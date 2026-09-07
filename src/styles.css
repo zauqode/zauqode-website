@@ -1,0 +1,209 @@
+@import "tailwindcss" source(none);
+@import "tw-animate-css";
+@source "../src";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * ZAUQODE Liquid Glass Design System — Dark Aesthetic
+ * Background: Pitch Black / Dark Charcoal (#050505 / #090E0D)
+ * Deep Teal Pill Button: #0F5A5A / #126363 with #2DD4BF glowing border
+ * Accent Cyan: #2DD4BF
+ * Text: #FDFBF7 / #E2E8F0
+ */
+
+@theme inline {
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-2xl: 2.25rem;
+  --radius-full: 9999px;
+
+  --color-background: #050505;
+  --color-foreground: #FDFBF7;
+  --color-card: rgba(15, 23, 22, 0.85);
+  --color-card-foreground: #FDFBF7;
+
+  --color-teal: #0F6B6B;
+  --color-teal-dark: #093838;
+  --color-teal-glow: #2DD4BF;
+  --color-mint: #BFE5D5;
+  --color-charcoal: #050505;
+  --color-muted-teal: #94A3B8;
+
+  --font-editorial: "DM Serif Display", serif;
+  --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
+  --font-alice: "Alice", serif;
+  --font-heading: "Instrument Serif", serif;
+  --font-body: "Barlow", sans-serif;
+}
+
+.font-alice {
+  font-family: "Alice", serif;
+}
+
+.font-heading {
+  font-family: "Instrument Serif", serif;
+}
+
+.font-body {
+  font-family: "Barlow", sans-serif;
+}
+
+/* Teal Capsule Pill Button (Matching exact requested button style) */
+.liquid-glass-dark {
+  background: linear-gradient(135deg, #136262 0%, #0D4747 100%);
+  color: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+  border: 1px solid rgba(45, 212, 191, 0.45);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35), 0 4px 20px rgba(13, 71, 71, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.liquid-glass-dark:hover {
+  background: linear-gradient(135deg, #167373 0%, #0F5454 100%);
+  border-color: rgba(45, 212, 191, 0.75);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 0 24px rgba(45, 212, 191, 0.35);
+}
+
+/* Secondary Dark Glass Pill Button */
+.liquid-glass {
+  background: rgba(15, 23, 22, 0.75);
+  color: #FDFBF7;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 9999px;
+  border: 1px solid rgba(45, 212, 191, 0.3);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15), 0 4px 16px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.liquid-glass:hover {
+  background: rgba(19, 98, 98, 0.4);
+  border-color: rgba(45, 212, 191, 0.6);
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.3), 0 0 20px rgba(45, 212, 191, 0.2);
+}
+
+/* Moving Glass Shine Light Sweep Effect */
+@keyframes liquid-sheen-sweep {
+  0% {
+    transform: translateX(-180%) skewX(-20deg);
+  }
+  40%, 100% {
+    transform: translateX(300%) skewX(-20deg);
+  }
+}
+
+.liquid-glass-dark::after,
+.liquid-glass::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 45%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 20%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.08) 80%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+  animation: liquid-sheen-sweep 3.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.liquid-glass-dark:hover::after,
+.liquid-glass:hover::after {
+  animation-duration: 1.8s;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 20%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.15) 80%,
+    transparent 100%
+  );
+}
+
+/* Dark Glass Card design for all section cards */
+.glass-card {
+  background: rgba(13, 20, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(45, 212, 191, 0.4);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(45, 212, 191, 0.12);
+}
+
+:root {
+  --background: #050505;
+  --foreground: #FDFBF7;
+  --card: rgba(13, 20, 20, 0.75);
+  --card-foreground: #FDFBF7;
+  --ease-liquid: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  * {
+    border-color: rgba(45, 212, 191, 0.15);
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: #050505;
+    color: #FDFBF7;
+    font-family: var(--font-sans);
+  }
+
+  body {
+    background-color: #050505;
+    color: #FDFBF7;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-editorial {
+    font-family: var(--font-editorial);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Reduced Motion Fallbacks */
+@media (prefers-reduced-motion: reduce) {
+  .liquid-glass, .glass-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: #0D1414 !important;
+  }
+  .liquid-glass-dark {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: #136262 !important;
+  }
+}
+
+/* Hide scrollbars for clean UI */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
