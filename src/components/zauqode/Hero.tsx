@@ -95,14 +95,14 @@ export function Hero() {
         >
           <a
             href="#work"
-            className="px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-full bg-[#2DD4BF] text-[#050505] hover:bg-[#14B8A6] hover:scale-105 transition-all shadow-[0_0_20px_rgba(45,212,191,0.3)]"
+            className="liquid-glass-dark px-8 py-4 text-xs font-bold uppercase tracking-widest text-white shadow-xl hover:scale-[1.03] transition-all duration-300"
           >
             Explore My Work
           </a>
 
           <a
             href="#contact"
-            className="px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-full border border-[#2DD4BF]/40 text-[#2DD4BF] hover:bg-[#2DD4BF]/10 hover:border-[#2DD4BF] transition-all"
+            className="liquid-glass px-8 py-4 text-xs font-bold uppercase tracking-widest text-[#FDFBF7] shadow-lg hover:scale-[1.03] transition-all duration-300"
           >
             Start a Project
           </a>

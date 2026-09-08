@@ -91,7 +91,7 @@ export function Navbar() {
           <div className="hidden sm:block">
             <a
               href="#contact"
-              className="inline-block rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-widest bg-[#2DD4BF] text-[#050505] hover:bg-[#14B8A6] hover:scale-105 transition-all shadow-[0_0_15px_rgba(45,212,191,0.25)]"
+              className="liquid-glass-dark inline-block px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-white shadow-md hover:scale-[1.03] transition-all duration-300"
             >
               Start a Project
             </a>

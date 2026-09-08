@@ -149,7 +149,7 @@ export function ContactFooter() {
                     className="w-full bg-[#050505]/70 border border-[#2DD4BF]/30 rounded-xl px-4 py-3 text-sm text-[#FDFBF7] focus:outline-none focus:border-[#2DD4BF] transition-colors"
                   >
                     <option value="Business Website" className="bg-[#050505] text-[#FDFBF7]">Business Website</option>
-                    <option value="Wedding Website" className="bg-[#050505] text-[#FDFBF7]">Wedding Website</option>
+                    <option value="Digital Invitations & Event Websites" className="bg-[#050505] text-[#FDFBF7]">Digital Invitations (All Occasions & Events)</option>
                     <option value="Portfolio Website" className="bg-[#050505] text-[#FDFBF7]">Portfolio Website</option>
                     <option value="Custom Project" className="bg-[#050505] text-[#FDFBF7]">Custom Digital Experience</option>
                   </select>
