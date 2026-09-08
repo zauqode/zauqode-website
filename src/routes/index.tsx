@@ -12,7 +12,6 @@ import { WhyZauqode } from "@/components/zauqode/WhyZauqode";
 import { Portfolio } from "@/components/zauqode/Portfolio";
 import { Testimonials } from "@/components/zauqode/Testimonials";
 import { ProcessTimeline } from "@/components/zauqode/ProcessTimeline";
-import { CtaFooter } from "@/components/zauqode/CtaFooter";
 import { ContactFooter } from "@/components/zauqode/ContactFooter";
 
 const title = "ZAUQODE — Where Taste Meets Digital | Freelance Creative Studio";
@@ -69,10 +68,10 @@ function Index() {
         <Portfolio />
         <Testimonials />
         <ProcessTimeline />
-        <CtaFooter />
         <ContactFooter />
       </main>
     </SmoothScroll>
   );
 }
+
 
