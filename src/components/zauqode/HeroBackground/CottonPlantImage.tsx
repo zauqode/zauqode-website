@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import cottonPlantImg from "@/assets/hero/cotton-plant.png";
 
 export function CottonPlantImage() {
   const plantRef = useRef<HTMLDivElement>(null);
@@ -10,7 +11,7 @@ export function CottonPlantImage() {
     const ctx = gsap.context(() => {
       if (plantRef.current) {
         gsap.to(plantRef.current, {
-          rotate: 0.6,
+          rotate: 0.5,
           x: 4,
           y: -2,
           duration: 9.5,
@@ -27,28 +28,30 @@ export function CottonPlantImage() {
   return (
     <div
       ref={plantRef}
-      className="absolute pointer-events-none z-10 transition-opacity duration-700"
+      className="absolute pointer-events-none z-10 transition-all duration-700 select-none"
       style={{
-        left: "-2%",
-        bottom: "-5%",
-        width: "clamp(380px, 42vw, 750px)",
-        opacity: 0.88,
+        left: "-3%",
+        bottom: "-4%",
+        width: "clamp(340px, 38vw, 680px)",
+        maxHeight: "90vh",
+        opacity: 0.92,
         transformOrigin: "bottom left",
       }}
     >
-      {/* Subtle radial glow behind cotton plant */}
+      {/* Soft teal backdrop glow behind left cotton plant */}
       <div
-        className="absolute inset-0 rounded-full blur-3xl pointer-events-none -z-10"
+        className="absolute inset-0 rounded-full blur-3xl pointer-events-none -z-10 opacity-70"
         style={{
-          background: "radial-gradient(circle at 35% 65%, rgba(45, 212, 191, 0.14), transparent 65%)",
+          background: "radial-gradient(circle at 35% 60%, rgba(45, 212, 191, 0.16), transparent 65%)",
         }}
       />
 
       <img
-        src="/assets/hero/cotton-plant.png"
-        alt="Botanical Cotton Plant"
-        className="w-full h-auto object-contain filter drop-shadow-[0_0_20px_rgba(45,212,191,0.15)]"
+        src={cottonPlantImg}
+        alt="Botanical Cotton Plant Artwork"
+        className="w-full h-auto object-contain mix-blend-screen filter drop-shadow-[0_0_25px_rgba(45,212,191,0.2)]"
       />
     </div>
   );
 }
+
