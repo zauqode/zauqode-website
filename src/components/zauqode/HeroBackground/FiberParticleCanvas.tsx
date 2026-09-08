@@ -27,6 +27,12 @@ const FIBER_SOURCES = [
   "/assets/hero/fibers/fiber-06.png",
 ];
 
+const EMISSION_ZONES = [
+  { xRatio: 0.18, yRatio: 0.22, spreadX: 40, spreadY: 40 }, // Upper blossom
+  { xRatio: 0.28, yRatio: 0.42, spreadX: 40, spreadY: 40 }, // Middle-right blossom
+  { xRatio: 0.12, yRatio: 0.65, spreadX: 40, spreadY: 40 }, // Lower-left blossom
+];
+
 export function FiberParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
