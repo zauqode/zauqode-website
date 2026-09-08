@@ -4,7 +4,6 @@ import { AmbientBackground } from "@/components/zauqode/AmbientBackground";
 import { Preloader } from "@/components/zauqode/Preloader";
 import { Navbar } from "@/components/zauqode/Navbar";
 import { Hero } from "@/components/zauqode/Hero";
-import { InteractiveShowcase } from "@/components/zauqode/InteractiveShowcase";
 import { Services } from "@/components/zauqode/Services";
 import { WhyZauqode } from "@/components/zauqode/WhyZauqode";
 import { Portfolio } from "@/components/zauqode/Portfolio";
@@ -38,7 +37,7 @@ export const Route = createFileRoute("/")({
           areaServed: "Worldwide",
           knowsAbout: [
             "Business Websites",
-            "Wedding Websites",
+            "Digital Invitations & Event Websites",
             "Portfolio Websites",
             "Digital Experience Design",
           ],
@@ -57,7 +56,6 @@ function Index() {
       <Navbar />
       <main className="relative overflow-x-hidden bg-[#050505] text-[#FDFBF7] z-10">
         <Hero />
-        <InteractiveShowcase />
         <Services />
         <WhyZauqode />
         <Portfolio />
@@ -67,6 +65,7 @@ function Index() {
     </SmoothScroll>
   );
 }
+
 
 
 

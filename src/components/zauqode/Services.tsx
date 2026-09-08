@@ -15,11 +15,11 @@ const services = [
   },
   {
     id: "02",
-    title: "WEDDING WEBSITES",
+    title: "DIGITAL INVITATIONS FOR ALL OCCASIONS & EVENTS",
     subtitle: "Bespoke Celebrations",
-    description: "Beautiful digital spaces created to tell your story, share your celebration, and make every detail feel memorable.",
+    description: "Beautiful digital invitations and websites created to celebrate weddings, birthdays, baby showers, engagements, and all special occasions.",
     mockup: weddingMockup,
-    tag: "Romantic Editorial",
+    tag: "Romantic & Celebration",
   },
   {
     id: "03",
