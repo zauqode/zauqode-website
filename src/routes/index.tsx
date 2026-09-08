@@ -2,15 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SmoothScroll } from "@/components/zauqode/SmoothScroll";
 import { AmbientBackground } from "@/components/zauqode/AmbientBackground";
 import { Preloader } from "@/components/zauqode/Preloader";
-import { CinematicCursor } from "@/components/zauqode/CinematicCursor";
 import { Navbar } from "@/components/zauqode/Navbar";
 import { Hero } from "@/components/zauqode/Hero";
-import { IntroStatement } from "@/components/zauqode/IntroStatement";
 import { InteractiveShowcase } from "@/components/zauqode/InteractiveShowcase";
 import { Services } from "@/components/zauqode/Services";
 import { WhyZauqode } from "@/components/zauqode/WhyZauqode";
 import { Portfolio } from "@/components/zauqode/Portfolio";
-import { Testimonials } from "@/components/zauqode/Testimonials";
 import { ProcessTimeline } from "@/components/zauqode/ProcessTimeline";
 import { ContactFooter } from "@/components/zauqode/ContactFooter";
 
@@ -56,22 +53,20 @@ function Index() {
   return (
     <SmoothScroll>
       <Preloader />
-      <CinematicCursor />
       <AmbientBackground />
       <Navbar />
       <main className="relative overflow-x-hidden bg-[#050505] text-[#FDFBF7] z-10">
         <Hero />
-        <IntroStatement />
         <InteractiveShowcase />
         <Services />
         <WhyZauqode />
         <Portfolio />
-        <Testimonials />
         <ProcessTimeline />
         <ContactFooter />
       </main>
     </SmoothScroll>
   );
 }
+
 
 

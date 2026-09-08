@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "motion/react";
 import zauqodeLogo from "../../assets/Logos/zauqode-logo.png";
-import { MagneticButton } from "./MagneticButton";
+
 
 const navLinks = [
   { name: "Home", href: "#top" },
@@ -89,10 +89,14 @@ export function Navbar() {
         {/* Action CTA & Mobile Menu Toggle */}
         <div className="flex items-center gap-3">
           <div className="hidden sm:block">
-            <MagneticButton href="#contact" className="rounded-full px-5 py-2.5 text-xs">
+            <a
+              href="#contact"
+              className="inline-block rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-widest bg-[#2DD4BF] text-[#050505] hover:bg-[#14B8A6] hover:scale-105 transition-all shadow-[0_0_15px_rgba(45,212,191,0.25)]"
+            >
               Start a Project
-            </MagneticButton>
+            </a>
           </div>
+
 
           {/* Mobile Menu Toggle */}
           <button

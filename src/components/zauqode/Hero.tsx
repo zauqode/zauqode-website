@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { MagneticButton } from "./MagneticButton";
 
 export function Hero() {
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -93,13 +93,20 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.64, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6"
         >
-          <MagneticButton href="#work" variant="primary" className="px-8 py-4 text-xs">
+          <a
+            href="#work"
+            className="px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-full bg-[#2DD4BF] text-[#050505] hover:bg-[#14B8A6] hover:scale-105 transition-all shadow-[0_0_20px_rgba(45,212,191,0.3)]"
+          >
             Explore My Work
-          </MagneticButton>
+          </a>
 
-          <MagneticButton href="#contact" variant="secondary" className="px-8 py-4 text-xs">
+          <a
+            href="#contact"
+            className="px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-full border border-[#2DD4BF]/40 text-[#2DD4BF] hover:bg-[#2DD4BF]/10 hover:border-[#2DD4BF] transition-all"
+          >
             Start a Project
-          </MagneticButton>
+          </a>
+
         </motion.div>
       </div>
     </section>
