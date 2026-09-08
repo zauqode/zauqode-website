@@ -5,19 +5,14 @@ export function Atmosphere() {
       style={{
         background: `
           radial-gradient(
-            circle at 12% 50%,
-            rgba(22, 160, 165, 0.12),
-            transparent 45%
+            circle at 10% 65%,
+            rgba(15, 130, 135, 0.10),
+            transparent 30%
           ),
           radial-gradient(
-            circle at 88% 65%,
-            rgba(15, 110, 120, 0.08),
+            circle at 85% 50%,
+            rgba(10, 100, 110, 0.05),
             transparent 35%
-          ),
-          radial-gradient(
-            circle at 20% 85%,
-            rgba(45, 212, 191, 0.06),
-            transparent 40%
           ),
           #050708
         `,
