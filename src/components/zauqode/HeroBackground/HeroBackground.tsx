@@ -1,7 +1,5 @@
 import { Atmosphere } from "./Atmosphere";
 import { WindLines } from "./WindLines";
-import { CottonPlantImage } from "./CottonPlantImage";
-import { FiberParticleCanvas } from "./FiberParticleCanvas";
 
 export function HeroBackground() {
   return (
@@ -11,12 +9,6 @@ export function HeroBackground() {
 
       {/* Layer 2: SVG wind flow lines */}
       <WindLines />
-
-      {/* Layer 3: Botanical cotton plant image with GSAP sway */}
-      <CottonPlantImage />
-
-      {/* Layer 4: Floating fiber particle canvas */}
-      <FiberParticleCanvas />
     </div>
   );
 }
