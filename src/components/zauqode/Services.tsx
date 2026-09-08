@@ -41,8 +41,8 @@ export function Services() {
       <div className="absolute bottom-10 -right-24 w-96 h-96 bg-[#2DD4BF]/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
       {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4 border-b border-[#2DD4BF]/20 pb-8">
-        <div>
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4 border-b border-[#2DD4BF]/20 pb-8 text-center md:text-left items-center md:items-start">
+        <div className="w-full">
           <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#2DD4BF]">
             PRIMARY SERVICES
           </span>

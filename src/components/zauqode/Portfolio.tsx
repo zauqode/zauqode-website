@@ -33,8 +33,8 @@ export function Portfolio() {
 
       <div className="px-6 max-w-7xl mx-auto mb-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#2DD4BF]/20 pb-8">
-          <div>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#2DD4BF]/20 pb-8 text-center md:text-left items-center md:items-start">
+          <div className="w-full">
             <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#2DD4BF]">
               SELECTED PORTFOLIO
             </span>
@@ -45,11 +45,9 @@ export function Portfolio() {
         </div>
       </div>
 
-      {/* Portfolio Showcase Track */}
+      {/* Portfolio Showcase Grid */}
       <div className="w-full px-6 max-w-7xl mx-auto flex justify-center">
-        <div
-          className="flex flex-col md:flex-row items-stretch justify-center gap-8 w-full max-w-2xl"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
           {projects.map((proj) => (
             <motion.div
               key={proj.id}
