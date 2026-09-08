@@ -17,26 +17,8 @@ export function InteractiveShowcase() {
   const scaleCenter = useTransform(scrollYProgress, [0.3, 0.5, 0.7], [0.9, 1.05, 0.9]);
 
   return (
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
-import zauqodeLogo from "../../assets/Logos/zauqode-logo.png";
-
-export function InteractiveShowcase() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-
-  // Fragment scroll transforms
-  const rotateLeft = useTransform(scrollYProgress, [0, 0.5, 1], [-12, 0, 12]);
-  const rotateRight = useTransform(scrollYProgress, [0, 0.5, 1], [14, 0, -14]);
-  const translateXLeft = useTransform(scrollYProgress, [0, 0.5, 1], [-80, 0, 80]);
-  const translateXRight = useTransform(scrollYProgress, [0, 0.5, 1], [80, 0, -80]);
-  const scaleCenter = useTransform(scrollYProgress, [0.3, 0.5, 0.7], [0.9, 1.05, 0.9]);
-
-  return (
     <section ref={containerRef} className="py-24 sm:py-36 px-6 relative overflow-hidden select-none bg-[#050505] border-y border-[#14B8A6]/15">
+
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#14B8A6]/10 rounded-full blur-[140px] pointer-events-none" />
 
