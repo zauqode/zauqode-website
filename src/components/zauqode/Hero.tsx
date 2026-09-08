@@ -28,7 +28,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="inline-flex items-center gap-2 rounded-full border border-[#14B8A6]/30 bg-[#14B8A6]/10 backdrop-blur-md px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#2DD4BF] shadow-sm"
         >
           <span className="w-2 h-2 rounded-full bg-[#2DD4BF] animate-pulse" />
@@ -43,7 +43,7 @@ export function Hero() {
                 <motion.span
                   initial={{ y: "110%", opacity: 0 }}
                   animate={{ y: "0%", opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.15 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.8, delay: 0.65 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
                   className="inline-block"
                 >
                   {word}
@@ -60,7 +60,7 @@ export function Hero() {
                 <motion.span
                   initial={{ y: "110%", opacity: 0 }}
                   animate={{ y: "0%", opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.4 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.8, delay: 0.9 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
                   className="inline-block"
                 >
                   {word}
@@ -77,7 +77,7 @@ export function Hero() {
               <motion.span
                 initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: "0%", opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.75 + i * 0.03, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.5, delay: 1.25 + i * 0.03, ease: [0.16, 1, 0.3, 1] }}
                 className="inline-block"
               >
                 {word}
@@ -90,7 +90,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.64, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6"
         >
           <a
