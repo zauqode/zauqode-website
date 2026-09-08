@@ -70,14 +70,10 @@ export function FiberParticleCanvas() {
     };
     window.addEventListener("resize", handleResize);
 
-    // 3 Blossom Emission Zones
-    const getEmissionZone = () => {
-      const zones = [
-        { x: width * 0.18, y: height * 0.22 }, // Upper blossom
     const createParticle = (spawnX?: number, spawnY?: number): FiberParticle => {
       const zone = EMISSION_ZONES[Math.floor(Math.random() * EMISSION_ZONES.length)] || EMISSION_ZONES[0];
-      const emitX = spawnX ?? zone.xRatio * width + (Math.random() - 0.5) * zone.spreadX;
-      const emitY = spawnY ?? zone.yRatio * height + (Math.random() - 0.5) * zone.spreadY;
+      const x = spawnX ?? zone.xRatio * width + (Math.random() - 0.5) * zone.spreadX;
+      const y = spawnY ?? zone.yRatio * height + (Math.random() - 0.5) * zone.spreadY;
 
       // Assign 3 depths
       const randDepth = Math.random();
