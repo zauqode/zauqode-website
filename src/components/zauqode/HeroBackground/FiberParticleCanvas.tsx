@@ -77,7 +77,8 @@ export function FiberParticleCanvas() {
     window.addEventListener("resize", handleResize);
 
     const createParticle = (spawnX?: number, spawnY?: number): FiberParticle => {
-      const zone = EMISSION_ZONES[Math.floor(Math.random() * EMISSION_ZONES.length)] || EMISSION_ZONES[0];
+      const zoneIndex = Math.floor(Math.random() * EMISSION_ZONES.length);
+      const zone = EMISSION_ZONES[zoneIndex] ?? { xRatio: 0.18, yRatio: 0.22, spreadX: 40, spreadY: 40 };
       const x = spawnX ?? zone.xRatio * width + (Math.random() - 0.5) * zone.spreadX;
       const y = spawnY ?? zone.yRatio * height + (Math.random() - 0.5) * zone.spreadY;
 
@@ -139,7 +140,8 @@ export function FiberParticleCanvas() {
       if (now - lastBurstTime > burstInterval && particles.length < maxParticles) {
         lastBurstTime = now;
         burstInterval = Math.random() * 7000 + 5000;
-        const burstZone = EMISSION_ZONES[Math.floor(Math.random() * EMISSION_ZONES.length)] || EMISSION_ZONES[0];
+        const burstIndex = Math.floor(Math.random() * EMISSION_ZONES.length);
+        const burstZone = EMISSION_ZONES[burstIndex] ?? { xRatio: 0.18, yRatio: 0.22, spreadX: 40, spreadY: 40 };
         const burstCount = Math.floor(Math.random() * 6) + 2; // 2 to 7 particles
         for (let b = 0; b < burstCount; b++) {
           particles.push(createParticle(burstZone.xRatio * width, burstZone.yRatio * height));
