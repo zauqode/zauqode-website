@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
+import { HeroBackground } from "./HeroBackground/HeroBackground";
 
 export function Hero() {
 
@@ -18,11 +19,14 @@ export function Hero() {
     <section
       id="top"
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center pt-36 pb-24 px-6 overflow-hidden select-none bg-[#050505] text-[#FDFBF7]"
+      className="relative min-h-screen flex items-center justify-center pt-36 pb-24 px-6 overflow-hidden select-none bg-[#050708] text-[#FDFBF7]"
     >
+      {/* Procedural Animated Cotton Plant Background Layer */}
+      <HeroBackground />
 
       {/* Main Content Container */}
       <div className="relative z-10 max-w-5xl text-center space-y-5 sm:space-y-8">
+
         
         {/* 1. Eyebrow badge stagger reveal */}
         <motion.div
