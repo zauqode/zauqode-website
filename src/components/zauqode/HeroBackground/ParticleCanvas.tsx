@@ -111,6 +111,7 @@ export function ParticleCanvas() {
       // Update and draw particles
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
+        if (!p) continue;
         p.life++;
 
         // Fade in & out lifecycle

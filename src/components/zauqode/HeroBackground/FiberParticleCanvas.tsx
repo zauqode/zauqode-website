@@ -153,6 +153,7 @@ export function FiberParticleCanvas() {
       // Update and Draw Particles
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
+        if (!p) continue;
         p.life++;
 
         // Lifecycle Fade In/Out

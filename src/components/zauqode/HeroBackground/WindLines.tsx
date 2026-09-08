@@ -27,7 +27,9 @@ export function WindLines() {
           opacity: 0,
         });
 
-        const { dur, delay } = windPaths[i % windPaths.length];
+        const currentWind = windPaths[i % windPaths.length] || { dur: 9, delay: 0 };
+        const dur = currentWind.dur;
+        const delay = currentWind.delay;
 
         gsap.to(path, {
           strokeDashoffset: -length,
