@@ -35,57 +35,55 @@ export function Hero() {
           FREELANCE DIGITAL STUDIO
         </motion.div>
 
-        {/* 2 & 3. Headline Mask/Clip Reveal with Scroll Parallax */}
-        <div className="space-y-2 flex flex-col items-center text-center w-full">
-          {/* Headline Line 1 Mask */}
-          <div className="overflow-hidden w-full flex justify-center text-center">
-            <motion.h1
-              initial={{ y: "110%", opacity: 0 }}
-              animate={{ y: "0%", opacity: 1 }}
-              transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              style={{ y: yParallaxSlow }}
-              className="font-editorial text-4xl sm:text-7xl md:text-8xl tracking-tight text-[#FDFBF7] leading-[1.1] text-center w-full"
-            >
-              Solving problems,
-            </motion.h1>
-          </div>
+        {/* 2 & 3. Word-by-Word Stagger Reveal Headline with Scroll Parallax */}
+        <motion.div style={{ y: yParallaxSlow }} className="space-y-2 text-center max-w-4xl mx-auto">
+          <h1 className="font-editorial text-4xl sm:text-7xl md:text-8xl tracking-tight text-[#FDFBF7] leading-[1.15] text-center flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-5 gap-y-1">
+            {["Solving", "problems,"].map((word, i) => (
+              <span key={i} className="inline-block overflow-hidden pb-1">
+                <motion.span
+                  initial={{ y: "110%", opacity: 0 }}
+                  animate={{ y: "0%", opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.15 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                  className="inline-block"
+                >
+                  {word}
+                </motion.span>
+              </span>
+            ))}
+          </h1>
+        </motion.div>
 
-          {/* Headline Line 2 Mask */}
-          <div className="overflow-hidden w-full flex justify-center text-center">
-            <motion.h1
-              initial={{ y: "110%", opacity: 0 }}
-              animate={{ y: "0%", opacity: 1 }}
-              transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              style={{ y: yParallaxFast }}
-              className="font-editorial text-4xl sm:text-7xl md:text-8xl tracking-tight leading-[1.1] text-center w-full"
-            >
-              <span className="italic text-[#2DD4BF] inline-block text-center">with digital solutions.</span>
-            </motion.h1>
-          </div>
-        </div>
+        <motion.div style={{ y: yParallaxFast }} className="space-y-2 text-center max-w-4xl mx-auto">
+          <h1 className="font-editorial text-4xl sm:text-7xl md:text-8xl tracking-tight text-[#2DD4BF] leading-[1.15] italic text-center flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-5 gap-y-1">
+            {["with", "digital", "solutions."].map((word, i) => (
+              <span key={i} className="inline-block overflow-hidden pb-1">
+                <motion.span
+                  initial={{ y: "110%", opacity: 0 }}
+                  animate={{ y: "0%", opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.4 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                  className="inline-block"
+                >
+                  {word}
+                </motion.span>
+              </span>
+            ))}
+          </h1>
+        </motion.div>
 
-        {/* 4. Subtext line-by-line stagger reveal */}
-        <div className="max-w-2xl mx-auto text-sm sm:text-lg text-[#94A3B8] font-normal leading-relaxed pt-2 space-y-1.5 text-center flex flex-col items-center">
-          <div className="overflow-hidden w-full text-center">
-            <motion.p
-              initial={{ y: "110%", opacity: 0 }}
-              animate={{ y: "0%", opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="text-center w-full"
-            >
-              Zauqode creates thoughtfully designed digital products
-            </motion.p>
-          </div>
-          <div className="overflow-hidden w-full text-center">
-            <motion.p
-              initial={{ y: "110%", opacity: 0 }}
-              animate={{ y: "0%", opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.52, ease: [0.16, 1, 0.3, 1] }}
-              className="text-center w-full"
-            >
-              and websites that solve real business challenges.
-            </motion.p>
-          </div>
+        {/* 4. Subtext Word Stagger Reveal */}
+        <div className="max-w-2xl mx-auto text-sm sm:text-lg text-[#94A3B8] font-normal leading-relaxed pt-2 text-center flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1">
+          {["Zauqode", "creates", "thoughtfully", "designed", "digital", "products", "and", "websites", "that", "solve", "real", "business", "challenges."].map((word, i) => (
+            <span key={i} className="inline-block overflow-hidden">
+              <motion.span
+                initial={{ y: "100%", opacity: 0 }}
+                animate={{ y: "0%", opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.75 + i * 0.03, ease: [0.16, 1, 0.3, 1] }}
+                className="inline-block"
+              >
+                {word}
+              </motion.span>
+            </span>
+          ))}
         </div>
 
         {/* 5. Dual Magnetic CTA Buttons stagger reveal */}
