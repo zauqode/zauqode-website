@@ -4,11 +4,12 @@ import { AmbientBackground } from "@/components/zauqode/AmbientBackground";
 import { Preloader } from "@/components/zauqode/Preloader";
 import { Navbar } from "@/components/zauqode/Navbar";
 import { Hero } from "@/components/zauqode/Hero";
-import { Services } from "@/components/zauqode/Services";
-import { WhyZauqode } from "@/components/zauqode/WhyZauqode";
-import { Portfolio } from "@/components/zauqode/Portfolio";
+import { AboutMe } from "@/components/zauqode/AboutMe";
+import { Pricing } from "@/components/zauqode/Pricing";
 import { ProcessTimeline } from "@/components/zauqode/ProcessTimeline";
+import { FAQ } from "@/components/zauqode/FAQ";
 import { ContactFooter } from "@/components/zauqode/ContactFooter";
+import { WhatsAppFloat } from "@/components/zauqode/WhatsAppFloat";
 
 const title = "ZAUQODE — Where Taste Meets Digital | Freelance Creative Studio";
 const description =
@@ -54,18 +55,16 @@ function Index() {
       <Preloader />
       <AmbientBackground />
       <Navbar />
-      <main className="relative overflow-x-hidden bg-[#050505] text-[#FDFBF7] z-10">
+      <main className="relative overflow-x-hidden bg-transparent text-[#0D2626] z-10">
         <Hero />
-        <Services />
-        <WhyZauqode />
-        <Portfolio />
+        <AboutMe />
+        <Pricing />
         <ProcessTimeline />
+        <FAQ />
         <ContactFooter />
       </main>
+      {/* Sticky WhatsApp button — always visible */}
+      <WhatsAppFloat />
     </SmoothScroll>
   );
 }
-
-
-
-

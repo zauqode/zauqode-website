@@ -21,13 +21,13 @@ const pillars = [
 
 export function WhyZauqode() {
   return (
-    <section className="py-24 sm:py-36 px-6 max-w-5xl mx-auto text-[#FDFBF7]">
+    <section className="py-24 sm:py-36 px-6 max-w-5xl mx-auto text-[#0D2626]">
       <div className="text-center space-y-4 mb-20">
-        <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#2DD4BF]">
+        <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#0D9488]">
           THE ZAUQODE DIFFERENCE
         </span>
-        <h2 className="font-editorial text-4xl sm:text-6xl text-[#FDFBF7]">
-          Why Zauqode<span className="text-[#2DD4BF]">?</span>
+        <h2 className="font-editorial text-4xl sm:text-6xl text-[#0D2626]">
+          Why Zauqode<span className="text-[#0D9488]">?</span>
         </h2>
       </div>
 
@@ -39,12 +39,12 @@ export function WhyZauqode() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8, delay: idx * 0.15 }}
-            className="space-y-4 border-l-2 border-[#2DD4BF]/30 pl-6 hover:border-[#2DD4BF] transition-colors duration-500"
+            className="space-y-4 border-l-2 border-[#0D9488]/30 pl-6 hover:border-[#0D9488] transition-colors duration-500"
           >
-            <h3 className="font-editorial text-2xl sm:text-3xl text-[#FDFBF7]">
+            <h3 className="font-editorial text-2xl sm:text-3xl text-[#0D2626]">
               {pillar.title}
             </h3>
-            <p className="text-sm sm:text-base text-[#94A3B8] leading-relaxed">
+            <p className="text-sm sm:text-base text-[#3D6060] leading-relaxed">
               {pillar.description}
             </p>
           </motion.div>

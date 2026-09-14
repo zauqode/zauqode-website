@@ -1,100 +1,219 @@
-import { motion } from "motion/react";
+import { useState, useRef } from "react";
+import { motion, useScroll, useTransform, useMotionValueEvent } from "motion/react";
 import { Compass, Palette, Code2, SlidersHorizontal, Rocket } from "lucide-react";
 
 const steps = [
   {
     num: "01",
-    name: "DISCOVER",
-    desc: "Understanding your idea, goals, target audience, and distinct visual vision.",
+    name: "Discover",
+    desc: "Unearthing your goals, audience, and visual aesthetic through focused consultation.",
     icon: Compass,
   },
   {
     num: "02",
-    name: "DESIGN",
-    desc: "Creating the bespoke visual direction, editorial typography, and liquid layout.",
+    name: "Design",
+    desc: "Crafting bespoke visual directions, editorial typography, and high-fidelity layouts.",
     icon: Palette,
   },
   {
     num: "03",
-    name: "BUILD",
-    desc: "Transforming design into a responsive, 60fps interactive web experience.",
+    name: "Build",
+    desc: "Engineering clean, responsive code with fluid 60fps animations.",
     icon: Code2,
   },
   {
     num: "04",
-    name: "REFINE",
-    desc: "Polishing micro-interactions, motion easing curves, and cross-device precision.",
+    name: "Refine",
+    desc: "Fine-tuning easing curves, micro-interactions, and cross-device performance.",
     icon: SlidersHorizontal,
   },
   {
     num: "05",
-    name: "LAUNCH",
-    desc: "Taking your website live, optimized for performance and lasting impression.",
+    name: "Launch",
+    desc: "Seamless live deployment, domain setup, audit, and ongoing guidance.",
     icon: Rocket,
   },
 ];
 
 export function ProcessTimeline() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start 75%", "center 45%"],
+  });
+
+  // Animated connector line draws from left to right as user scrolls into view
+  const lineScaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const orbLeft = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  // Dynamically activate steps as the line draws across them
+  useMotionValueEvent(scrollYProgress, "change", (progress) => {
+    if (hoveredIdx === null) {
+      const computed = Math.min(4, Math.max(0, Math.floor(progress * 5)));
+      setActiveIdx(computed);
+    }
+  });
+
+  const currentIdx = hoveredIdx !== null ? hoveredIdx : activeIdx;
+
   return (
-    <section id="process" className="relative py-24 sm:py-36 px-6 max-w-7xl mx-auto overflow-hidden text-[#FDFBF7]">
-      {/* Background Soft Teal Blob for Blur Effect */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-[#14B8A6]/10 rounded-full blur-3xl pointer-events-none -z-10" />
+    <section
+      id="process"
+      ref={sectionRef}
+      className="relative py-8 sm:py-10 lg:py-12 px-6 max-w-7xl mx-auto overflow-hidden text-[#0D2626]"
+    >
+      {/* Subtle ambient lighting */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#0D9488]/6 rounded-full blur-3xl pointer-events-none -z-10" />
 
       {/* Header */}
-      <div className="text-center space-y-4 mb-20">
-        <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#2DD4BF]">
-          METHODOLOGY
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="text-center space-y-2 mb-8 sm:mb-12"
+      >
+        <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#0D9488]">
+          Methodology
         </span>
-        <h2 className="font-editorial text-4xl sm:text-6xl text-[#FDFBF7]">
-          From idea to experience<span className="text-[#2DD4BF]">.</span>
+        <h2 className="font-editorial text-3xl sm:text-5xl lg:text-6xl text-[#0D2626]">
+          From idea to experience<span className="text-[#0D9488]">.</span>
         </h2>
-        <p className="max-w-xl mx-auto text-sm sm:text-base text-[#94A3B8]">
-          A structured 5-step process tailored to turn your vision into a fluid digital product.
+        <p className="max-w-md mx-auto text-xs sm:text-sm text-[#3D6060]">
+          Connected by a clear, intentional flow. Hover or tap each step to explore.
         </p>
-      </div>
+      </motion.div>
 
-      {/* Horizontal Process Grid Container */}
-      <div className="relative">
-        {/* Desktop Horizontal Connector Line */}
-        <div className="hidden lg:block absolute top-14 left-[10%] right-[10%] h-0.5 bg-[#2DD4BF]/20 z-0" />
+      {/* Animated Connector Line — NO CARDS AT ALL */}
+      <div className="relative max-w-5xl mx-auto">
+        {/* Continuous Horizontal Connector Line (running through center of circles) */}
+        <div className="absolute top-6 sm:top-8 md:top-10 left-[8%] right-[8%] -translate-y-1/2 h-[2px] pointer-events-none z-0">
+          {/* Subtle background track */}
+          <div className="absolute inset-0 bg-[#0D9488]/20 rounded-full" />
 
-        {/* 5-Step Horizontal Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-4 relative z-10">
+          {/* Animated line that draws from left to right on scroll */}
+          <motion.div
+            style={{ scaleX: lineScaleX, transformOrigin: "left" }}
+            className="absolute inset-0 bg-gradient-to-r from-[#0D9488] via-[#14B8A6] to-[#0D9488] rounded-full shadow-[0_0_8px_rgba(13,148,136,0.5)]"
+          />
+
+          {/* Traveling glowing pulse orb at the head of the drawn line */}
+          <motion.div
+            style={{ left: orbLeft }}
+            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white border-2 border-[#0D9488] shadow-[0_0_10px_rgba(13,148,136,0.9)]"
+          />
+        </div>
+
+        {/* 5 Icons in Circles Grid (Fluid across all screen sizes, NO scrollbar) */}
+        <div className="grid grid-cols-5 relative z-10 gap-1 sm:gap-4">
           {steps.map((step, idx) => {
             const Icon = step.icon;
+            const isCurrent = currentIdx === idx;
+            const isPassed = activeIdx >= idx;
+
             return (
-              <motion.div
+              <div
                 key={step.num}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.12 }}
-                whileHover={{ y: -4 }}
-                className="group glass-card p-6 shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between items-center text-center space-y-4 relative"
+                className="flex flex-col items-center text-center px-1 sm:px-2 group cursor-pointer"
+                onMouseEnter={() => setHoveredIdx(idx)}
+                onMouseLeave={() => setHoveredIdx(null)}
+                onClick={() => setActiveIdx(idx)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    setActiveIdx(idx);
+                  }
+                }}
+                aria-label={`Step ${step.num}: ${step.name}`}
               >
-                {/* Step Badge & Icon */}
-                <div className="relative flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-2xl bg-[#136262] border border-[#2DD4BF]/40 flex items-center justify-center text-white shadow-inner group-hover:bg-[#2DD4BF] group-hover:text-[#050505] transition-all duration-300 transform group-hover:scale-110">
-                    <Icon className="w-7 h-7 stroke-[1.75]" />
-                  </div>
-                  <span className="absolute -top-2 -right-3 font-mono text-xs font-extrabold text-[#2DD4BF] bg-[#050505] px-2 py-0.5 rounded-full border border-[#2DD4BF]/40 shadow-md">
+                {/* Icon in Circle with Gradient Royal Glow */}
+                <div className="relative mb-3 sm:mb-4">
+                  {/* Ambient Royal Glow Aura behind node */}
+                  <div
+                    className={`absolute -inset-2 sm:-inset-3 rounded-full blur-xl transition-opacity duration-500 pointer-events-none ${
+                      isCurrent
+                        ? "opacity-100 bg-gradient-to-tr from-[#0D9488]/70 via-[#14B8A6]/60 to-[#2DD4BF]/70 scale-125"
+                        : isPassed
+                        ? "opacity-50 group-hover:opacity-85 bg-gradient-to-tr from-[#0D9488]/40 to-[#14B8A6]/30"
+                        : "opacity-25 group-hover:opacity-60 bg-gradient-to-tr from-[#0D9488]/30 to-[#99F6E4]/40"
+                    }`}
+                  />
+
+                  {/* Outer active animated ring */}
+                  {isCurrent && (
+                    <motion.div
+                      layoutId="activeStepRing"
+                      className="absolute -inset-2 sm:-inset-2.5 rounded-full border-2 border-[#2DD4BF]/80 bg-[#0D9488]/15 animate-pulse pointer-events-none shadow-[0_0_15px_rgba(45,212,191,0.6)]"
+                      transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                    />
+                  )}
+
+                  {/* Circular Node with Royal Gradient Background */}
+                  <motion.div
+                    animate={{
+                      scale: isCurrent ? 1.1 : 1,
+                    }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    className={`relative w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
+                      isCurrent
+                        ? "text-white border-2 border-[#5EEAD4] shadow-[0_0_30px_rgba(20,184,166,0.7),0_0_60px_rgba(13,148,136,0.35),inset_0_2px_4px_rgba(255,255,255,0.6)]"
+                        : isPassed
+                        ? "text-white border-2 border-[#2DD4BF]/50 shadow-[0_6px_20px_rgba(9,38,34,0.4),0_0_15px_rgba(13,148,136,0.3),inset_0_1px_2px_rgba(255,255,255,0.35)]"
+                        : "text-[#0D2626] border-2 border-[#0D9488]/35 shadow-[0_4px_16px_rgba(13,148,136,0.18),inset_0_1px_3px_#ffffff]"
+                    }`}
+                    style={{
+                      background: isCurrent
+                        ? "radial-gradient(circle at 35% 25%, rgba(255,255,255,0.4) 0%, transparent 55%), linear-gradient(135deg, #14B8A6 0%, #0D9488 40%, #0F766E 75%, #0A4D48 100%)"
+                        : isPassed
+                        ? "radial-gradient(circle at 35% 25%, rgba(45,212,191,0.3) 0%, transparent 60%), linear-gradient(135deg, #115E59 0%, #0F4C47 45%, #082F2C 100%)"
+                        : "radial-gradient(circle at 35% 25%, rgba(255,255,255,0.9) 0%, transparent 60%), linear-gradient(135deg, #FFFFFF 0%, #F0FDF9 50%, #CCFBF1 100%)",
+                    }}
+                  >
+                    <Icon className="w-5 h-5 sm:w-7 sm:h-7 stroke-[2] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]" />
+                  </motion.div>
+
+                  {/* Step Number Tag with Royal Jewel Styling */}
+                  <span
+                    className={`absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 text-[8px] sm:text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded-full border shadow-md transition-all duration-300 ${
+                      isCurrent
+                        ? "bg-gradient-to-r from-[#0D2626] to-[#0D9488] text-[#5EEAD4] border-[#5EEAD4] shadow-[0_0_10px_rgba(94,234,212,0.6)]"
+                        : isPassed
+                        ? "bg-gradient-to-r from-[#0D2626] to-[#0F766E] text-white border-[#2DD4BF]/60 shadow-[0_0_8px_rgba(45,212,191,0.4)]"
+                        : "bg-white text-[#0D9488] border-[#0D9488]/40 shadow-xs"
+                    }`}
+                  >
                     {step.num}
                   </span>
                 </div>
 
-                {/* Step Title & Description */}
-                <div className="space-y-2">
-                  <h3 className="text-base font-bold text-[#FDFBF7] tracking-wider uppercase group-hover:text-[#2DD4BF] transition-colors">
-                    {step.name}
-                  </h3>
-                  <p className="text-xs text-[#94A3B8] leading-relaxed">
-                    {step.desc}
-                  </p>
-                </div>
+                {/* Title Below Icon */}
+                <h3
+                  className={`text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider transition-colors duration-200 ${
+                    isCurrent ? "text-[#0D9488]" : "text-[#0D2626]"
+                  }`}
+                >
+                  {step.name}
+                </h3>
 
-                {/* Bottom Step Indicator Dot */}
-                <div className="w-2 h-2 rounded-full bg-[#2DD4BF]/30 group-hover:bg-[#2DD4BF] group-hover:scale-125 transition-all duration-300" />
-              </motion.div>
+                {/* Small Description — Fades in only when that step is active/hovered */}
+                <div className="mt-1 sm:mt-2 min-h-[50px] sm:min-h-[60px] flex items-start justify-center">
+                  <motion.p
+                    initial={false}
+                    animate={{
+                      opacity: isCurrent ? 1 : 0,
+                      y: isCurrent ? 0 : 4,
+                    }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    className="text-[10px] sm:text-xs text-[#3D6060] leading-relaxed max-w-[170px]"
+                  >
+                    {step.desc}
+                  </motion.p>
+                </div>
+              </div>
             );
           })}
         </div>

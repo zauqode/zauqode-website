@@ -1,9 +1,49 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { useRef, useEffect } from "react";
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "motion/react";
 import { HeroBackground } from "./HeroBackground/HeroBackground";
+import heroDeveloperImg from "../../assets/hero-developer.jpg";
 
+const WHATSAPP_RAW = "918946077234";
+
+// Magnetic Button component
+function MagneticButton({ children, className, href }: { children: React.ReactNode; className?: string; href: string }) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 280, damping: 22 });
+  const springY = useSpring(y, { stiffness: 280, damping: 22 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    x.set((e.clientX - cx) * 0.35);
+    y.set((e.clientY - cy) * 0.35);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.a
+      ref={ref}
+      href={href}
+      style={{ x: springX, y: springY }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={className}
+    >
+      {children}
+    </motion.a>
+  );
+}
+
+// Animated scroll-cue chevron
 export function Hero() {
-
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -11,114 +51,171 @@ export function Hero() {
     offset: ["start start", "end start"],
   });
 
-  // Parallax transforms for headline lines as user scrolls down
-  const yParallaxFast = useTransform(scrollYProgress, [0, 1], [0, -70]);
-  const yParallaxSlow = useTransform(scrollYProgress, [0, 1], [0, -35]);
+  const leftY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const rightY = useTransform(scrollYProgress, [0, 1], [0, -30]);
+
+  const words1 = ["Solving", "problems,"];
+  const words2 = ["with", "digital", "solutions."];
 
   return (
     <section
       id="top"
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center pt-36 pb-24 px-6 overflow-hidden select-none bg-[#050708] text-[#FDFBF7]"
+      className="relative overflow-hidden select-none bg-transparent text-[#0D2626] lg:min-h-screen flex flex-col justify-center"
     >
-      {/* Procedural Animated Cotton Plant Background Layer */}
-      <HeroBackground />
+      {/* RIGHT PANEL — background visual fills entire section behind */}
+      <div className="absolute inset-0 z-0">
+        <HeroBackground />
+      </div>
 
-      {/* Main Content Container */}
-      <div className="relative z-10 max-w-5xl text-center space-y-5 sm:space-y-8">
+      {/* SPLIT GRID */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-6 sm:px-10 lg:px-12 grid grid-cols-1 lg:grid-cols-2 lg:min-h-screen items-center pt-24 sm:pt-28 lg:pt-28 pb-10 sm:pb-14 lg:pb-16 gap-8 lg:gap-12">
 
-        
-        {/* 1. Eyebrow badge stagger reveal */}
+        {/* LEFT PANEL — text content */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-flex items-center gap-2 rounded-full border border-[#14B8A6]/30 bg-[#14B8A6]/10 backdrop-blur-md px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#2DD4BF] shadow-sm"
+          style={{ y: leftY }}
+          className="flex flex-col justify-center py-2"
         >
-          <span className="w-2 h-2 rounded-full bg-[#2DD4BF] animate-pulse" />
-          FREELANCE DIGITAL STUDIO
-        </motion.div>
+          {/* Eyebrow */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="inline-flex items-center gap-2 rounded-full border border-[#0D9488]/40 bg-[#0D9488]/10 backdrop-blur-md px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-[#0D9488] mb-5 w-fit"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0D9488] animate-pulse" />
+            Freelance Digital Studio
+          </motion.div>
 
-        {/* 2 & 3. Word-by-Word Stagger Reveal Headline with Scroll Parallax */}
-        <motion.div style={{ y: yParallaxSlow }} className="text-center max-w-4xl mx-auto">
-          <h1 className="font-editorial text-4xl sm:text-7xl md:text-8xl tracking-tight text-[#FDFBF7] leading-[1.05] text-center">
-            {/* Line 1 */}
-            <span className="block">
-              {["Solving", "problems,"].map((word, i) => (
-                <span key={i} className="inline-block overflow-hidden mr-2 sm:mr-4">
-                  <motion.span
-                    initial={{ y: "110%", opacity: 0 }}
-                    animate={{ y: "0%", opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.65 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                    className="inline-block"
-                  >
-                    {word}
-                  </motion.span>
-                </span>
+          {/* Headline */}
+          <div className="mb-5">
+            <h1 className="font-editorial text-4xl sm:text-5xl md:text-6xl lg:text-[3.25rem] xl:text-[3.85rem] leading-[1.12] sm:leading-[1.1] text-[#0D2626]">
+              <span className="block mb-1 sm:whitespace-nowrap">
+                {words1.map((word, i) => (
+                  <span key={i} className="inline-block overflow-hidden mr-2.5 sm:mr-3.5">
+                    <motion.span
+                      initial={{ y: "110%", opacity: 0 }}
+                      animate={{ y: "0%", opacity: 1 }}
+                      transition={{ duration: 0.85, delay: 0.55 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                      className="inline-block"
+                    >
+                      {word}
+                    </motion.span>
+                  </span>
+                ))}
+              </span>
+              <span className="block italic text-[#0D9488] sm:whitespace-nowrap">
+                {words2.map((word, i) => (
+                  <span key={i} className="inline-block overflow-hidden mr-2.5 sm:mr-3.5">
+                    <motion.span
+                      initial={{ y: "110%", opacity: 0 }}
+                      animate={{ y: "0%", opacity: 1 }}
+                      transition={{ duration: 0.85, delay: 0.78 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                      className="inline-block"
+                    >
+                      {word}
+                    </motion.span>
+                  </span>
+                ))}
+              </span>
+            </h1>
+          </div>
+
+          {/* Sub-copy */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.15, ease: [0.16, 1, 0.3, 1] }}
+            className="text-sm sm:text-base lg:text-lg text-[#3D6060] leading-relaxed max-w-lg mb-8"
+          >
+            Zauqode crafts thoughtfully designed websites for businesses, celebrations,
+            and personal brands — where taste meets digital.
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.4, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4"
+          >
+            {/* Magnetic primary CTA */}
+            <MagneticButton
+              href="#pricing"
+              className="liquid-glass-dark px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-xl transition-all duration-300 text-center"
+            >
+              View Pricing
+            </MagneticButton>
+
+            {/* Secondary CTA */}
+            <MagneticButton
+              href="#contact"
+              className="liquid-glass px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-[#0D2626] shadow-lg transition-all duration-300 text-center"
+            >
+              Start a Project →
+            </MagneticButton>
+          </motion.div>
+
+          {/* Trust line */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.9, duration: 0.7 }}
+            className="mt-8 flex items-center gap-3 text-xs text-[#3D6060]"
+          >
+            <span className="flex -space-x-1">
+              {["#0D9488", "#136262", "#0F6B6B"].map((c, i) => (
+                <span key={i} className="w-6 h-6 rounded-full border-2 border-white/80" style={{ background: c }} />
               ))}
             </span>
+            <span>Trusted by businesses &amp; creators across India</span>
+          </motion.div>
 
-            {/* Line 2 */}
-            <span className="block italic text-[#2DD4BF] mt-1 sm:mt-2">
-              {["with", "digital", "solutions."].map((word, i) => (
-                <span key={i} className="inline-block overflow-hidden mr-2 sm:mr-4">
-                  <motion.span
-                    initial={{ y: "110%", opacity: 0 }}
-                    animate={{ y: "0%", opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.9 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                    className="inline-block"
-                  >
-                    {word}
-                  </motion.span>
-                </span>
-              ))}
-            </span>
-          </h1>
+          {/* Mobile Illustration */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:hidden mt-8 max-w-[280px] sm:max-w-xs mx-auto relative"
+          >
+            <div className="liquid-glass-card p-2.5 rounded-2xl border border-[#0D9488]/20 shadow-xl overflow-hidden">
+              <img
+                src={heroDeveloperImg}
+                alt="Web Developer & Designer"
+                className="w-full h-auto object-cover rounded-xl"
+              />
+            </div>
+          </motion.div>
         </motion.div>
 
-        {/* 4. Subtext Line-by-Line Stagger Reveal */}
-        <div className="max-w-2xl mx-auto text-sm sm:text-lg text-[#94A3B8] font-normal leading-relaxed text-center space-y-1">
-          <div className="overflow-hidden">
-            <motion.p
-              initial={{ y: "100%", opacity: 0 }}
-              animate={{ y: "0%", opacity: 1 }}
-              transition={{ duration: 0.7, delay: 1.25, ease: [0.16, 1, 0.3, 1] }}
-            >
-              Zauqode creates thoughtfully designed digital products
-            </motion.p>
-          </div>
-          <div className="overflow-hidden">
-            <motion.p
-              initial={{ y: "100%", opacity: 0 }}
-              animate={{ y: "0%", opacity: 1 }}
-              transition={{ duration: 0.7, delay: 1.38, ease: [0.16, 1, 0.3, 1] }}
-            >
-              and websites that solve real business challenges.
-            </motion.p>
-          </div>
-        </div>
-
-        {/* 5. Dual Magnetic CTA Buttons stagger reveal */}
+        {/* RIGHT PANEL — Desktop Bespoke Illustration */}
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6"
+          style={{ y: rightY }}
+          className="hidden lg:flex items-center justify-center py-4"
         >
-          <a
-            href="#work"
-            className="liquid-glass-dark px-8 py-4 text-xs font-bold uppercase tracking-widest text-white shadow-xl hover:scale-[1.03] transition-all duration-300"
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92, x: 40 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ duration: 1.1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-md xl:max-w-lg"
           >
-            Explore My Work
-          </a>
+            {/* Ambient teal glow behind illustration */}
+            <div className="absolute -inset-4 bg-gradient-to-tr from-[#0D9488]/20 via-[#2DD4BF]/25 to-transparent rounded-3xl blur-2xl -z-10 pointer-events-none" />
 
-          <a
-            href="#contact"
-            className="liquid-glass px-8 py-4 text-xs font-bold uppercase tracking-widest text-[#FDFBF7] shadow-lg hover:scale-[1.03] transition-all duration-300"
-          >
-            Start a Project
-          </a>
+            {/* Framed illustration card */}
+            <div className="liquid-glass-card p-3 sm:p-4 rounded-3xl border border-[#0D9488]/20 shadow-2xl overflow-hidden group">
+              <div className="relative rounded-2xl overflow-hidden bg-white/70">
+                <img
+                  src={heroDeveloperImg}
+                  alt="Zauqode — Web Design & Development"
+                  className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                />
 
+                {/* Subtle sheen overlay */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#0D9488]/5 via-transparent to-white/20 pointer-events-none" />
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

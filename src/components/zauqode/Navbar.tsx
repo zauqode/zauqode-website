@@ -5,8 +5,8 @@ import zauqodeLogo from "../../assets/Logos/zauqode-logo.png";
 
 const navLinks = [
   { name: "Home", href: "#top" },
-  { name: "Services", href: "#services" },
-  { name: "Work", href: "#work" },
+  { name: "About", href: "#about" },
+  { name: "Pricing", href: "#pricing" },
   { name: "Process", href: "#process" },
 ];
 
@@ -20,13 +20,19 @@ export function Navbar() {
     const isScrolled = latest > 40;
     if (scrolled !== isScrolled) setScrolled(isScrolled);
 
+    // If near top, mark Home as active
+    if (latest < 200) {
+      if (activeSection !== "top") setActiveSection("top");
+      return;
+    }
+
     // Dynamic active section detection
-    const sections = ["top", "services", "work", "process", "contact"];
+    const sections = ["top", "about", "pricing", "process", "faq", "contact"];
     for (const section of sections) {
       const el = document.getElementById(section);
       if (el) {
         const rect = el.getBoundingClientRect();
-        if (rect.top <= 300 && rect.bottom >= 150) {
+        if (rect.top <= 260 && rect.bottom >= 120) {
           if (activeSection !== section) setActiveSection(section);
           break;
         }
@@ -38,7 +44,7 @@ export function Navbar() {
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#050505]/85 backdrop-blur-md border-b border-[#2DD4BF]/10 py-4 shadow-xl"
+          ? "bg-white/80 backdrop-blur-md border-b border-[#0D9488]/15 py-4 shadow-lg shadow-teal-100/30"
           : "bg-transparent py-6"
       }`}
     >
@@ -55,13 +61,13 @@ export function Navbar() {
             alt="ZAUQODE"
             className="h-8 sm:h-9 w-auto object-contain transition-transform duration-500 group-hover:scale-105 filter drop-shadow-md"
           />
-          <span className="font-alice text-xl sm:text-2xl tracking-[0.25em] text-[#2DD4BF] font-normal">
+          <span className="font-alice text-xl sm:text-2xl tracking-[0.25em] text-[#0D9488] font-normal">
             ZAUQODE
           </span>
         </a>
 
-        {/* Desktop Nav Links with Shared LayoutId Active Pill */}
-        <div className="hidden md:flex items-center gap-1 bg-[#050505]/40 p-1.5 rounded-full backdrop-blur-md">
+        {/* Desktop Nav Links with Minimal Underline Draw */}
+        <div className="hidden md:flex items-center gap-8 lg:gap-10">
           {navLinks.map((link) => {
             const isActive = activeSection === link.href.replace("#", "");
             return (
@@ -69,18 +75,11 @@ export function Navbar() {
                 key={link.name}
                 href={link.href}
                 data-cursor="button"
-                className={`relative px-4 py-1.5 text-xs font-semibold uppercase tracking-widest transition-colors duration-300 ${
-                  isActive ? "text-[#2DD4BF]" : "text-[#94A3B8] hover:text-[#FDFBF7]"
+                className={`nav-link-underline text-xs font-semibold uppercase tracking-widest ${
+                  isActive ? "active" : ""
                 }`}
               >
-                {isActive && (
-                  <motion.div
-                    layoutId="activeNavPill"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    className="absolute inset-0 bg-[#136262]/60 rounded-full shadow-inner border border-[#2DD4BF]/50"
-                  />
-                )}
-                <span className="relative z-10">{link.name}</span>
+                {link.name}
               </a>
             );
           })}
@@ -101,7 +100,7 @@ export function Navbar() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden glass-button-secondary rounded-full p-2.5 text-[#2DD4BF]"
+            className="md:hidden glass-button-secondary rounded-full p-2.5 text-[#0D9488]"
             aria-label="Toggle Menu"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -121,14 +120,14 @@ export function Navbar() {
           initial={{ opacity: 0, scale: 0.95, y: -10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: -10 }}
-          className="pointer-events-auto absolute top-20 left-4 right-4 glass-card rounded-3xl p-6 md:hidden flex flex-col gap-4 shadow-2xl z-50 border-white/20 bg-[#080E0D]/95 backdrop-blur-2xl text-[#FDFBF7]"
+          className="pointer-events-auto absolute top-20 left-4 right-4 glass-card rounded-3xl p-6 md:hidden flex flex-col gap-4 shadow-2xl z-50 border-[#0D9488]/20 bg-white/95 backdrop-blur-2xl text-[#0D2626]"
         >
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className="text-base font-semibold text-[#FDFBF7] hover:text-[#2DD4BF] transition-colors py-2 border-b border-white/05"
+              className="text-base font-semibold text-[#0D2626] hover:text-[#0D9488] transition-colors py-2 border-b border-[#0D9488]/10"
             >
               {link.name}
             </a>
