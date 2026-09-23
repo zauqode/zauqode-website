@@ -31,10 +31,12 @@ function FloatingInput({
 }) {
   const [focused, setFocused] = useState(false);
   const active = focused || value.length > 0;
+  const inputId = `input-${label.toLowerCase().replace(/[^a-z0-9]/g, "-")}`;
 
   return (
     <div className="relative">
       <input
+        id={inputId}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -42,9 +44,10 @@ function FloatingInput({
         onBlur={() => setFocused(false)}
         required={required}
         placeholder={placeholder}
-        className="w-full bg-white/40 backdrop-blur-sm border border-white/50 rounded-xl px-4 pt-6 pb-2.5 text-sm text-[#0D2626] focus:outline-none focus:border-[#0D9488]/60 focus:bg-white/60 transition-all duration-300 peer"
+        className="w-full bg-white/40 backdrop-blur-sm border border-white/50 rounded-xl px-4 pt-6 pb-2.5 text-base sm:text-sm text-[#0D2626] focus:outline-none focus:border-[#0D9488]/60 focus:bg-white/60 transition-all duration-300 peer min-h-[52px]"
       />
       <label
+        htmlFor={inputId}
         className={`absolute left-4 pointer-events-none transition-all duration-200 font-medium ${
           active
             ? "top-2 text-[10px] uppercase tracking-wider text-[#0D9488]"
@@ -166,10 +169,12 @@ function FloatingTextarea({
 }) {
   const [focused, setFocused] = useState(false);
   const active = focused || value.length > 0;
+  const textareaId = `textarea-${label.toLowerCase().replace(/[^a-z0-9]/g, "-")}`;
 
   return (
     <div className="relative">
       <textarea
+        id={textareaId}
         rows={4}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -177,9 +182,10 @@ function FloatingTextarea({
         onBlur={() => setFocused(false)}
         required={required}
         placeholder=" "
-        className="w-full bg-white/40 backdrop-blur-sm border border-white/50 rounded-xl px-4 pt-6 pb-2.5 text-sm text-[#0D2626] focus:outline-none focus:border-[#0D9488]/60 focus:bg-white/60 transition-all duration-300 resize-none"
+        className="w-full bg-white/40 backdrop-blur-sm border border-white/50 rounded-xl px-4 pt-6 pb-2.5 text-base sm:text-sm text-[#0D2626] focus:outline-none focus:border-[#0D9488]/60 focus:bg-white/60 transition-all duration-300 resize-none min-h-[110px]"
       />
       <label
+        htmlFor={textareaId}
         className={`absolute left-4 pointer-events-none transition-all duration-200 font-medium ${
           active
             ? "top-2 text-[10px] uppercase tracking-wider text-[#0D9488]"
@@ -238,7 +244,7 @@ export function ContactFooter() {
         backgroundSize: "150px",
       }} />
 
-      <div className="pt-8 sm:pt-10 lg:pt-12 pb-12 sm:pb-16 px-6 max-w-7xl mx-auto">
+      <div className="pt-8 sm:pt-10 lg:pt-12 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] px-4 sm:px-6 max-w-7xl mx-auto">
         {/* Large CTA header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -247,7 +253,7 @@ export function ContactFooter() {
           className="text-center max-w-4xl mx-auto mb-6 sm:mb-8"
         >
           <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#0D9488]">Start a Project</span>
-          <h2 className="font-editorial text-4xl sm:text-6xl lg:text-7xl text-[#0D2626] mt-2 leading-[1.05]">
+          <h2 className="font-editorial text-[clamp(2.15rem,6vw,4.5rem)] text-[#0D2626] mt-2 leading-[1.05]">
             Have something
             <br />
             <span className="italic text-[#0D9488]">in mind?</span>
@@ -263,7 +269,7 @@ export function ContactFooter() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.9, delay: 0.15 }}
-          className="liquid-glass-card max-w-2xl mx-auto p-6 sm:p-8 mb-10 sm:mb-12"
+          className="liquid-glass-card max-w-2xl mx-auto p-5 sm:p-8 mb-10 sm:mb-12"
         >
           {submitted ? (
             <motion.div

@@ -17,7 +17,7 @@ export function WhatsAppFloat() {
       initial={{ opacity: 0, scale: 0.5, y: 40 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ delay: 2.5, duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
-      className="fixed bottom-6 right-6 z-[999] flex items-center gap-3"
+      className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-[calc(1.25rem+env(safe-area-inset-right,0px))] z-[999] flex items-center gap-3"
     >
       {/* Tooltip */}
       <AnimatePresence>
@@ -44,6 +44,7 @@ export function WhatsAppFloat() {
           href={`https://wa.me/${WHATSAPP_RAW}`}
           target="_blank"
           rel="noreferrer"
+          aria-label="Direct WhatsApp inquiry"
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
           whileHover={{ scale: 1.1 }}

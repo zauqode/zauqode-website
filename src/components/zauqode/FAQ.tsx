@@ -46,7 +46,8 @@ function AccordionItem({ item, defaultOpen = false }: { item: typeof faqs[0]; de
     <div className="border-b border-[#0D9488]/15 last:border-none">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between gap-4 py-5 text-left group"
+        aria-expanded={open}
+        className="w-full flex items-center justify-between gap-3 sm:gap-4 py-4 sm:py-5 text-left group min-h-[48px] cursor-pointer"
       >
         <span className="text-sm sm:text-base font-semibold text-[#0D2626] group-hover:text-[#0D9488] transition-colors leading-snug">
           {item.q}
@@ -70,7 +71,7 @@ function AccordionItem({ item, defaultOpen = false }: { item: typeof faqs[0]; de
             transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <p className="text-sm text-[#3D6060] leading-relaxed pb-5 pr-10">
+            <p className="text-xs sm:text-sm text-[#3D6060] leading-relaxed pb-4 sm:pb-5 pr-2 sm:pr-8">
               {item.a}
             </p>
           </motion.div>
@@ -82,7 +83,7 @@ function AccordionItem({ item, defaultOpen = false }: { item: typeof faqs[0]; de
 
 export function FAQ() {
   return (
-    <section id="faq" className="relative py-8 sm:py-10 lg:py-12 px-6 max-w-7xl mx-auto text-[#0D2626]">
+    <section id="faq" className="relative py-8 sm:py-10 lg:py-12 px-4 sm:px-6 max-w-7xl mx-auto text-[#0D2626]">
       {/* Ambient */}
       <div className="absolute bottom-1/3 right-0 w-72 h-72 bg-[#0D9488]/6 rounded-full blur-3xl pointer-events-none -z-10" />
 
@@ -94,7 +95,7 @@ export function FAQ() {
         className="text-center mb-6 sm:mb-8"
       >
         <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#0D9488]">FAQ</span>
-        <h2 className="font-editorial text-3xl sm:text-5xl lg:text-6xl text-[#0D2626] mt-1">
+        <h2 className="font-editorial text-[clamp(1.85rem,5vw,3.5rem)] text-[#0D2626] mt-1">
           Common questions<span className="text-[#0D9488]">.</span>
         </h2>
         <p className="text-xs sm:text-sm text-[#3D6060] mt-2 max-w-sm mx-auto">
@@ -108,7 +109,7 @@ export function FAQ() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7 }}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-12 liquid-glass-card p-8 sm:p-10"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-12 liquid-glass-card p-4 sm:p-8 lg:p-10"
       >
         {/* Left column */}
         <div>

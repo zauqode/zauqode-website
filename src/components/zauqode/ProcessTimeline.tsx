@@ -90,7 +90,7 @@ export function ProcessTimeline() {
       {/* Animated Connector Line — NO CARDS AT ALL */}
       <div className="relative max-w-5xl mx-auto">
         {/* Continuous Horizontal Connector Line (running through center of circles) */}
-        <div className="absolute top-6 sm:top-8 md:top-10 left-[8%] right-[8%] -translate-y-1/2 h-[2px] pointer-events-none z-0">
+        <div className="absolute top-5 sm:top-8 md:top-10 left-[8%] right-[8%] -translate-y-1/2 h-[2px] pointer-events-none z-0">
           {/* Subtle background track */}
           <div className="absolute inset-0 bg-[#0D9488]/20 rounded-full" />
 
@@ -103,12 +103,12 @@ export function ProcessTimeline() {
           {/* Traveling glowing pulse orb at the head of the drawn line */}
           <motion.div
             style={{ left: orbLeft }}
-            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white border-2 border-[#0D9488] shadow-[0_0_10px_rgba(13,148,136,0.9)]"
+            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-white border-2 border-[#0D9488] shadow-[0_0_10px_rgba(13,148,136,0.9)]"
           />
         </div>
 
         {/* 5 Icons in Circles Grid (Fluid across all screen sizes, NO scrollbar) */}
-        <div className="grid grid-cols-5 relative z-10 gap-1 sm:gap-4">
+        <div className="grid grid-cols-5 relative z-10 gap-0.5 sm:gap-4">
           {steps.map((step, idx) => {
             const Icon = step.icon;
             const isCurrent = currentIdx === idx;
@@ -117,7 +117,7 @@ export function ProcessTimeline() {
             return (
               <div
                 key={step.num}
-                className="flex flex-col items-center text-center px-1 sm:px-2 group cursor-pointer"
+                className="flex flex-col items-center text-center px-0.5 sm:px-2 group cursor-pointer min-w-0"
                 onMouseEnter={() => setHoveredIdx(idx)}
                 onMouseLeave={() => setHoveredIdx(null)}
                 onClick={() => setActiveIdx(idx)}
@@ -131,10 +131,10 @@ export function ProcessTimeline() {
                 aria-label={`Step ${step.num}: ${step.name}`}
               >
                 {/* Icon in Circle with Gradient Royal Glow */}
-                <div className="relative mb-3 sm:mb-4">
+                <div className="relative mb-2 sm:mb-4">
                   {/* Ambient Royal Glow Aura behind node */}
                   <div
-                    className={`absolute -inset-2 sm:-inset-3 rounded-full blur-xl transition-opacity duration-500 pointer-events-none ${
+                    className={`absolute -inset-1.5 sm:-inset-3 rounded-full blur-lg sm:blur-xl transition-opacity duration-500 pointer-events-none ${
                       isCurrent
                         ? "opacity-100 bg-gradient-to-tr from-[#0D9488]/70 via-[#14B8A6]/60 to-[#2DD4BF]/70 scale-125"
                         : isPassed
@@ -147,7 +147,7 @@ export function ProcessTimeline() {
                   {isCurrent && (
                     <motion.div
                       layoutId="activeStepRing"
-                      className="absolute -inset-2 sm:-inset-2.5 rounded-full border-2 border-[#2DD4BF]/80 bg-[#0D9488]/15 animate-pulse pointer-events-none shadow-[0_0_15px_rgba(45,212,191,0.6)]"
+                      className="absolute -inset-1.5 sm:-inset-2.5 rounded-full border-2 border-[#2DD4BF]/80 bg-[#0D9488]/15 animate-pulse pointer-events-none shadow-[0_0_15px_rgba(45,212,191,0.6)]"
                       transition={{ type: "spring", stiffness: 350, damping: 25 }}
                     />
                   )}
@@ -155,15 +155,15 @@ export function ProcessTimeline() {
                   {/* Circular Node with Royal Gradient Background */}
                   <motion.div
                     animate={{
-                      scale: isCurrent ? 1.1 : 1,
+                      scale: isCurrent ? 1.08 : 1,
                     }}
                     transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                    className={`relative w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
+                    className={`relative w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105 ${
                       isCurrent
-                        ? "text-white border-2 border-[#5EEAD4] shadow-[0_0_30px_rgba(20,184,166,0.7),0_0_60px_rgba(13,148,136,0.35),inset_0_2px_4px_rgba(255,255,255,0.6)]"
+                        ? "text-white border-2 border-[#5EEAD4] shadow-[0_0_20px_rgba(20,184,166,0.6),inset_0_2px_4px_rgba(255,255,255,0.6)]"
                         : isPassed
-                        ? "text-white border-2 border-[#2DD4BF]/50 shadow-[0_6px_20px_rgba(9,38,34,0.4),0_0_15px_rgba(13,148,136,0.3),inset_0_1px_2px_rgba(255,255,255,0.35)]"
-                        : "text-[#0D2626] border-2 border-[#0D9488]/35 shadow-[0_4px_16px_rgba(13,148,136,0.18),inset_0_1px_3px_#ffffff]"
+                        ? "text-white border-2 border-[#2DD4BF]/50 shadow-[0_4px_16px_rgba(9,38,34,0.3),inset_0_1px_2px_rgba(255,255,255,0.35)]"
+                        : "text-[#0D2626] border-2 border-[#0D9488]/35 shadow-[0_3px_12px_rgba(13,148,136,0.15),inset_0_1px_3px_#ffffff]"
                     }`}
                     style={{
                       background: isCurrent
@@ -173,17 +173,17 @@ export function ProcessTimeline() {
                         : "radial-gradient(circle at 35% 25%, rgba(255,255,255,0.9) 0%, transparent 60%), linear-gradient(135deg, #FFFFFF 0%, #F0FDF9 50%, #CCFBF1 100%)",
                     }}
                   >
-                    <Icon className="w-5 h-5 sm:w-7 sm:h-7 stroke-[2] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]" />
+                    <Icon className="w-4 h-4 sm:w-7 sm:h-7 stroke-[2] filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.35)]" />
                   </motion.div>
 
                   {/* Step Number Tag with Royal Jewel Styling */}
                   <span
-                    className={`absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 text-[8px] sm:text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded-full border shadow-md transition-all duration-300 ${
+                    className={`absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 text-[8px] sm:text-[10px] font-mono font-extrabold px-1 sm:px-1.5 py-0.2 sm:py-0.5 rounded-full border shadow-xs transition-all duration-300 ${
                       isCurrent
-                        ? "bg-gradient-to-r from-[#0D2626] to-[#0D9488] text-[#5EEAD4] border-[#5EEAD4] shadow-[0_0_10px_rgba(94,234,212,0.6)]"
+                        ? "bg-gradient-to-r from-[#0D2626] to-[#0D9488] text-[#5EEAD4] border-[#5EEAD4]"
                         : isPassed
-                        ? "bg-gradient-to-r from-[#0D2626] to-[#0F766E] text-white border-[#2DD4BF]/60 shadow-[0_0_8px_rgba(45,212,191,0.4)]"
-                        : "bg-white text-[#0D9488] border-[#0D9488]/40 shadow-xs"
+                        ? "bg-gradient-to-r from-[#0D2626] to-[#0F766E] text-white border-[#2DD4BF]/60"
+                        : "bg-white text-[#0D9488] border-[#0D9488]/40"
                     }`}
                   >
                     {step.num}
@@ -192,15 +192,15 @@ export function ProcessTimeline() {
 
                 {/* Title Below Icon */}
                 <h3
-                  className={`text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider transition-colors duration-200 ${
+                  className={`text-[10px] sm:text-sm md:text-base font-bold uppercase tracking-wider transition-colors duration-200 truncate max-w-full ${
                     isCurrent ? "text-[#0D9488]" : "text-[#0D2626]"
                   }`}
                 >
                   {step.name}
                 </h3>
 
-                {/* Small Description — Fades in only when that step is active/hovered */}
-                <div className="mt-1 sm:mt-2 min-h-[50px] sm:min-h-[60px] flex items-start justify-center">
+                {/* Desktop Description (hidden on mobile, shown on tablet/desktop) */}
+                <div className="hidden sm:flex mt-1 sm:mt-2 min-h-[50px] sm:min-h-[60px] items-start justify-center">
                   <motion.p
                     initial={false}
                     animate={{
@@ -217,6 +217,22 @@ export function ProcessTimeline() {
             );
           })}
         </div>
+
+        {/* Mobile Dedicated Active Step Detail Card */}
+        <motion.div
+          key={currentIdx}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="sm:hidden mt-6 text-center p-4 rounded-2xl liquid-glass-card border border-[#0D9488]/20 min-h-[80px] flex flex-col justify-center items-center shadow-xs"
+        >
+          <span className="text-[11px] font-bold text-[#0D9488] uppercase tracking-widest mb-1">
+            Step {steps[currentIdx].num} • {steps[currentIdx].name}
+          </span>
+          <p className="text-xs text-[#3D6060] leading-relaxed max-w-xs mx-auto">
+            {steps[currentIdx].desc}
+          </p>
+        </motion.div>
       </div>
     </section>
   );

@@ -18,6 +18,7 @@ const description =
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { name: "viewport", content: "width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" },
       { title },
       { name: "description", content: description },
       { property: "og:title", content: title },

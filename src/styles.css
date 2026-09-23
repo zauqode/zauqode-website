@@ -256,6 +256,8 @@
     background-color: #f5fdf9;
     color: #0D2626;
     font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
@@ -264,6 +266,18 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* Prevent iOS Safari from auto-zooming inputs on focus */
+  input, textarea, select {
+    font-size: 16px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
   }
 
   h1, h2, h3, .font-editorial {
@@ -273,12 +287,40 @@
   }
 }
 
-/* Reduced Motion Fallbacks */
+/* Mobile Performance Tuning: Optimize continuous sheen animations & blurs on touch devices */
+@media (max-width: 768px) {
+  .liquid-glass-card {
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+  }
+  .liquid-glass-card::before {
+    animation: none;
+  }
+  .liquid-glass-card:active::before {
+    animation: lg-card-sheen 1.2s ease-in-out forwards;
+  }
+  .liquid-glass-dark::after,
+  .liquid-glass::after {
+    animation: none;
+  }
+  .liquid-glass-dark:active::after,
+  .liquid-glass:active::after {
+    animation: liquid-sheen-sweep 1.2s ease-in-out forwards;
+  }
+}
+
+/* Comprehensive Reduced Motion Fallbacks */
 @media (prefers-reduced-motion: reduce) {
-  .liquid-glass, .glass-card {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .liquid-glass, .glass-card, .liquid-glass-card {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    background: rgba(255, 255, 255, 0.9) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
   }
   .liquid-glass-dark {
     backdrop-filter: none !important;

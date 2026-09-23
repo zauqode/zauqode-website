@@ -61,7 +61,7 @@ export function Hero() {
     <section
       id="top"
       ref={containerRef}
-      className="relative overflow-hidden select-none bg-transparent text-[#0D2626] lg:min-h-screen flex flex-col justify-center"
+      className="relative overflow-hidden select-none bg-transparent text-[#0D2626] min-h-[100dvh] flex flex-col justify-center"
     >
       {/* RIGHT PANEL — background visual fills entire section behind */}
       <div className="absolute inset-0 z-0">
@@ -69,7 +69,7 @@ export function Hero() {
       </div>
 
       {/* SPLIT GRID */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-6 sm:px-10 lg:px-12 grid grid-cols-1 lg:grid-cols-2 lg:min-h-screen items-center pt-24 sm:pt-28 lg:pt-28 pb-10 sm:pb-14 lg:pb-16 gap-8 lg:gap-12">
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-10 lg:px-12 grid grid-cols-1 lg:grid-cols-2 min-h-[100dvh] items-center pt-[calc(5.5rem+env(safe-area-inset-top,0px))] sm:pt-28 lg:pt-28 pb-10 sm:pb-14 lg:pb-16 gap-8 lg:gap-12">
 
         {/* LEFT PANEL — text content */}
         <motion.div
@@ -81,18 +81,18 @@ export function Hero() {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 rounded-full border border-[#0D9488]/40 bg-[#0D9488]/10 backdrop-blur-md px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-[#0D9488] mb-5 w-fit"
+            className="inline-flex items-center gap-2 rounded-full border border-[#0D9488]/40 bg-[#0D9488]/10 backdrop-blur-md px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-[#0D9488] mb-4 sm:mb-5 w-fit"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#0D9488] animate-pulse" />
             Freelance Digital Studio
           </motion.div>
 
-          {/* Headline */}
-          <div className="mb-5">
-            <h1 className="font-editorial text-4xl sm:text-5xl md:text-6xl lg:text-[3.25rem] xl:text-[3.85rem] leading-[1.12] sm:leading-[1.1] text-[#0D2626]">
+          {/* Headline with fluid clamp typography */}
+          <div className="mb-4 sm:mb-5">
+            <h1 className="font-editorial text-[clamp(2.15rem,6.5vw,3.85rem)] leading-[1.12] sm:leading-[1.1] text-[#0D2626] break-words">
               <span className="block mb-1 sm:whitespace-nowrap">
                 {words1.map((word, i) => (
-                  <span key={i} className="inline-block overflow-hidden mr-2.5 sm:mr-3.5">
+                  <span key={i} className="inline-block overflow-hidden mr-2 sm:mr-3.5">
                     <motion.span
                       initial={{ y: "110%", opacity: 0 }}
                       animate={{ y: "0%", opacity: 1 }}
@@ -106,7 +106,7 @@ export function Hero() {
               </span>
               <span className="block italic text-[#0D9488] sm:whitespace-nowrap">
                 {words2.map((word, i) => (
-                  <span key={i} className="inline-block overflow-hidden mr-2.5 sm:mr-3.5">
+                  <span key={i} className="inline-block overflow-hidden mr-2 sm:mr-3.5">
                     <motion.span
                       initial={{ y: "110%", opacity: 0 }}
                       animate={{ y: "0%", opacity: 1 }}
@@ -126,23 +126,23 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.15, ease: [0.16, 1, 0.3, 1] }}
-            className="text-sm sm:text-base lg:text-lg text-[#3D6060] leading-relaxed max-w-lg mb-8"
+            className="text-sm sm:text-base lg:text-lg text-[#3D6060] leading-relaxed max-w-lg mb-6 sm:mb-8"
           >
             Zauqode crafts thoughtfully designed websites for businesses, celebrations,
             and personal brands — where taste meets digital.
           </motion.p>
 
-          {/* CTAs */}
+          {/* CTAs with comfortable touch targets */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.4, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4"
+            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto"
           >
             {/* Magnetic primary CTA */}
             <MagneticButton
               href="#pricing"
-              className="liquid-glass-dark px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-xl transition-all duration-300 text-center"
+              className="liquid-glass-dark px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-xl transition-all duration-300 text-center min-h-[46px] flex items-center justify-center"
             >
               View Pricing
             </MagneticButton>
@@ -150,7 +150,7 @@ export function Hero() {
             {/* Secondary CTA */}
             <MagneticButton
               href="#contact"
-              className="liquid-glass px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-[#0D2626] shadow-lg transition-all duration-300 text-center"
+              className="liquid-glass px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-[#0D2626] shadow-lg transition-all duration-300 text-center min-h-[46px] flex items-center justify-center"
             >
               Start a Project →
             </MagneticButton>
@@ -161,9 +161,9 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.9, duration: 0.7 }}
-            className="mt-8 flex items-center gap-3 text-xs text-[#3D6060]"
+            className="mt-6 sm:mt-8 flex items-center gap-3 text-xs text-[#3D6060]"
           >
-            <span className="flex -space-x-1">
+            <span className="flex -space-x-1 flex-shrink-0">
               {["#0D9488", "#136262", "#0F6B6B"].map((c, i) => (
                 <span key={i} className="w-6 h-6 rounded-full border-2 border-white/80" style={{ background: c }} />
               ))}
@@ -171,18 +171,23 @@ export function Hero() {
             <span>Trusted by businesses &amp; creators across India</span>
           </motion.div>
 
-          {/* Mobile Illustration */}
+          {/* Mobile Illustration with aspect ratio to prevent CLS */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:hidden mt-8 max-w-[280px] sm:max-w-xs mx-auto relative"
+            className="lg:hidden mt-7 max-w-[280px] sm:max-w-xs mx-auto relative w-full"
           >
-            <div className="liquid-glass-card p-2.5 rounded-2xl border border-[#0D9488]/20 shadow-xl overflow-hidden">
+            <div className="liquid-glass-card p-2.5 rounded-2xl border border-[#0D9488]/20 shadow-xl overflow-hidden aspect-[4/5]">
               <img
                 src={heroDeveloperImg}
                 alt="Web Developer & Designer"
-                className="w-full h-auto object-cover rounded-xl"
+                width={320}
+                height={400}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+                className="w-full h-full object-cover rounded-xl"
               />
             </div>
           </motion.div>
@@ -204,11 +209,16 @@ export function Hero() {
 
             {/* Framed illustration card */}
             <div className="liquid-glass-card p-3 sm:p-4 rounded-3xl border border-[#0D9488]/20 shadow-2xl overflow-hidden group">
-              <div className="relative rounded-2xl overflow-hidden bg-white/70">
+              <div className="relative rounded-2xl overflow-hidden bg-white/70 aspect-[4/5]">
                 <img
                   src={heroDeveloperImg}
                   alt="Zauqode — Web Design & Development"
-                  className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                  width={480}
+                  height={600}
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
 
                 {/* Subtle sheen overlay */}
