@@ -1,54 +1,45 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import zauqodeLogo from "../../assets/Logos/zauqode-logo.png";
 
 const navLinks = [
-  { name: "Home", href: "#top" },
-  { name: "About", href: "#about" },
-  { name: "Pricing", href: "#pricing" },
-  { name: "Process", href: "#process" },
+  { name: "Home", href: "#hero" },
+  { name: "I Craft", href: "#craft" },
+  { name: "Contact", href: "#contact" },
 ];
 
 export function Navbar() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("top");
+  const [activeSection, setActiveSection] = useState("hero");
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Lock body scroll while mobile menu is open
   useEffect(() => {
     if (mobileOpen) {
-      const originalOverflow = document.body.style.overflow;
+      const original = document.body.style.overflow;
       document.body.style.overflow = "hidden";
-      const handleKeyDown = (e: KeyboardEvent) => {
+      const onKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") setMobileOpen(false);
       };
-      window.addEventListener("keydown", handleKeyDown);
+      window.addEventListener("keydown", onKeyDown);
       return () => {
-        document.body.style.overflow = originalOverflow;
-        window.removeEventListener("keydown", handleKeyDown);
+        document.body.style.overflow = original;
+        window.removeEventListener("keydown", onKeyDown);
       };
     }
   }, [mobileOpen]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    const isScrolled = latest > 30;
-    if (scrolled !== isScrolled) setScrolled(isScrolled);
+    setScrolled(latest > 20);
 
-    // If near top, mark Home as active
-    if (latest < 200) {
-      if (activeSection !== "top") setActiveSection("top");
-      return;
-    }
-
-    // Dynamic active section detection
-    const sections = ["top", "about", "pricing", "wedding-services", "process", "faq", "contact"];
+    const sections = ["hero", "craft", "contact"];
     for (const section of sections) {
       const el = document.getElementById(section);
       if (el) {
         const rect = el.getBoundingClientRect();
-        if (rect.top <= 260 && rect.bottom >= 120) {
-          if (activeSection !== section) setActiveSection(section);
+        if (rect.top <= 240 && rect.bottom >= 80) {
+          setActiveSection(section);
           break;
         }
       }
@@ -59,136 +50,120 @@ export function Navbar() {
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/85 backdrop-blur-md border-b border-[#0D9488]/15 py-3 sm:py-4 shadow-lg shadow-teal-100/30"
-          : "bg-transparent py-4 sm:py-6"
-      } pt-[calc(0.75rem+env(safe-area-inset-top,0px))]`}
+          ? "bg-[#F7F5EF]/95 backdrop-blur-md border-b border-[#0E4847]/10 py-4 shadow-xs"
+          : "bg-[#F7F5EF]/80 backdrop-blur-xs border-b border-[#0E4847]/10 py-5 sm:py-6"
+      }`}
     >
-      <motion.nav
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4 w-full"
-      >
-        {/* Zauqode Brand Logo with Alice Font */}
-        <a href="#top" data-cursor="button" className="flex items-center gap-2.5 sm:gap-3 group">
+      <nav className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 flex items-center justify-between">
+        {/* Left: Brand Wordmark Zauqode® */}
+        <a
+          href="#hero"
+          className="flex items-center gap-2.5 group transition-opacity hover:opacity-85"
+        >
           <img
             src={zauqodeLogo}
-            alt="ZAUQODE"
-            width={36}
-            height={36}
-            className="h-8 sm:h-9 w-auto object-contain transition-transform duration-500 group-hover:scale-105 filter drop-shadow-md"
+            alt="Zauqode"
+            width={26}
+            height={26}
+            className="w-6 h-6 object-contain"
           />
-          <span className="font-alice text-xl sm:text-2xl tracking-[0.25em] text-[#0D9488] font-normal">
-            ZAUQODE
+          <span className="font-alice text-lg sm:text-xl text-[#0E4847] font-normal tracking-wide">
+            Zauqode
           </span>
         </a>
 
-        {/* Desktop Nav Links with Minimal Underline Draw */}
+        {/* Right: Desktop Navigation Links + Circular Action */}
         <div className="hidden md:flex items-center gap-8 lg:gap-10">
-          {navLinks.map((link) => {
-            const isActive = activeSection === link.href.replace("#", "");
-            return (
-              <a
-                key={link.name}
-                href={link.href}
-                data-cursor="button"
-                className={`nav-link-underline text-xs font-semibold uppercase tracking-widest ${
-                  isActive ? "active text-[#0D9488]" : "text-[#0D2626]"
-                }`}
-              >
-                {link.name}
-              </a>
-            );
-          })}
-        </div>
-
-        {/* Action CTA & Mobile Menu Toggle */}
-        <div className="flex items-center gap-2.5 sm:gap-3">
-          <div className="hidden sm:block">
-            <a
-              href="#contact"
-              className="liquid-glass-dark inline-block px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-white shadow-md hover:scale-[1.03] transition-all duration-300"
-            >
-              Start a Project
-            </a>
+          <div className="flex items-center gap-7 lg:gap-9">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href.replace("#", "");
+              return (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className={`text-xs tracking-wide font-medium transition-colors relative py-1 ${
+                    isActive ? "text-[#0E4847] font-semibold" : "text-[#0E4847]/70 hover:text-[#0E4847]"
+                  }`}
+                >
+                  {link.name}
+                  {isActive && (
+                    <motion.span
+                      layoutId="header-active-line"
+                      className="absolute -bottom-1.5 left-0 right-0 h-[1.5px] bg-[#0E8F91]"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </a>
+              );
+            })}
           </div>
 
-          {/* Mobile Menu Toggle Button (Touch Friendly 44x44px minimum target) */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden w-11 h-11 rounded-full flex items-center justify-center bg-white/70 backdrop-blur-md border border-[#0D9488]/25 text-[#0D9488] hover:bg-[#0D9488]/10 transition-colors shadow-xs"
-            aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
-            aria-expanded={mobileOpen}
+          {/* Minimal circular menu / quick contact trigger */}
+          <a
+            href="#contact"
+            className="w-9 h-9 rounded-full border border-[#0E4847]/20 flex items-center justify-center text-[#0E4847] hover:border-[#0E4847] hover:bg-[#0E4847] hover:text-[#F7F5EF] transition-all duration-300"
+            title="Get in touch"
+            aria-label="Contact Studio"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              {mobileOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M4 8h16M4 16h16" />
-              )}
-            </svg>
-          </button>
+            <ArrowUpRight className="w-4 h-4" />
+          </a>
         </div>
-      </motion.nav>
 
-      {/* Mobile Expanding Glass Panel & Full Backdrop */}
+        {/* Mobile Hamburger Toggle (Circular Minimal Control) */}
+        <button
+          type="button"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="md:hidden w-10 h-10 rounded-full border border-[#0E4847]/20 flex items-center justify-center text-[#0E4847] hover:bg-[#0E4847]/5 focus:outline-none transition-colors"
+          aria-label="Toggle navigation menu"
+        >
+          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
+      </nav>
+
+      {/* Refined Full-Screen Mobile Navigation Overlay */}
       <AnimatePresence>
         {mobileOpen && (
-          <>
-            {/* Backdrop overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 bg-black/35 backdrop-blur-xs z-40 md:hidden"
-              aria-hidden="true"
-            />
-
-            {/* Floating Drawer Card */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: -12 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: -12 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="pointer-events-auto absolute top-full mt-2 left-4 right-4 rounded-3xl p-6 md:hidden flex flex-col gap-3 shadow-2xl z-50 border border-[#0D9488]/25 bg-white/95 backdrop-blur-2xl text-[#0D2626]"
-            >
-              <div className="flex flex-col space-y-1">
-                {navLinks.map((link) => {
-                  const isActive = activeSection === link.href.replace("#", "");
-                  return (
-                    <a
-                      key={link.name}
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className={`text-base font-semibold transition-colors py-3 px-3 rounded-xl flex items-center justify-between min-h-[44px] ${
-                        isActive
-                          ? "bg-[#0D9488]/10 text-[#0D9488] font-bold"
-                          : "text-[#0D2626] hover:bg-[#0D9488]/5"
-                      }`}
-                    >
-                      <span>{link.name}</span>
-                      <span className="text-xs text-[#0D9488]">→</span>
-                    </a>
-                  );
-                })}
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="md:hidden fixed inset-0 top-[69px] bg-[#F7F5EF] px-8 py-12 flex flex-col justify-between z-40"
+          >
+            <div className="space-y-6">
+              <span className="text-xs tracking-wider text-[#0E8F91] font-semibold block">
+                Menu
+              </span>
+              <div className="flex flex-col space-y-5">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="font-editorial text-3xl text-[#0E4847] hover:text-[#0E8F91] transition-colors py-1.5 border-b border-[#0E4847]/10 flex items-center justify-between group"
+                  >
+                    <span>{link.name}</span>
+                    <ArrowUpRight className="w-4 h-4 text-[#C9A66B] opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </a>
+                ))}
               </div>
+            </div>
 
-              <div className="pt-2 border-t border-[#0D9488]/15 flex flex-col gap-2.5">
-                <a
-                  href="#contact"
-                  onClick={() => setMobileOpen(false)}
-                  className="liquid-glass-dark text-center rounded-full py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-lg min-h-[44px] flex items-center justify-center"
-                >
-                  Start a Project
-                </a>
-              </div>
-            </motion.div>
-          </>
+            <div className="pt-8 border-t border-[#0E4847]/10 space-y-3">
+              <p className="text-xs text-[#0E4847]/60 font-sans">
+                Independent Creative Studio &bull; Worldwide
+              </p>
+              <a
+                href="#contact"
+                onClick={() => setMobileOpen(false)}
+                className="btn-primary w-full text-center"
+              >
+                Let's Create Together
+              </a>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </header>
   );
 }
-

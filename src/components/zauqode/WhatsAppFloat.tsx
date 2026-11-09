@@ -27,9 +27,9 @@ export function WhatsAppFloat() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 10, scale: 0.9 }}
             transition={{ duration: 0.2 }}
-            className="liquid-glass-card px-4 py-2.5 rounded-xl text-xs font-semibold text-[#0D2626] whitespace-nowrap shadow-lg"
+            className="liquid-glass-card px-4 py-2 rounded-full text-xs font-semibold text-[#0D2626] whitespace-nowrap shadow-lg border border-[#0D9488]/30 bg-white/90 backdrop-blur-md"
           >
-            💬 Direct Inquiry
+            ✨ Chat with Atelier
           </motion.div>
         )}
       </AnimatePresence>

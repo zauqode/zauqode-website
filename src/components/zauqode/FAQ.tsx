@@ -1,40 +1,40 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { Sparkles } from "lucide-react";
 
 const faqs = [
   {
     id: 1,
-    q: "How long does a typical website project take?",
-    a: "Most projects are delivered within 7–14 days depending on scope. Starter projects take 5–7 days, Business websites 10–14 days, and complex custom projects are scoped individually with a clear timeline upfront.",
+    q: "How do our guests open and experience the digital invitation?",
+    a: "Your guests simply tap a link sent via WhatsApp, SMS, Instagram, or email. The invitation opens instantly in their browser with fluid unsealing animations, ambient music, and interactive event details. No apps or sign-ups required — 100% seamless across all iPhones and Androids.",
   },
   {
     id: 2,
-    q: "What's included in the price?",
-    a: "Design, development, mobile responsiveness, basic SEO, and deployment are all included. Revision rounds vary by plan. There are no hidden fees — everything is agreed before the project begins.",
+    q: "Can we include our favorite song or background music?",
+    a: "Yes! You can choose any instrumental piece (violin, piano, harp, shehnai), a favorite romantic song, or even a personalized voice greeting. We integrate a subtle audio controller so guests can effortlessly play or mute the soundtrack.",
   },
   {
     id: 3,
-    q: "How many revisions do I get?",
-    a: "Starter includes 2 rounds of revisions, Business includes 3 rounds, and Custom projects include revisions structured to scope. Any extra revision rounds beyond the included package are available with additional charges.",
+    q: "Where do guest RSVP responses go and how do we track them?",
+    a: "Every RSVP submission (attending status, guest count, meal preferences, and heartfelt wishes) is instantly logged in real time into your private, organized Google Sheet. You can monitor your guest list anytime from your phone or computer.",
   },
   {
     id: 4,
-    q: "Are domain, hosting, and database charges included?",
-    a: "No, domain registration, cloud hosting, and database charges are excluded from the project pricing. You maintain 100% direct ownership of your accounts and subscriptions, and Zauqode will guide you through setup and handle all technical deployment.",
+    q: "Can we feature multiple events like Haldi, Sangeet, and Reception?",
+    a: "Absolutely. Our celebration portals elegantly structure multi-day itineraries with separate timings, dress code recommendations, and dedicated 1-tap Google Maps navigation pins for each venue so guests never get lost.",
   },
   {
     id: 5,
-    q: "Do you offer ongoing maintenance?",
-    a: "Yes — available with paid charges (via monthly retainer packages) for content updates, performance monitoring, and feature additions. Ask about this when inquiring.",
+    q: "Can you provide matching printable cards for elder relatives?",
+    a: "Yes. In our Haute Couture Suite, we provide matching 300 DPI print-ready files (Save the Date, Formal Wedding Card, Reception Itinerary) formatted for physical foil stamping and local luxury printing.",
   },
   {
     id: 6,
-    q: "What do I need to get started?",
-    a: "Just a brief about your goals, some reference links if you have them, and a clear idea of what you need. I'll guide you through the rest in our first consultation.",
+    q: "How fast can we receive our invitation for an upcoming date?",
+    a: "Standard delivery is 5–7 business days, with initial design concepts delivered within 48–72 hours. If your celebration date is very close, we offer expedited rush turnaround options.",
   },
 ];
 
-// Split FAQs into two columns
 const half = Math.ceil(faqs.length / 2);
 const leftFaqs = faqs.slice(0, half);
 const rightFaqs = faqs.slice(half);
@@ -64,14 +64,13 @@ function AccordionItem({ item, defaultOpen = false }: { item: typeof faqs[0]; de
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
-            key="content"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <p className="text-xs sm:text-sm text-[#3D6060] leading-relaxed pb-4 sm:pb-5 pr-2 sm:pr-8">
+            <p className="text-xs sm:text-sm text-[#3D6060] pb-4 sm:pb-5 leading-relaxed">
               {item.a}
             </p>
           </motion.div>
@@ -83,71 +82,55 @@ function AccordionItem({ item, defaultOpen = false }: { item: typeof faqs[0]; de
 
 export function FAQ() {
   return (
-    <section id="faq" className="relative py-8 sm:py-10 lg:py-12 px-4 sm:px-6 max-w-7xl mx-auto text-[#0D2626]">
-      {/* Ambient */}
-      <div className="absolute bottom-1/3 right-0 w-72 h-72 bg-[#0D9488]/6 rounded-full blur-3xl pointer-events-none -z-10" />
-
+    <section id="faq" className="relative py-16 sm:py-24 px-4 sm:px-6 max-w-7xl mx-auto text-[#0D2626]">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-center mb-6 sm:mb-8"
-      >
-        <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#0D9488]">FAQ</span>
-        <h2 className="font-editorial text-[clamp(1.85rem,5vw,3.5rem)] text-[#0D2626] mt-1">
-          Common questions<span className="text-[#0D9488]">.</span>
-        </h2>
-        <p className="text-xs sm:text-sm text-[#3D6060] mt-2 max-w-sm mx-auto">
-          Everything you need to know before starting your project.
-        </p>
-      </motion.div>
+      <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="inline-flex items-center gap-2 rounded-full border border-[#0D9488]/30 bg-white/70 backdrop-blur-md px-3.5 py-1 text-[11px] font-bold uppercase tracking-[0.25em] text-[#0D9488] mb-3"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-[#0D9488]" />
+          <span>Atelier Inquiries</span>
+        </motion.div>
 
-      {/* Two-column accordion */}
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7 }}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-12 liquid-glass-card p-4 sm:p-8 lg:p-10"
-      >
-        {/* Left column */}
-        <div>
-          {leftFaqs.map((item, i) => (
-            <AccordionItem key={item.id} item={item} defaultOpen={i === 0} />
+        <motion.h2
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="font-editorial text-[clamp(2.1rem,5vw,3.75rem)] text-[#0D2626] leading-tight"
+        >
+          Frequently asked
+          <br />
+          <span className="italic font-heading text-[#0D9488]">celebration questions.</span>
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="text-sm sm:text-base text-[#3D6060] max-w-lg mx-auto mt-3"
+        >
+          Everything you need to know about crafting your digital invitation suite.
+        </motion.p>
+      </div>
+
+      {/* Two Column Accordion */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10">
+        <div className="liquid-glass-card rounded-3xl p-6 sm:p-8 border border-white/70 shadow-lg bg-white/70 backdrop-blur-xl">
+          {leftFaqs.map((faq, i) => (
+            <AccordionItem key={faq.id} item={faq} defaultOpen={i === 0} />
           ))}
         </div>
-
-        {/* Vertical divider (desktop) */}
-        <div className="hidden lg:block absolute left-1/2 top-12 bottom-12 w-px bg-[#0D9488]/10" />
-
-        {/* Right column */}
-        <div>
-          {rightFaqs.map((item) => (
-            <AccordionItem key={item.id} item={item} />
+        <div className="liquid-glass-card rounded-3xl p-6 sm:p-8 border border-white/70 shadow-lg bg-white/70 backdrop-blur-xl">
+          {rightFaqs.map((faq) => (
+            <AccordionItem key={faq.id} item={faq} />
           ))}
         </div>
-      </motion.div>
-
-      {/* Bottom CTA */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className="text-center mt-10"
-      >
-        <p className="text-sm text-[#3D6060]">
-          Still have questions?{" "}
-          <a
-            href={`https://wa.me/918946077234`}
-            target="_blank"
-            rel="noreferrer"
-            className="text-[#0D9488] font-semibold underline underline-offset-2 hover:no-underline"
-          >
-            Start a direct conversation →
-          </a>
-        </p>
-      </motion.div>
+      </div>
     </section>
   );
 }

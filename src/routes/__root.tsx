@@ -77,16 +77,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#f5fdf9" },
+      { name: "theme-color", content: "#F7F5EF" },
       { name: "format-detection", content: "telephone=no" },
-      { title: "ZAUQODE — Where Taste Meets Digital | Premium Freelance Web Studio" },
+      { title: "Zauqode — Creative Studio & Designer Portfolio" },
       {
         name: "description",
         content:
-          "Zauqode crafts thoughtfully designed websites for businesses, celebrations, and personal portfolios. Where taste meets digital.",
+          "Zauqode is an independent creative studio specialising in bespoke wedding invitation design, wedding websites, brand identities, and modern digital experiences.",
       },
-      { name: "author", content: "ZAUQODE" },
-      { property: "og:site_name", content: "ZAUQODE" },
+      { name: "author", content: "Zauqode" },
+      { property: "og:site_name", content: "Zauqode" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -106,7 +106,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Italiana&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Alice&family=Instrument+Serif:ital@0;1&family=Barlow:wght@400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Alice&family=Antic+Didone&family=Jost:wght@300;400;500&family=Poiret+One&family=Sacramento&family=Allura&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Manrope:wght@300;400;500;600;700&display=swap",
       },
     ],
   }),
@@ -122,6 +122,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+        <title>Zauqode — Creative Studio &amp; Designer Portfolio</title>
         <HeadContent />
       </head>
       <body>
