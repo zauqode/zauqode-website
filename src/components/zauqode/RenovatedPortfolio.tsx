@@ -1214,9 +1214,9 @@ export function RenovatedPortfolio() {
           </section>
 
           {/* Wavy Divider to Contact Section */}
-          <div className="w-full overflow-hidden leading-none block bg-[#005a55] -mb-[2px] relative z-[2]">
+          <div className="w-full overflow-hidden leading-none block bg-transparent -mt-[2px] relative z-[2]">
             <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block" shapeRendering="geometricPrecision">
-              <path d="M-2,25 C320,55 640,5 960,35 C1200,55 1360,20 1442,30 L1442,65 L-2,65 Z" fill="#f9fbf8" />
+              <path d="M-2,-5 L1442,-5 L1442,30 C1360,20 1200,55 960,35 C640,5 320,55 -2,25 Z" fill="#005a55" />
             </svg>
           </div>
 
@@ -1453,7 +1453,7 @@ export function RenovatedPortfolio() {
       })()}
 
       {/* Wavy Divider into Deep Teal Footer */}
-      <div className="w-full overflow-hidden leading-none block bg-[#f9fbf8] -mb-[2px] relative z-[2]">
+      <div className="w-full overflow-hidden leading-none block bg-transparent -mb-[2px] relative z-[2]">
         <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 sm:h-14 block" shapeRendering="geometricPrecision">
           <path d="M-2,20 C360,50 720,5 1080,40 C1260,55 1380,25 1442,30 L1442,65 L-2,65 Z" fill="#005a55" />
         </svg>
