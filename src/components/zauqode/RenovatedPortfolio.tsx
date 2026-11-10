@@ -235,7 +235,7 @@ export function RenovatedPortfolio() {
     works.find((w) => w.id === "01")!,
     works.find((w) => w.id === "06")!,
     works.find((w) => w.id === "11")!,
-    works.find((w) => w.id === "13")!,
+    works.find((w) => w.id === "12")!,
   ].filter(Boolean);
 
   return (
