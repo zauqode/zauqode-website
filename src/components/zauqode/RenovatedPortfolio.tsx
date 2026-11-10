@@ -823,7 +823,7 @@ export function RenovatedPortfolio() {
                   <div className="flex items-center gap-5 sm:gap-6">
                     <span className="font-heading text-2xl text-[#b8893c]">01</span>
                     <div>
-                      <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">Bespoke Invitations</h3>
+                      <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">Bespoke Invitation Design</h3>
                       <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light mt-0.5">
                         Heirloom stationery, custom typography suites, and digital cards designed with personal emotion.
                       </p>
