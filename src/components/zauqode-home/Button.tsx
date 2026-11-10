@@ -1,5 +1,15 @@
 import React from 'react';
 import styles from './Button.module.css';
+import { ArrowIcon, type ArrowDirection } from './ArrowIcon';
+
+const ARROW_DIRECTION_MAP: Record<string, ArrowDirection> = {
+  '→': 'right',
+  '↗': 'up-right',
+  '←': 'left',
+  right: 'right',
+  'up-right': 'up-right',
+  left: 'left',
+};
 
 interface ButtonProps {
   href?: string;
@@ -13,7 +23,7 @@ interface ButtonProps {
 
 /**
  * Reusable Pill Button Component
- * Pure CSS: 1px teal border, bottom sliding fill, and animated directional arrow.
+ * Pure CSS: 1px teal border, bottom sliding fill, and animated directional vector arrow.
  */
 export function Button({
   href,
@@ -25,6 +35,12 @@ export function Button({
   className = '',
 }: ButtonProps) {
   const combinedClassName = `${styles.button} ${className}`.trim();
+  const mappedDirection = arrow ? ARROW_DIRECTION_MAP[arrow] : undefined;
+  const arrowNode = arrow ? (
+    <span className={styles.arrow}>
+      {mappedDirection ? <ArrowIcon direction={mappedDirection} /> : arrow}
+    </span>
+  ) : null;
 
   if (href) {
     return (
@@ -36,7 +52,7 @@ export function Button({
         className={combinedClassName}
       >
         <span>{children}</span>
-        {arrow && <span className={styles.arrow}>{arrow}</span>}
+        {arrowNode}
       </a>
     );
   }
@@ -44,7 +60,7 @@ export function Button({
   return (
     <button type="button" onClick={onClick} className={combinedClassName}>
       <span>{children}</span>
-      {arrow && <span className={styles.arrow}>{arrow}</span>}
+      {arrowNode}
     </button>
   );
 }

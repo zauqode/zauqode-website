@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import zauqodeLogo from "../../assets/Logos/zauqode-logo.png";
 import { Hero } from "@/components/zauqode-home/Hero";
+import { ArrowIcon } from "@/components/zauqode-home/ArrowIcon";
 
 export function RenovatedPortfolio() {
   const [currentRoute, setCurrentRoute] = useState("home");
@@ -830,7 +831,7 @@ export function RenovatedPortfolio() {
                     </div>
                   </div>
                   <span className="service-arrow-rot text-xl text-[#00756e] shrink-0 transition-transform duration-300">
-                    ↗
+                    <ArrowIcon direction="up-right" />
                   </span>
                 </div>
 
@@ -851,7 +852,7 @@ export function RenovatedPortfolio() {
                     </div>
                   </div>
                   <span className="service-arrow-rot text-xl text-[#00756e] shrink-0 transition-transform duration-300">
-                    ↗
+                    <ArrowIcon direction="up-right" />
                   </span>
                 </div>
               </div>
@@ -869,7 +870,7 @@ export function RenovatedPortfolio() {
                   >
                     <div className="flex items-center justify-between">
                       <h4 className="font-heading text-lg text-[#005a55]">Video Invitations</h4>
-                      <span className="text-sm text-[#00756e]">↗</span>
+                      <span className="text-sm text-[#00756e]"><ArrowIcon direction="up-right" /></span>
                     </div>
                     <p className="text-xs text-[#0d3b38]/70 font-light">
                       Cinematic motion reveals and audio-synced vertical stories for WhatsApp &amp; Instagram.
@@ -883,7 +884,7 @@ export function RenovatedPortfolio() {
                   >
                     <div className="flex items-center justify-between">
                       <h4 className="font-heading text-lg text-[#005a55]">Business Websites</h4>
-                      <span className="text-sm text-[#00756e]">↗</span>
+                      <span className="text-sm text-[#00756e]"><ArrowIcon direction="up-right" /></span>
                     </div>
                     <p className="text-xs text-[#0d3b38]/70 font-light">
                       Tailored digital flagships and modern portfolios engineered for your brand.
@@ -1112,7 +1113,7 @@ export function RenovatedPortfolio() {
               </div>
 
               <div className="sm:hidden text-center font-ui text-[10px] tracking-[0.25em] uppercase text-[#b8893c]/80 -mt-4">
-                Swipe to explore →
+                Swipe to explore <ArrowIcon direction="right" className="ml-1" />
               </div>
 
               <div className="text-center pt-4">
@@ -1123,7 +1124,7 @@ export function RenovatedPortfolio() {
                   onMouseLeave={handleMouseLeave}
                 >
                   <span>All works</span>
-                  <span className="arrow-move">→</span>
+                  <span className="arrow-move"><ArrowIcon direction="right" /></span>
                 </a>
               </div>
 
@@ -1207,7 +1208,7 @@ export function RenovatedPortfolio() {
                   onMouseLeave={handleMouseLeave}
                 >
                   <span>Say hello</span>
-                  <span className="arrow-move">→</span>
+                  <span className="arrow-move"><ArrowIcon direction="right" /></span>
                 </a>
               </div>
             </div>
@@ -1310,7 +1311,7 @@ export function RenovatedPortfolio() {
 
                 <button type="submit" className="btn-pill-renovated w-full justify-center">
                   <span>Send message</span>
-                  <span className="arrow-move">→</span>
+                  <span className="arrow-move"><ArrowIcon direction="right" /></span>
                 </button>
 
                 <p className="text-center text-xs text-[#0d3b38]/65 font-light pt-1">
@@ -1533,9 +1534,9 @@ export function RenovatedPortfolio() {
                   }
                   className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#d4a55a]/40 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer text-sm"
                   aria-label="Previous Invitation"
-                  title="Previous (←)"
+                  title="Previous"
                 >
-                  ←
+                  <ArrowIcon direction="left" />
                 </button>
                 <button
                   type="button"
@@ -1546,9 +1547,9 @@ export function RenovatedPortfolio() {
                   }
                   className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#d4a55a]/40 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer text-sm"
                   aria-label="Next Invitation"
-                  title="Next (→)"
+                  title="Next"
                 >
-                  →
+                  <ArrowIcon direction="right" />
                 </button>
                 <button
                   type="button"
