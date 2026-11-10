@@ -26,16 +26,6 @@ const craftLinks = [
     note: 'Interactive wedding & celebration portals with live RSVP concierge.',
   },
   {
-    label: 'Stall Boards',
-    category: 'stalls',
-    note: 'Custom event signage & illustrated boards crafted for wedding counters.',
-  },
-  {
-    label: 'Motion',
-    category: 'videos',
-    note: 'Cinematic musical reels & animated invitation stories.',
-  },
-  {
     label: 'Brand Web',
     category: 'business',
     note: 'Editorial digital flagships engineered with restraint and speed.',
