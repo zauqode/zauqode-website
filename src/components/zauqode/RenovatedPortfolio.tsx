@@ -806,8 +806,8 @@ export function RenovatedPortfolio() {
                 <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
                   Services &amp; Offerings
                 </div>
-                <h2 className="font-heading text-3xl sm:text-4xl text-[#00756e]">
-                  What I Create
+                <h2 className="font-heading text-3xl sm:text-4xl text-[#00756e] leading-snug">
+                  What I <span className="font-script text-4xl sm:text-5xl font-normal">Create</span>
                 </h2>
               </div>
 
@@ -1054,8 +1054,8 @@ export function RenovatedPortfolio() {
                 <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
                   Selected Portfolio
                 </div>
-                <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#00756e]">
-                  Meaningful stories, thoughtfully shaped.
+                <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#00756e] leading-snug">
+                  Meaningful stories, <span className="font-script text-3xl sm:text-4xl md:text-5xl font-normal">thoughtfully shaped</span>.
                 </h2>
               </div>
 
