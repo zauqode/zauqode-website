@@ -283,6 +283,29 @@ export function RenovatedPortfolio() {
   const invitationWorks = works.filter((w) => w.category === "invitations");
   const activeInv = activeInvitationIndex !== null ? invitationWorks[activeInvitationIndex] : null;
 
+  const testimonials = [
+    {
+      name: "Sonali & Major Pallav",
+      project: "Occasion Portal & Folio",
+      quote: "“Absolutely loved how our invitation turned out! You were so understanding, patient, and creative throughout the process. Highly recommended! ❤️”",
+    },
+    {
+      name: "Aravind & Salini",
+      project: "Sacred Temple Portal",
+      quote: "“What a dreamy invitation! Impressed by the creativity and attention to detail. Truly the best invitation I’ve seen! ✨”",
+    },
+    {
+      name: "Bala & Shahin",
+      project: "Digital Wedding Invitation",
+      quote: "“Such a unique and elegant digital invitation! It’s not just an invitation; it’s a beautiful expression of thoughtfulness and style. Absolutely loved it! ❤️”",
+    },
+    {
+      name: "Giridhar & Renee",
+      project: "Celebration & RSVP Suite",
+      quote: "“You understood exactly what we envisioned. Your amazing taste, creativity, and editing made our special occasion even more memorable! 💗”",
+    },
+  ];
+
   return (
     <div className="renovated-app min-h-screen relative overflow-x-hidden">
       {/* Inline styles for fonts and effects */}
@@ -436,6 +459,45 @@ export function RenovatedPortfolio() {
         .no-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+
+        /* Seamless Infinite Testimonial Marquee */
+        @keyframes testimonialMarqueeScroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        .testimonial-marquee-wrap {
+          overflow: hidden;
+          width: 100%;
+          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+        }
+        .testimonial-marquee-track {
+          display: flex;
+          width: max-content;
+          animation: testimonialMarqueeScroll 30s linear infinite;
+          will-change: transform;
+        }
+        .testimonial-marquee-wrap:hover .testimonial-marquee-track,
+        .testimonial-marquee-wrap:active .testimonial-marquee-track {
+          animation-play-state: paused;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .testimonial-marquee-wrap {
+            overflow-x: auto;
+            -webkit-mask-image: none;
+            mask-image: none;
+          }
+          .testimonial-marquee-track {
+            animation: none;
+          }
+          .testimonial-duplicate-set {
+            display: none;
+          }
         }
 
         @media (max-width: 640px) {
@@ -997,53 +1059,39 @@ export function RenovatedPortfolio() {
                   </h3>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                  {/* Quote 1: Sonali & Major Pallav */}
-                  <div className="p-7 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm space-y-4 relative">
-                    <span className="font-heading text-4xl text-[#d4a55a] leading-none block">“</span>
-                    <p className="font-body text-sm text-[#0d3b38]/85 font-light leading-relaxed -mt-3">
-                      “Absolutely loved how our invitation turned out! You were so understanding, patient, and creative throughout the process. Highly recommended! ❤️”
-                    </p>
-                    <div className="pt-2 border-t border-[#d4a55a]/20 flex items-center justify-between">
-                      <span className="font-heading text-base text-[#005a55]">Sonali &amp; Major Pallav</span>
-                      <span className="font-ui text-[11px] text-[#b8893c] uppercase tracking-wider">Occasion Portal &amp; Folio</span>
-                    </div>
-                  </div>
-
-                  {/* Quote 2: Aravind & Salini */}
-                  <div className="p-7 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm space-y-4 relative">
-                    <span className="font-heading text-4xl text-[#d4a55a] leading-none block">“</span>
-                    <p className="font-body text-sm text-[#0d3b38]/85 font-light leading-relaxed -mt-3">
-                      “What a dreamy invitation! Impressed by the creativity and attention to detail. Truly the best invitation I’ve seen! ✨”
-                    </p>
-                    <div className="pt-2 border-t border-[#d4a55a]/20 flex items-center justify-between">
-                      <span className="font-heading text-base text-[#005a55]">Aravind &amp; Salini</span>
-                      <span className="font-ui text-[11px] text-[#b8893c] uppercase tracking-wider">Sacred Temple Portal</span>
-                    </div>
-                  </div>
-
-                  {/* Quote 3: Bala & Shahin */}
-                  <div className="p-7 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm space-y-4 relative">
-                    <span className="font-heading text-4xl text-[#d4a55a] leading-none block">“</span>
-                    <p className="font-body text-sm text-[#0d3b38]/85 font-light leading-relaxed -mt-3">
-                      “Such a unique and elegant digital invitation! It’s not just an invitation; it’s a beautiful expression of thoughtfulness and style. Absolutely loved it! ❤️”
-                    </p>
-                    <div className="pt-2 border-t border-[#d4a55a]/20 flex items-center justify-between">
-                      <span className="font-heading text-base text-[#005a55]">Bala &amp; Shahin</span>
-                      <span className="font-ui text-[11px] text-[#b8893c] uppercase tracking-wider">Digital Wedding Invitation</span>
-                    </div>
-                  </div>
-
-                  {/* Quote 4: Giridhar & Renee */}
-                  <div className="p-7 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm space-y-4 relative">
-                    <span className="font-heading text-4xl text-[#d4a55a] leading-none block">“</span>
-                    <p className="font-body text-sm text-[#0d3b38]/85 font-light leading-relaxed -mt-3">
-                      “You understood exactly what we envisioned. Your amazing taste, creativity, and editing made our special occasion even more memorable! 💗”
-                    </p>
-                    <div className="pt-2 border-t border-[#d4a55a]/20 flex items-center justify-between">
-                      <span className="font-heading text-base text-[#005a55]">Giridhar &amp; Renee</span>
-                      <span className="font-ui text-[11px] text-[#b8893c] uppercase tracking-wider">Celebration &amp; RSVP Suite</span>
-                    </div>
+                <div className="testimonial-marquee-wrap -mx-4 sm:mx-0 w-auto sm:w-full py-1">
+                  <div className="testimonial-marquee-track">
+                    {[0, 1].map((setIdx) => (
+                      <div
+                        key={setIdx}
+                        className={`flex gap-4 sm:gap-5 pr-4 sm:pr-5 shrink-0 ${
+                          setIdx === 1 ? "testimonial-duplicate-set" : ""
+                        }`}
+                        aria-hidden={setIdx === 1}
+                      >
+                        {testimonials.map((t, idx) => (
+                          <div
+                            key={`${setIdx}-${idx}`}
+                            className="w-[250px] sm:w-[285px] shrink-0 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm flex flex-col justify-between gap-3 relative"
+                          >
+                            <div>
+                              <span className="font-heading text-2xl sm:text-3xl text-[#d4a55a] leading-none block">“</span>
+                              <p className="font-body text-xs sm:text-[13px] text-[#0d3b38]/85 font-light leading-relaxed -mt-1.5">
+                                {t.quote}
+                              </p>
+                            </div>
+                            <div className="pt-2.5 border-t border-[#d4a55a]/20 flex flex-col gap-0.5">
+                              <span className="font-heading text-sm sm:text-[15px] text-[#005a55] leading-tight">
+                                {t.name}
+                              </span>
+                              <span className="font-ui text-[9px] sm:text-[10px] text-[#b8893c] uppercase tracking-wider leading-tight">
+                                {t.project}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

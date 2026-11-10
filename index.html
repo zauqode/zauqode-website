@@ -1096,6 +1096,84 @@
     }
 
     /* ==========================================================================
+       TESTIMONIAL MARQUEE
+       ========================================================================== */
+    @keyframes testimonialMarqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .testimonial-marquee-wrap {
+      overflow: hidden;
+      width: 100%;
+      padding: 4px 0;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    }
+
+    .testimonial-marquee-track {
+      display: flex;
+      width: max-content;
+      animation: testimonialMarqueeScroll 30s linear infinite;
+      will-change: transform;
+    }
+
+    .testimonial-marquee-wrap:hover .testimonial-marquee-track,
+    .testimonial-marquee-wrap:active .testimonial-marquee-track {
+      animation-play-state: paused;
+    }
+
+    .testimonial-group {
+      display: flex;
+      gap: 20px;
+      padding-right: 20px;
+      flex-shrink: 0;
+    }
+
+    .testimonial-card {
+      width: 285px;
+      flex-shrink: 0;
+      background: #ffffff;
+      border: 1px solid rgba(212, 165, 90, 0.35);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 2px 10px rgba(13, 59, 56, 0.04);
+    }
+
+    @media (max-width: 640px) {
+      .testimonial-marquee-wrap {
+        margin: 0 -16px;
+        width: auto;
+      }
+      .testimonial-group {
+        gap: 16px;
+        padding-right: 16px;
+      }
+      .testimonial-card {
+        width: 250px;
+        padding: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .testimonial-marquee-wrap {
+        overflow-x: auto;
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
+      .testimonial-marquee-track {
+        animation: none;
+      }
+      .testimonial-duplicate-set {
+        display: none;
+      }
+    }
+
+    /* ==========================================================================
        IPHONE MOCKUP MODAL
        ========================================================================== */
     .mockup-modal-backdrop {
@@ -2473,57 +2551,121 @@
       </div>
 
       <!-- Client Words / Social Proof -->
-      <div style="max-width: 860px; margin: 48px auto 0; padding-top: 36px; border-top: 1px solid rgba(212, 165, 90, 0.25);" class="reveal">
+      <div style="max-width: 1020px; margin: 48px auto 0; padding-top: 36px; border-top: 1px solid rgba(212, 165, 90, 0.25);" class="reveal">
         <div class="section-header" style="margin-bottom: 24px;">
           <div class="section-label">Client Words</div>
           <h2 class="section-title" style="font-size: 28px;">Cherished Celebrations</h2>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-          <!-- 1. Sonali & Major Pallav -->
-          <div style="background: #ffffff; border: 1px solid rgba(212, 165, 90, 0.35); border-radius: 16px; padding: 24px;">
-            <div style="font-family: var(--font-heading); font-size: 32px; color: var(--gold); line-height: 1;">“</div>
-            <p style="font-size: 13px; color: rgba(13, 59, 56, 0.85); line-height: 1.6; margin: -8px 0 16px;">
-              “Absolutely loved how our invitation turned out! You were so understanding, patient, and creative throughout the process. Highly recommended! ❤️”
-            </p>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 8px;">
-              <span style="font-family: var(--font-heading); font-size: 15px; color: #005a55;">Sonali &amp; Major Pallav</span>
-              <span style="font-family: var(--font-ui); font-size: 10px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.1em;">Occasion Portal &amp; Folio</span>
-            </div>
-          </div>
+        <div class="testimonial-marquee-wrap">
+          <div class="testimonial-marquee-track">
+            <!-- Set 1 -->
+            <div class="testimonial-group">
+              <div class="testimonial-card">
+                <div>
+                  <div style="font-family: var(--font-heading); font-size: 26px; color: var(--gold); line-height: 1;">“</div>
+                  <p style="font-size: 12.5px; color: rgba(13, 59, 56, 0.85); line-height: 1.55; margin: -4px 0 0;">
+                    “Absolutely loved how our invitation turned out! You were so understanding, patient, and creative throughout the process. Highly recommended! ❤️”
+                  </p>
+                </div>
+                <div style="border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 8px; display: flex; flex-direction: column; gap: 2px;">
+                  <span style="font-family: var(--font-heading); font-size: 14px; color: #005a55;">Sonali &amp; Major Pallav</span>
+                  <span style="font-family: var(--font-ui); font-size: 9.5px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.1em;">Occasion Portal &amp; Folio</span>
+                </div>
+              </div>
 
-          <!-- 2. Aravind & Salini -->
-          <div style="background: #ffffff; border: 1px solid rgba(212, 165, 90, 0.35); border-radius: 16px; padding: 24px;">
-            <div style="font-family: var(--font-heading); font-size: 32px; color: var(--gold); line-height: 1;">“</div>
-            <p style="font-size: 13px; color: rgba(13, 59, 56, 0.85); line-height: 1.6; margin: -8px 0 16px;">
-              “What a dreamy invitation! Impressed by the creativity and attention to detail. Truly the best invitation I’ve seen! ✨”
-            </p>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 8px;">
-              <span style="font-family: var(--font-heading); font-size: 15px; color: #005a55;">Aravind &amp; Salini</span>
-              <span style="font-family: var(--font-ui); font-size: 10px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.1em;">Sacred Temple Portal</span>
-            </div>
-          </div>
+              <div class="testimonial-card">
+                <div>
+                  <div style="font-family: var(--font-heading); font-size: 26px; color: var(--gold); line-height: 1;">“</div>
+                  <p style="font-size: 12.5px; color: rgba(13, 59, 56, 0.85); line-height: 1.55; margin: -4px 0 0;">
+                    “What a dreamy invitation! Impressed by the creativity and attention to detail. Truly the best invitation I’ve seen! ✨”
+                  </p>
+                </div>
+                <div style="border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 8px; display: flex; flex-direction: column; gap: 2px;">
+                  <span style="font-family: var(--font-heading); font-size: 14px; color: #005a55;">Aravind &amp; Salini</span>
+                  <span style="font-family: var(--font-ui); font-size: 9.5px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.1em;">Sacred Temple Portal</span>
+                </div>
+              </div>
 
-          <!-- 3. Bala & Shahin -->
-          <div style="background: #ffffff; border: 1px solid rgba(212, 165, 90, 0.35); border-radius: 16px; padding: 24px;">
-            <div style="font-family: var(--font-heading); font-size: 32px; color: var(--gold); line-height: 1;">“</div>
-            <p style="font-size: 13px; color: rgba(13, 59, 56, 0.85); line-height: 1.6; margin: -8px 0 16px;">
-              “Such a unique and elegant digital invitation! It’s not just an invitation; it’s a beautiful expression of thoughtfulness and style. Absolutely loved it! ❤️”
-            </p>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 8px;">
-              <span style="font-family: var(--font-heading); font-size: 15px; color: #005a55;">Bala &amp; Shahin</span>
-              <span style="font-family: var(--font-ui); font-size: 10px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.1em;">Digital Wedding Invitation</span>
-            </div>
-          </div>
+              <div class="testimonial-card">
+                <div>
+                  <div style="font-family: var(--font-heading); font-size: 26px; color: var(--gold); line-height: 1;">“</div>
+                  <p style="font-size: 12.5px; color: rgba(13, 59, 56, 0.85); line-height: 1.55; margin: -4px 0 0;">
+                    “Such a unique and elegant digital invitation! It’s not just an invitation; it’s a beautiful expression of thoughtfulness and style. Absolutely loved it! ❤️”
+                  </p>
+                </div>
+                <div style="border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 8px; display: flex; flex-direction: column; gap: 2px;">
+                  <span style="font-family: var(--font-heading); font-size: 14px; color: #005a55;">Bala &amp; Shahin</span>
+                  <span style="font-family: var(--font-ui); font-size: 9.5px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.1em;">Digital Wedding Invitation</span>
+                </div>
+              </div>
 
-          <!-- 4. Giridhar & Renee -->
-          <div style="background: #ffffff; border: 1px solid rgba(212, 165, 90, 0.35); border-radius: 16px; padding: 24px;">
-            <div style="font-family: var(--font-heading); font-size: 32px; color: var(--gold); line-height: 1;">“</div>
-            <p style="font-size: 13px; color: rgba(13, 59, 56, 0.85); line-height: 1.6; margin: -8px 0 16px;">
-              “You understood exactly what we envisioned. Your amazing taste, creativity, and editing made our special occasion even more memorable! 💗”
-            </p>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 8px;">
-              <span style="font-family: var(--font-heading); font-size: 15px; color: #005a55;">Giridhar &amp; Renee</span>
-              <span style="font-family: var(--font-ui); font-size: 10px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.1em;">Celebration &amp; RSVP Suite</span>
+              <div class="testimonial-card">
+                <div>
+                  <div style="font-family: var(--font-heading); font-size: 26px; color: var(--gold); line-height: 1;">“</div>
+                  <p style="font-size: 12.5px; color: rgba(13, 59, 56, 0.85); line-height: 1.55; margin: -4px 0 0;">
+                    “You understood exactly what we envisioned. Your amazing taste, creativity, and editing made our special occasion even more memorable! 💗”
+                  </p>
+                </div>
+                <div style="border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 8px; display: flex; flex-direction: column; gap: 2px;">
+                  <span style="font-family: var(--font-heading); font-size: 14px; color: #005a55;">Giridhar &amp; Renee</span>
+                  <span style="font-family: var(--font-ui); font-size: 9.5px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.1em;">Celebration &amp; RSVP Suite</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Set 2 (Seamless Loop Duplicate) -->
+            <div class="testimonial-group testimonial-duplicate-set" aria-hidden="true">
+              <div class="testimonial-card">
+                <div>
+                  <div style="font-family: var(--font-heading); font-size: 26px; color: var(--gold); line-height: 1;">“</div>
+                  <p style="font-size: 12.5px; color: rgba(13, 59, 56, 0.85); line-height: 1.55; margin: -4px 0 0;">
+                    “Absolutely loved how our invitation turned out! You were so understanding, patient, and creative throughout the process. Highly recommended! ❤️”
+                  </p>
+                </div>
+                <div style="border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 8px; display: flex; flex-direction: column; gap: 2px;">
+                  <span style="font-family: var(--font-heading); font-size: 14px; color: #005a55;">Sonali &amp; Major Pallav</span>
+                  <span style="font-family: var(--font-ui); font-size: 9.5px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.1em;">Occasion Portal &amp; Folio</span>
+                </div>
+              </div>
+
+              <div class="testimonial-card">
+                <div>
+                  <div style="font-family: var(--font-heading); font-size: 26px; color: var(--gold); line-height: 1;">“</div>
+                  <p style="font-size: 12.5px; color: rgba(13, 59, 56, 0.85); line-height: 1.55; margin: -4px 0 0;">
+                    “What a dreamy invitation! Impressed by the creativity and attention to detail. Truly the best invitation I’ve seen! ✨”
+                  </p>
+                </div>
+                <div style="border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 8px; display: flex; flex-direction: column; gap: 2px;">
+                  <span style="font-family: var(--font-heading); font-size: 14px; color: #005a55;">Aravind &amp; Salini</span>
+                  <span style="font-family: var(--font-ui); font-size: 9.5px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.1em;">Sacred Temple Portal</span>
+                </div>
+              </div>
+
+              <div class="testimonial-card">
+                <div>
+                  <div style="font-family: var(--font-heading); font-size: 26px; color: var(--gold); line-height: 1;">“</div>
+                  <p style="font-size: 12.5px; color: rgba(13, 59, 56, 0.85); line-height: 1.55; margin: -4px 0 0;">
+                    “Such a unique and elegant digital invitation! It’s not just an invitation; it’s a beautiful expression of thoughtfulness and style. Absolutely loved it! ❤️”
+                  </p>
+                </div>
+                <div style="border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 8px; display: flex; flex-direction: column; gap: 2px;">
+                  <span style="font-family: var(--font-heading); font-size: 14px; color: #005a55;">Bala &amp; Shahin</span>
+                  <span style="font-family: var(--font-ui); font-size: 9.5px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.1em;">Digital Wedding Invitation</span>
+                </div>
+              </div>
+
+              <div class="testimonial-card">
+                <div>
+                  <div style="font-family: var(--font-heading); font-size: 26px; color: var(--gold); line-height: 1;">“</div>
+                  <p style="font-size: 12.5px; color: rgba(13, 59, 56, 0.85); line-height: 1.55; margin: -4px 0 0;">
+                    “You understood exactly what we envisioned. Your amazing taste, creativity, and editing made our special occasion even more memorable! 💗”
+                  </p>
+                </div>
+                <div style="border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 8px; display: flex; flex-direction: column; gap: 2px;">
+                  <span style="font-family: var(--font-heading); font-size: 14px; color: #005a55;">Giridhar &amp; Renee</span>
+                  <span style="font-family: var(--font-ui); font-size: 9.5px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.1em;">Celebration &amp; RSVP Suite</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
