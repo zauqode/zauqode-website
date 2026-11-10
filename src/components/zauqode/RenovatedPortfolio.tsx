@@ -1465,7 +1465,16 @@ export function RenovatedPortfolio() {
 
       {/* 6. Deep Teal Footer */}
       <footer className="bg-[#005a55] text-[#f3e3c0] py-16 px-6 text-center space-y-6">
-        <div className="font-brand text-2xl text-[#f3e3c0]">Zauqode</div>
+        <div
+          className="text-xl sm:text-2xl text-[#f3e3c0]"
+          style={{
+            fontFamily: "'Croissant One', cursive, serif",
+            letterSpacing: "0.3em",
+            textTransform: "uppercase",
+          }}
+        >
+          ZAUQODE
+        </div>
         <div className="font-script text-2xl text-[#d4a55a]">Design . Code . Elevate</div>
 
         {/* Direct Contact Channels in Footer */}
