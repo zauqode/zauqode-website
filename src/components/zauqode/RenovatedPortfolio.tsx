@@ -850,27 +850,51 @@ export function RenovatedPortfolio() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                  {/* Quote 1 */}
+                  {/* Quote 1: Sonali & Major Pallav */}
                   <div className="p-7 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm space-y-4 relative">
                     <span className="font-heading text-4xl text-[#d4a55a] leading-none block">“</span>
                     <p className="font-body text-sm text-[#0d3b38]/85 font-light leading-relaxed -mt-3">
-                      Zauqode brought our wedding vision to life with so much emotion. Our guests were genuinely mesmerized by the RSVP portal and personalized touches!
+                      “Absolutely loved how our invitation turned out! You were so understanding, patient, and creative throughout the process. Highly recommended! ❤️”
                     </p>
                     <div className="pt-2 border-t border-[#d4a55a]/20 flex items-center justify-between">
                       <span className="font-heading text-base text-[#005a55]">Sonali &amp; Major Pallav</span>
-                      <span className="font-ui text-[11px] text-[#b8893c] uppercase tracking-wider">Occasion Portal</span>
+                      <span className="font-ui text-[11px] text-[#b8893c] uppercase tracking-wider">Occasion Portal &amp; Folio</span>
                     </div>
                   </div>
 
-                  {/* Quote 2 */}
+                  {/* Quote 2: Aravind & Salini */}
                   <div className="p-7 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm space-y-4 relative">
                     <span className="font-heading text-4xl text-[#d4a55a] leading-none block">“</span>
                     <p className="font-body text-sm text-[#0d3b38]/85 font-light leading-relaxed -mt-3">
-                      The stationery design and video invite felt so personal and timeless. Working with Zauqode was effortlessly the best decision we made for our celebrations.
+                      “What a dreamy invitation! Impressed by the creativity and attention to detail. Truly the best invitation I’ve seen! ✨”
                     </p>
                     <div className="pt-2 border-t border-[#d4a55a]/20 flex items-center justify-between">
-                      <span className="font-heading text-base text-[#005a55]">Karthik &amp; Divya</span>
-                      <span className="font-ui text-[11px] text-[#b8893c] uppercase tracking-wider">Heirloom Suite</span>
+                      <span className="font-heading text-base text-[#005a55]">Aravind &amp; Salini</span>
+                      <span className="font-ui text-[11px] text-[#b8893c] uppercase tracking-wider">Sacred Temple Portal</span>
+                    </div>
+                  </div>
+
+                  {/* Quote 3: Bala & Shahin */}
+                  <div className="p-7 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm space-y-4 relative">
+                    <span className="font-heading text-4xl text-[#d4a55a] leading-none block">“</span>
+                    <p className="font-body text-sm text-[#0d3b38]/85 font-light leading-relaxed -mt-3">
+                      “Such a unique and elegant digital invitation! It’s not just an invitation; it’s a beautiful expression of thoughtfulness and style. Absolutely loved it! ❤️”
+                    </p>
+                    <div className="pt-2 border-t border-[#d4a55a]/20 flex items-center justify-between">
+                      <span className="font-heading text-base text-[#005a55]">Bala &amp; Shahin</span>
+                      <span className="font-ui text-[11px] text-[#b8893c] uppercase tracking-wider">Digital Wedding Invitation</span>
+                    </div>
+                  </div>
+
+                  {/* Quote 4: Giridhar & Renee */}
+                  <div className="p-7 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm space-y-4 relative">
+                    <span className="font-heading text-4xl text-[#d4a55a] leading-none block">“</span>
+                    <p className="font-body text-sm text-[#0d3b38]/85 font-light leading-relaxed -mt-3">
+                      “You understood exactly what we envisioned. Your amazing taste, creativity, and editing made our special occasion even more memorable! 💗”
+                    </p>
+                    <div className="pt-2 border-t border-[#d4a55a]/20 flex items-center justify-between">
+                      <span className="font-heading text-base text-[#005a55]">Giridhar &amp; Renee</span>
+                      <span className="font-ui text-[11px] text-[#b8893c] uppercase tracking-wider">Celebration &amp; RSVP Suite</span>
                     </div>
                   </div>
                 </div>

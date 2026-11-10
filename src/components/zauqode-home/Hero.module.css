@@ -1,0 +1,317 @@
+/* ==========================================================================
+   HERO SECTION STYLES (No Tailwind, Plain CSS Modules)
+   ========================================================================== */
+.hero {
+  min-height: 100vh;
+  padding: 130px 7vw 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+}
+
+/* 1. Gold Frame */
+.goldFrame {
+  position: absolute;
+  top: 92px;
+  bottom: 28px;
+  left: 3vw;
+  right: 3vw;
+  border: 1px solid rgba(212, 165, 90, 0.55);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 2. Top corner labels inside the frame (top 122px) */
+.topLabelLeft {
+  position: absolute;
+  top: 122px;
+  left: calc(3vw + 24px);
+  font-family: 'Poiret One', cursive, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-dark, #b8893c);
+  pointer-events: none;
+  z-index: 15;
+}
+
+.topLabelRight {
+  position: absolute;
+  top: 122px;
+  right: calc(3vw + 24px);
+  font-family: 'Poiret One', cursive, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-dark, #b8893c);
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* 3. Headline */
+.headlineWrap {
+  margin: 0;
+  padding: 0;
+  z-index: 20;
+}
+
+.headline {
+  font-family: 'Antic Didone', serif;
+  font-size: clamp(38px, 6.6vw, 96px);
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  color: var(--deep, #005a55);
+  margin: 0;
+  font-weight: 400;
+}
+
+.lineMask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
+}
+
+.line1 {
+  display: inline-block;
+  transform: translateY(120%);
+  animation: slideUp 1.3s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s forwards;
+}
+
+.line2 {
+  display: inline-block;
+  margin-left: clamp(0px, 9vw, 150px);
+  transform: translateY(120%);
+  animation: slideUp 1.3s cubic-bezier(0.2, 0.7, 0.2, 1) 0.45s forwards;
+}
+
+.scriptWord {
+  font-family: 'Sacramento', cursive;
+  font-size: 1.2em;
+  color: var(--teal, #00756e);
+  font-weight: 400;
+  margin-left: 0.15em;
+  vertical-align: baseline;
+}
+
+@keyframes slideUp {
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* 4. Row under headline */
+.actionRow {
+  margin-top: 46px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  z-index: 20;
+}
+
+.tagline {
+  font-family: 'Croissant One', cursive, serif;
+  font-size: 18px;
+  color: var(--deep, #005a55);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.dividerLine {
+  height: 1px;
+  flex: 1;
+  max-width: 200px;
+  min-width: 30px;
+  background: linear-gradient(to right, var(--gold, #d4a55a), transparent);
+}
+
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* 5. Vertical text on the right inside the frame */
+.verticalText {
+  position: absolute;
+  right: calc(3vw + 16px);
+  top: 50%;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  font-family: 'Poiret One', cursive, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--teal, #00756e);
+  pointer-events: none;
+  z-index: 15;
+  white-space: nowrap;
+}
+
+/* 6. Scroll cue bottom-left inside frame (bottom 52px) */
+.scrollCue {
+  position: absolute;
+  left: calc(3vw + 24px);
+  bottom: 52px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.scrollLine {
+  width: 1px;
+  height: 46px;
+  background-color: var(--gold, #d4a55a);
+  transform-origin: top;
+  animation: scrollAnim 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+.scrollWord {
+  font-family: 'Poiret One', cursive, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-dark, #b8893c);
+}
+
+@keyframes scrollAnim {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 0;
+  }
+}
+
+/* 7. Rotating badge bottom-right (112px, 84px on mobile) */
+.badgeContainer {
+  position: absolute;
+  right: calc(3vw + 24px);
+  bottom: 52px;
+  width: 112px;
+  height: 112px;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.rotatingSvg {
+  width: 100%;
+  height: 100%;
+  animation: rotateBadge 22s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes rotateBadge {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 8. Cursor Glow (560px soft radial-gradient) */
+.cursorGlow {
+  position: absolute;
+  width: 560px;
+  height: 560px;
+  left: var(--gx, 50%);
+  top: var(--gy, 50%);
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(205, 238, 227, 0.8) 0%, rgba(205, 238, 227, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  transition: left 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              top 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0.95;
+}
+
+/* Responsive adjustments */
+@media (max-width: 819px) {
+  .hero {
+    padding: 110px 5vw 80px;
+  }
+
+  .goldFrame {
+    inset: 80px 2.5vw 20px;
+  }
+
+  .topLabelLeft {
+    top: 100px;
+    left: calc(2.5vw + 16px);
+  }
+
+  /* Hide right label on mobile as requested */
+  .topLabelRight {
+    display: none;
+  }
+
+  /* Hide vertical text on mobile as requested */
+  .verticalText {
+    display: none;
+  }
+
+  .scrollCue {
+    left: calc(2.5vw + 16px);
+    bottom: 36px;
+  }
+
+  .badgeContainer {
+    right: calc(2.5vw + 16px);
+    bottom: 36px;
+    width: 84px;
+    height: 84px;
+  }
+
+  .tagline {
+    font-size: 16px;
+    white-space: normal;
+  }
+
+  .dividerLine {
+    display: none;
+  }
+
+  .buttonGroup {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line1,
+  .line2,
+  .scrollLine,
+  .rotatingSvg,
+  .cursorGlow {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+  .line1,
+  .line2 {
+    transform: translateY(0) !important;
+  }
+  .scrollLine {
+    transform: scaleY(1) !important;
+    opacity: 0.8 !important;
+  }
+}
+

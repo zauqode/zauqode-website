@@ -4,6 +4,17 @@
 
 @custom-variant dark (&:is(.dark *));
 
+:root {
+  --teal: #00756e;
+  --deep: #005a55;
+  --mint: #cdeee3;
+  --mist: #eef8f3;
+  --bg: #f9fbf8;
+  --gold: #d4a55a;
+  --gold-dark: #b8893c;
+  --ink: #0d3b38;
+}
+
 /*
  * ZAUQODE Creative Studio & Designer Portfolio
  * Palette:

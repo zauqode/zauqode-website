@@ -1,0 +1,40 @@
+:root {
+  --teal: #00756e;
+  --deep: #005a55;
+  --mint: #cdeee3;
+  --mist: #eef8f3;
+  --bg: #f9fbf8;
+  --gold: #d4a55a;
+  --gold-dark: #b8893c;
+  --ink: #0d3b38;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100vh;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(205, 238, 227, 0.6) 0%, transparent 48%),
+    radial-gradient(circle at 100% 100%, rgba(205, 238, 227, 0.6) 0%, transparent 48%);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-jost, 'Jost', sans-serif);
+  font-weight: 300;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+

@@ -1,0 +1,180 @@
+/* ==========================================================================
+   NAVBAR STYLES (Glass blur, sliding gold underline, mobile overlay)
+   ========================================================================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px 7vw;
+  background-color: rgba(249, 251, 248, 0.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.logo {
+  font-family: 'Croissant One', cursive, serif;
+  font-size: 17px;
+  letter-spacing: 0.3em;
+  color: var(--teal, #00756e);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: opacity 0.3s ease;
+}
+
+.logo:hover {
+  opacity: 0.85;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navItem {
+  position: relative;
+}
+
+.navLink {
+  position: relative;
+  display: inline-block;
+  font-family: 'Poiret One', cursive, sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.12em;
+  color: var(--deep, #005a55);
+  text-decoration: none;
+  padding: 4px 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--gold, #d4a55a);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.navLink:hover::after,
+.navLink.active::after {
+  transform: scaleX(1);
+}
+
+.menuButton {
+  display: none;
+  background: transparent;
+  border: none;
+  font-family: 'Poiret One', cursive, sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--deep, #005a55);
+  cursor: pointer;
+  padding: 6px 12px;
+}
+
+/* Mobile full-screen overlay */
+.mobileOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background-color: var(--bg, #f9fbf8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  padding: 40px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobileOverlay.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.mobileCloseButton {
+  position: absolute;
+  top: 28px;
+  right: 7vw;
+  background: transparent;
+  border: none;
+  font-family: 'Poiret One', cursive, sans-serif;
+  font-size: 28px;
+  color: var(--deep, #005a55);
+  cursor: pointer;
+  padding: 8px;
+  line-height: 1;
+}
+
+.mobileLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mobileLink {
+  font-family: 'Antic Didone', serif;
+  font-size: 38px;
+  color: var(--deep, #005a55);
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.mobileLink:hover {
+  color: var(--gold, #d4a55a);
+  transform: translateX(4px);
+}
+
+@media (max-width: 819px) {
+  /* CRITICAL: Do NOT use backdrop-filter on the nav on mobile (it breaks the fixed overlay) */
+  .navbar {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: rgba(249, 251, 248, 0.96);
+    padding: 20px 6vw;
+  }
+
+  .navLinks {
+    display: none;
+  }
+
+  .menuButton {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navLink::after,
+  .mobileOverlay,
+  .mobileLink {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+

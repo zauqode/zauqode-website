@@ -1,0 +1,42 @@
+/* ==========================================================================
+   CUSTOM CURSOR STYLES (Desktop only, 38px -> 70px on hover)
+   ========================================================================== */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--gold, #d4a55a);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  background-color: transparent;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.2s ease;
+  will-change: transform, left, top;
+}
+
+.hovering {
+  width: 70px;
+  height: 70px;
+  background-color: rgba(212, 165, 90, 0.15);
+  border-color: var(--gold-dark, #b8893c);
+}
+
+@media (pointer: coarse) {
+  .cursor {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    display: none !important;
+  }
+}
+

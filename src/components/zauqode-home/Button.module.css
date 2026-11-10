@@ -1,0 +1,62 @@
+/* ==========================================================================
+   PILL BUTTON STYLES (No Tailwind, Plain CSS Modules)
+   ========================================================================== */
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 34px;
+  border: 1px solid var(--teal, #00756e);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--teal, #00756e);
+  font-family: 'Poiret One', cursive, sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--teal, #00756e);
+  transform: translateY(101%);
+  transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.button:hover::before {
+  transform: translateY(0);
+}
+
+.button:hover {
+  color: #ffffff;
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.button:hover .arrow {
+  transform: translateX(6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .button::before,
+  .arrow {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
