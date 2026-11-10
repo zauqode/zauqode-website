@@ -34,19 +34,19 @@ export function Hero() {
       <div className={styles.goldFrame} aria-hidden="true" />
 
       {/* 2. Top Corner Labels inside frame (top 122px) */}
-      <div className={styles.topLabelLeft}>Invitation Designer</div>
-      <div className={styles.topLabelRight}>Occasion Designer</div>
+      <div className={styles.topLabelLeft}>Designer & Developer</div>
+      <div className={styles.topLabelRight}>Crafted with Feeling</div>
 
       {/* 3. Headline: Antic Didone + Sacramento */}
       <div className={styles.headlineWrap}>
         <h1 className={styles.headline}>
           <span className={styles.lineMask}>
-            <span className={styles.line1}>Invitations</span>
+            <span className={styles.line1}>Design that</span>
           </span>
           <span className={styles.lineMask}>
             <span className={styles.line2}>
-              that carry your
-              <span className={styles.scriptWord}>feelings.</span>
+              feels
+              <span className={styles.scriptWord}>personal.</span>
             </span>
           </span>
         </h1>
@@ -54,7 +54,7 @@ export function Hero() {
 
       {/* 4. Row under headline: Tagline + Gold line + Two pill buttons */}
       <div className={styles.actionRow}>
-        <p className={styles.tagline}>Designed with care, love and trust.</p>
+        <p className={styles.tagline}>Crafted with care, love and trust.</p>
 
         <div className={styles.dividerLine} aria-hidden="true" />
 

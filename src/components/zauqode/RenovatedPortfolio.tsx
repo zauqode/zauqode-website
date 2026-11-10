@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import zauqodeLogo from "../../assets/Logos/zauqode-logo.png";
 import { Hero } from "@/components/zauqode-home/Hero";
+import { Cursor } from "@/components/zauqode-home/Cursor";
 
 export function RenovatedPortfolio() {
   const [currentRoute, setCurrentRoute] = useState("home");
@@ -446,51 +447,59 @@ export function RenovatedPortfolio() {
           }
         }
 
-        /* Navigation Links: Poiret One with Progress-Style Underline */
+        /* Header & Navigation: Fixed glass blur on desktop, no backdrop-filter on mobile */
+        .site-nav-glass {
+          background-color: rgba(249, 251, 248, 0.6);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border-bottom: 1px solid rgba(212, 165, 90, 0.25);
+        }
+        @media (max-width: 820px) {
+          .site-nav-glass {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            background-color: #f9fbf8 !important;
+          }
+        }
+
+        /* Navigation Links: Poiret One 17px, letter-spacing .12em, deep teal */
         .nav-progress-link {
           font-family: 'Poiret One', cursive, sans-serif;
-          font-size: 18px;
-          letter-spacing: 0.14em;
+          font-size: 17px;
+          letter-spacing: 0.12em;
           text-decoration: none;
           position: relative;
           padding: 6px 0 8px;
           display: inline-block;
+          color: var(--deep, #005a55);
           transition: color 0.3s ease;
           text-transform: none;
           cursor: pointer;
         }
         .nav-progress-link:hover,
         .nav-progress-link.active {
-          color: #00756e;
+          color: var(--teal, #00756e);
         }
         .nav-progress-bar {
           position: absolute;
           bottom: 0;
           left: 0;
           width: 100%;
-          height: 2px;
-          border-radius: 999px;
-          background: linear-gradient(90deg, #b8893c 0%, #d4a55a 70%, #fff0c7 95%, #d4a55a 100%);
-          background-size: 200% 100%;
+          height: 1px;
+          background-color: var(--gold, #d4a55a);
           transform: scaleX(0);
           transform-origin: left;
-          transition: transform 0.48s cubic-bezier(0.65, 0, 0.2, 1);
+          transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
           pointer-events: none;
         }
-        .nav-progress-link:hover .nav-progress-bar {
-          transform: scaleX(1);
-          animation: navProgressShimmer 1.8s ease-in-out infinite;
-        }
+        .nav-progress-link:hover .nav-progress-bar,
         .nav-progress-link.active .nav-progress-bar {
           transform: scaleX(1);
-          box-shadow: 0 0 8px rgba(212, 165, 90, 0.45);
-        }
-        @keyframes navProgressShimmer {
-          0% { background-position: 0% 50%; box-shadow: 0 0 4px rgba(212, 165, 90, 0.4); }
-          50% { background-position: 100% 50%; box-shadow: 0 0 10px rgba(212, 165, 90, 0.7); }
-          100% { background-position: 0% 50%; box-shadow: 0 0 4px rgba(212, 165, 90, 0.4); }
         }
       `}</style>
+
+      {/* Custom Gold Cursor (Desktop Only) */}
+      <Cursor />
 
       {/* Teal Curtain Page Transition */}
       <div
@@ -504,16 +513,24 @@ export function RenovatedPortfolio() {
         </div>
       </div>
 
-      {/* Top Glass Blur Nav */}
-      <header className="fixed top-0 inset-x-0 z-50 px-6 sm:px-10 py-4 sm:py-5 bg-[#f9fbf8]/85 backdrop-blur-md border-b border-[#d4a55a]/25">
+      {/* Top Fixed Glass Blur Nav */}
+      <header className="fixed top-0 inset-x-0 z-50 px-6 sm:px-10 py-4 sm:py-5 site-nav-glass">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <a
             href="#home"
-            className="font-brand text-2xl text-[#00756e] tracking-wide"
+            className="transition-opacity hover:opacity-85"
+            style={{
+              fontFamily: "'Croissant One', cursive, serif",
+              fontSize: "17px",
+              letterSpacing: "0.3em",
+              color: "var(--teal, #00756e)",
+              textTransform: "uppercase",
+            }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            aria-label="Zauqode Home"
           >
-            <span>Zauqode</span>
+            ZAUQODE
           </a>
 
           <nav className="hidden md:flex items-center gap-9">
@@ -536,7 +553,7 @@ export function RenovatedPortfolio() {
                       window.history.pushState(null, "", `#${item.id}`);
                     }
                   }}
-                  className={`nav-progress-link ${isActive ? "active text-[#00756e]" : "text-[#005a55]"}`}
+                  className={`nav-progress-link ${isActive ? "active" : ""}`}
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
@@ -550,17 +567,41 @@ export function RenovatedPortfolio() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden font-ui text-xs tracking-widest uppercase border border-[#d4a55a] text-[#00756e] px-4 py-1.5 rounded-full"
+            className="md:hidden text-xs uppercase px-4 py-1.5 rounded-full border border-[#d4a55a] text-[#00756e]"
+            style={{ fontFamily: "'Poiret One', cursive, sans-serif", letterSpacing: "0.25em" }}
+            aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? "Close" : "Menu"}
           </button>
         </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Full-Screen Overlay (<820px, links in Antic Didone 38px) */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 top-[65px] bg-[#f9fbf8] z-40 p-8 flex flex-col justify-between">
-          <div className="space-y-5 pt-8">
+        <div className="fixed inset-0 bg-[#f9fbf8] z-[99999] p-8 flex flex-col justify-between">
+          <div className="flex justify-between items-center pb-6 border-b border-[#d4a55a]/25">
+            <span
+              style={{
+                fontFamily: "'Croissant One', cursive, serif",
+                fontSize: "17px",
+                letterSpacing: "0.3em",
+                color: "var(--teal, #00756e)",
+                textTransform: "uppercase",
+              }}
+            >
+              ZAUQODE
+            </span>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-2xl text-[#005a55] px-2 py-1"
+              aria-label="Close Menu"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="space-y-6 py-auto my-auto">
             {[
               { id: "home", label: "Home" },
               { id: "about", label: "About" },
@@ -579,14 +620,19 @@ export function RenovatedPortfolio() {
                     window.history.pushState(null, "", `#${item.id}`);
                   }
                 }}
-                className="block text-2xl tracking-[0.14em] text-[#005a55] hover:text-[#00756e] py-1.5 transition-colors"
-                style={{ fontFamily: "'Poiret One', cursive, sans-serif" }}
+                className="block text-[#005a55] hover:text-[#00756e] transition-colors"
+                style={{
+                  fontFamily: "'Antic Didone', serif",
+                  fontSize: "38px",
+                  lineHeight: "1.2",
+                }}
               >
                 {item.label}
               </a>
             ))}
           </div>
-          <div className="font-script text-2xl text-[#b8893c] pb-6">
+
+          <div className="font-script text-2xl text-[#b8893c] pt-6 border-t border-[#d4a55a]/25">
             Design . Code . Elevate
           </div>
         </div>
