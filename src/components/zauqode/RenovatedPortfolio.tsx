@@ -1230,8 +1230,8 @@ export function RenovatedPortfolio() {
               <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
                 Start a Conversation
               </div>
-              <h2 className="font-heading text-3xl sm:text-4xl text-[#00756e]">
-                Let’s talk about your celebration.
+              <h2 className="font-heading text-3xl sm:text-4xl text-[#00756e] leading-snug">
+                Let’s talk about your <span className="font-script text-4xl sm:text-5xl font-normal">celebration</span>.
               </h2>
             </div>
 
