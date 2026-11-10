@@ -68,8 +68,9 @@ export function RenovatedPortfolio() {
   const handleMouseEnter = () => {};
   const handleMouseLeave = () => {};
 
-  // 3D Card Tilt Effect
+  // 3D Card Tilt Effect (disabled on mobile touch devices)
   const handleCardMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) return;
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
@@ -384,6 +385,22 @@ export function RenovatedPortfolio() {
           transform: rotate(45deg);
           color: var(--gold-dark);
         }
+
+        @media (max-width: 640px) {
+          .tilt-card-container {
+            aspect-ratio: 4 / 5;
+            padding: 22px 18px;
+            border-radius: 20px;
+            transform: none !important;
+          }
+          .card-inner-gold {
+            inset: 10px;
+            border-radius: 12px;
+          }
+          .tilt-card-container:hover .card-inner-gold {
+            inset: 6px;
+          }
+        }
       `}</style>
 
       {/* Teal Curtain Page Transition */}
@@ -666,19 +683,19 @@ export function RenovatedPortfolio() {
           </div>
 
           {/* 4. Selected Works (Mist Band) */}
-          <section className="bg-[#eef8f3] py-24 px-6">
-            <div className="max-w-5xl mx-auto space-y-12">
-              <div className="text-center space-y-3">
+          <section className="bg-[#eef8f3] py-16 sm:py-24 px-4 sm:px-6">
+            <div className="max-w-5xl mx-auto space-y-10 sm:space-y-12">
+              <div className="text-center space-y-2 sm:space-y-3">
                 <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
                   Selected Portfolio
                 </div>
-                <h2 className="font-heading text-3xl sm:text-4xl text-[#00756e]">
+                <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#00756e]">
                   Meaningful stories, thoughtfully shaped.
                 </h2>
               </div>
 
               {/* 4 Curated Cards: 1 Wedding Website, 1 Invitation, 1 Video, 1 Business Website */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 max-w-sm sm:max-w-none mx-auto w-full">
                 {homeSelectedWorks.map((item) => (
                   <article
                     key={item.id}
@@ -721,30 +738,30 @@ export function RenovatedPortfolio() {
                     </div>
 
                     <div className="relative z-10 text-center my-auto">
-                      <div className={`font-script text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
-                      <div className={`font-heading text-sm mt-1 ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>{item.sub}</div>
+                      <div className={`font-script text-3xl sm:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
+                      <div className={`font-heading text-xs sm:text-sm mt-1 leading-snug ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>{item.sub}</div>
                       {item.videoUrl ? (
-                        <div className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                        <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
                           🎬 Play Video Invite ↗
                         </div>
                       ) : item.category === "invitations" ? (
-                        <div className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                        <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
                           Preview ↗
                         </div>
                       ) : item.thumb ? (
-                        <div className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                        <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
                           📱 Mobile Preview ↗
                         </div>
                       ) : item.category === "videos" ? (
-                        <div className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[10px] tracking-widest uppercase">
+                        <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[9px] sm:text-[10px] tracking-widest uppercase">
                           🎬 Motion Story ↗
                         </div>
                       ) : item.category === "business" ? (
-                        <div className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[10px] tracking-widest uppercase">
+                        <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[9px] sm:text-[10px] tracking-widest uppercase">
                           ✦ Digital Platform ↗
                         </div>
                       ) : (
-                        <div className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[10px] tracking-widest uppercase">
+                        <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[9px] sm:text-[10px] tracking-widest uppercase">
                           💌 Heirloom Suite ↗
                         </div>
                       )}
@@ -891,18 +908,18 @@ export function RenovatedPortfolio() {
           VIEW: WORKS (#works)
           ===================================================================== */}
       {currentRoute === "works" && (
-        <section className="py-32 px-6 max-w-5xl mx-auto space-y-10">
-          <div className="text-center space-y-3">
+        <section className="pt-24 sm:pt-32 pb-16 px-4 sm:px-6 max-w-5xl mx-auto space-y-8 sm:space-y-10 w-full overflow-hidden">
+          <div className="text-center space-y-2 sm:space-y-3">
             <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
               Portfolio Gallery
             </div>
-            <h1 className="font-heading text-4xl text-[#00756e]">
+            <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#00756e] leading-snug">
               A collection of meaningful creations.
             </h1>
           </div>
 
           {/* Filter Pills */}
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3 max-w-full px-2">
             {[
               { id: "all", label: "All" },
               { id: "websites", label: "Wedding Websites" },
@@ -914,7 +931,7 @@ export function RenovatedPortfolio() {
                 key={f.id}
                 type="button"
                 onClick={() => setActiveFilter(f.id)}
-                className={`font-ui text-xs tracking-widest uppercase px-6 py-2 rounded-full border transition-all ${
+                className={`font-ui text-[11px] sm:text-xs tracking-wider sm:tracking-widest uppercase px-3.5 sm:px-6 py-1.5 sm:py-2 rounded-full border transition-all ${
                   activeFilter === f.id
                     ? "bg-[#00756e] text-[#f3e3c0] border-[#00756e]"
                     : "border-[#d4a55a]/40 text-[#0d3b38] hover:border-[#00756e]"
@@ -926,7 +943,7 @@ export function RenovatedPortfolio() {
           </div>
 
           {/* Grid of 3:4 Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8 max-w-sm sm:max-w-none mx-auto w-full">
             {works
               .filter((w) => activeFilter === "all" || w.category === activeFilter)
               .map((item) => (
@@ -971,30 +988,30 @@ export function RenovatedPortfolio() {
                   </div>
 
                   <div className="relative z-10 text-center my-auto">
-                    <div className={`font-script text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
-                    <div className={`font-heading text-sm mt-1 ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>{item.sub}</div>
+                    <div className={`font-script text-3xl sm:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
+                    <div className={`font-heading text-xs sm:text-sm mt-1 leading-snug ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>{item.sub}</div>
                     {item.videoUrl ? (
-                      <div className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                      <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
                         🎬 Play Video Invite ↗
                       </div>
                     ) : item.category === "invitations" ? (
-                      <div className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                      <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
                         Preview ↗
                       </div>
                     ) : item.thumb ? (
-                      <div className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                      <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
                         📱 Mobile Preview ↗
                       </div>
                     ) : item.category === "videos" ? (
-                      <div className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[10px] tracking-widest uppercase">
+                      <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[9px] sm:text-[10px] tracking-widest uppercase">
                         🎬 Motion Story ↗
                       </div>
                     ) : item.category === "business" ? (
-                      <div className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[10px] tracking-widest uppercase">
+                      <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[9px] sm:text-[10px] tracking-widest uppercase">
                         ✦ Digital Platform ↗
                       </div>
                     ) : (
-                      <div className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[10px] tracking-widest uppercase">
+                      <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[9px] sm:text-[10px] tracking-widest uppercase">
                         💌 Heirloom Suite ↗
                       </div>
                     )}
@@ -1099,12 +1116,12 @@ export function RenovatedPortfolio() {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Top Bar */}
-            <div className="flex items-center justify-between w-full max-w-[350px] px-2 text-[#f3e3c0]">
-              <span className="font-heading text-base tracking-wide">{activeMockup.title}</span>
+            <div className="flex items-center justify-between w-full max-w-[320px] sm:max-w-[350px] px-2 text-[#f3e3c0]">
+              <span className="font-heading text-sm sm:text-base tracking-wide truncate pr-2">{activeMockup.title}</span>
               <button
                 type="button"
                 onClick={() => setActiveMockup(null)}
-                className="w-9 h-9 rounded-full border border-[#d4a55a] bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer"
+                className="w-9 h-9 shrink-0 rounded-full border border-[#d4a55a] bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer"
                 aria-label="Close"
               >
                 ✕
@@ -1112,8 +1129,8 @@ export function RenovatedPortfolio() {
             </div>
 
             {/* iPhone Frame */}
-            <div className="w-[350px] h-[700px] max-h-[84vh] max-w-[90vw] bg-[#09201e] rounded-[52px] p-3 shadow-[0_0_0_3px_#d4a55a,0_0_0_6px_#031412,0_30px_80px_-10px_rgba(0,0,0,0.85)] relative flex flex-col">
-              <div className="flex-1 w-full h-full bg-white rounded-[42px] overflow-hidden relative flex flex-col">
+            <div className="w-full max-w-[320px] sm:max-w-[350px] h-[580px] sm:h-[700px] max-h-[78vh] sm:max-h-[84vh] bg-[#09201e] rounded-[40px] sm:rounded-[52px] p-2.5 sm:p-3 shadow-[0_0_0_3px_#d4a55a,0_0_0_6px_#031412,0_30px_80px_-10px_rgba(0,0,0,0.85)] relative flex flex-col">
+              <div className="flex-1 w-full h-full bg-white rounded-[32px] sm:rounded-[42px] overflow-hidden relative flex flex-col">
                 {/* Status Bar */}
                 <div className="absolute top-0 inset-x-0 h-11 z-30 flex items-center justify-between px-6 pointer-events-none text-xs font-semibold text-black bg-gradient-to-b from-white/95 to-transparent">
                   <span>9:41</span>
