@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { RenovatedPortfolio } from "@/components/zauqode/RenovatedPortfolio";
 
-const title = "Zauqode | Designer";
+const title = "Zauqode | Design & Development Studio";
 const description =
   "Zauqode is a bespoke design studio by an invitation & occasion designer, thoughtfully connecting with emotions. I craft premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.";
 

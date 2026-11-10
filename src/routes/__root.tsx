@@ -79,7 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#F7F5EF" },
       { name: "format-detection", content: "telephone=no" },
-      { title: "Zauqode | Designer" },
+      { title: "Zauqode | Design & Development Studio" },
       {
         name: "description",
         content:
@@ -122,7 +122,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
-        <title>Zauqode | Designer</title>
+        <title>Zauqode | Design & Development Studio</title>
         <HeadContent />
       </head>
       <body>

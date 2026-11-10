@@ -38,11 +38,13 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  title: "Zauqode | Designer",
+  title: "Zauqode | Design & Development Studio",
   description:
-    "Zauqode is a bespoke design studio by an invitation & occasion designer, thoughtfully connecting with emotions. I craft premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.",
+    "Zauqode is a bespoke design & development studio, thoughtfully connecting with emotions. I craft premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.",
   keywords: [
     "designer",
+    "developer",
+    "design and development studio",
     "invitation designer",
     "occasion designer",
     "bespoke invitations",
@@ -57,16 +59,16 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://www.zauqode.com/",
     siteName: "Zauqode",
-    title: "Zauqode | Designer",
+    title: "Zauqode | Design & Development Studio",
     description:
-      "A bespoke design studio by an invitation & occasion designer, thoughtfully connecting with emotions. Crafting premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.",
+      "A bespoke design & development studio, thoughtfully connecting with emotions. Crafting premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.",
     images: [{ url: "https://www.zauqode.com/zauqode-logo.png" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Zauqode | Designer",
+    title: "Zauqode | Design & Development Studio",
     description:
-      "A bespoke design studio by an invitation & occasion designer, thoughtfully connecting with emotions. Crafting premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.",
+      "A bespoke design & development studio, thoughtfully connecting with emotions. Crafting premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.",
     images: ["https://www.zauqode.com/zauqode-logo.png"],
   },
 };
