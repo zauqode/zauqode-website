@@ -1232,10 +1232,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
+      gap: 8px;
       position: relative;
       max-width: 100%;
-      max-height: 96vh;
+      max-height: 98vh;
       overflow-y: auto;
       transform: scale(0.93) translateY(16px);
       transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1250,7 +1250,7 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      max-width: 360px;
+      max-width: 365px;
       color: #f3e3c0;
       padding: 0 4px;
     }
@@ -1520,21 +1520,21 @@
       transform: rotate(90deg);
     }
 
-    /* Realistic iPhone 16 Model */
+    /* Realistic Android Flagship Model */
     .iphone-frame {
-      width: 350px;
-      height: 700px;
-      max-height: 84vh;
+      width: 365px;
+      height: 780px;
+      max-height: 89vh;
       max-width: 90vw;
       background: #09201e;
-      border-radius: 52px;
+      border-radius: 36px;
       box-shadow: 
-        0 0 0 3px #d4a55a,
-        0 0 0 6px #031412,
+        0 0 0 2.5px #d4a55a,
+        0 0 0 5px #031412,
         0 30px 80px -10px rgba(0, 0, 0, 0.85),
         inset 0 0 0 1.5px rgba(255, 255, 255, 0.15);
       position: relative;
-      padding: 12px;
+      padding: 9px;
       display: flex;
       flex-direction: column;
     }
@@ -1544,7 +1544,7 @@
       width: 100%;
       height: 100%;
       background: #ffffff;
-      border-radius: 42px;
+      border-radius: 28px;
       overflow: hidden;
       position: relative;
       display: flex;
@@ -1556,18 +1556,18 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 44px;
+      height: 32px;
       z-index: 30;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 24px;
+      padding: 0 18px;
       pointer-events: none;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      color: #111;
-      background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 100%);
+      font-size: 11px;
+      font-weight: 500;
+      color: #171717;
+      background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.8) 70%, rgba(255,255,255,0) 100%);
     }
 
     .iphone-island {
@@ -1575,30 +1575,29 @@
       top: 10px;
       left: 50%;
       transform: translateX(-50%);
-      width: 110px;
-      height: 26px;
+      width: 12px;
+      height: 12px;
       background: #000000;
-      border-radius: 20px;
+      border-radius: 50%;
+      border: 1px solid #1a2c3f;
       z-index: 35;
       display: flex;
       align-items: center;
-      justify-content: flex-end;
-      padding-right: 10px;
+      justify-content: center;
     }
 
     .iphone-island .camera-dot {
-      width: 9px;
-      height: 9px;
-      background: #101c2c;
+      width: 4px;
+      height: 4px;
+      background: #132437;
       border-radius: 50%;
-      border: 1px solid #1a2c3f;
     }
 
     .iphone-viewport {
       width: 100%;
       height: 100%;
-      padding-top: 44px;
-      padding-bottom: 22px;
+      padding-top: 32px;
+      padding-bottom: 12px;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       position: relative;
@@ -1620,12 +1619,12 @@
 
     .iphone-home-bar {
       position: absolute;
-      bottom: 8px;
+      bottom: 6px;
       left: 50%;
       transform: translateX(-50%);
-      width: 125px;
-      height: 4.5px;
-      background: rgba(0, 0, 0, 0.65);
+      width: 96px;
+      height: 3px;
+      background: rgba(0, 0, 0, 0.45);
       border-radius: 999px;
       z-index: 35;
       pointer-events: none;
@@ -2212,16 +2211,16 @@
       }
 
       .iphone-frame {
-        width: 100% !important;
-        max-width: 310px !important;
-        height: 540px !important;
-        max-height: 74vh !important;
-        border-radius: 40px !important;
-        padding: 10px !important;
+        width: 325px !important;
+        max-width: 90vw !important;
+        height: 640px !important;
+        max-height: 85vh !important;
+        border-radius: 30px !important;
+        padding: 8px !important;
       }
 
       .iphone-screen {
-        border-radius: 32px !important;
+        border-radius: 23px !important;
       }
 
       .image-modal-body-split {
@@ -2246,7 +2245,7 @@
       }
 
       .mockup-top-bar {
-        max-width: 310px;
+        max-width: 325px;
       }
     }
 
@@ -3675,7 +3674,7 @@
         <button type="button" class="mockup-close-btn" onclick="closeIphoneMockup()" aria-label="Close Preview">✕</button>
       </div>
 
-      <!-- iPhone 16 Frame -->
+      <!-- Android Flagship Frame -->
       <div class="iphone-frame">
         <div class="iphone-screen">
           <!-- Status Bar -->
@@ -3684,7 +3683,14 @@
             <div class="iphone-island">
               <div class="camera-dot"></div>
             </div>
-            <span>5G 􀛨</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;">
+              <span>5G</span>
+              <svg width="16" height="9" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+                <rect x="0.75" y="1" width="14.5" height="8" rx="1.8" stroke="currentColor" stroke-width="1.2" />
+                <rect x="2.2" y="2.4" width="10.2" height="5.2" rx="0.8" fill="currentColor" />
+                <path d="M16.5 3.3V6.7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+              </svg>
+            </span>
           </div>
 
           <!-- Viewport: iframe or mobile scroll -->

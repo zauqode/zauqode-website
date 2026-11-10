@@ -1661,43 +1661,50 @@ export function RenovatedPortfolio() {
         </div>
       )}
 
-      {/* iPhone Mobile Mockup Modal */}
+      {/* Android Mobile Mockup Modal */}
       {activeMockup && (
         <div
-          className="fixed inset-0 z-[99999] bg-[#041412]/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto transition-all duration-300"
+          className="fixed inset-0 z-[99999] bg-[#041412]/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-3 overflow-y-auto transition-all duration-300"
           onClick={() => setActiveMockup(null)}
         >
           <div
-            className="flex flex-col items-center gap-2.5 sm:gap-3 relative max-w-full my-auto"
+            className="flex flex-col items-center gap-2 relative max-w-full my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Top Bar */}
-            <div className="flex items-center justify-between w-full max-w-[310px] sm:max-w-[350px] px-2 text-[#f3e3c0]">
+            <div className="flex items-center justify-between w-full max-w-[325px] sm:max-w-[365px] px-1.5 text-[#f3e3c0]">
               <span className="font-heading text-sm sm:text-base tracking-wide truncate pr-2">{activeMockup.title}</span>
               <button
                 type="button"
                 onClick={() => setActiveMockup(null)}
-                className="w-9 h-9 shrink-0 rounded-full border border-[#d4a55a] bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer"
+                className="w-8 h-8 shrink-0 rounded-full border border-[#d4a55a] bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer text-xs"
                 aria-label="Close"
               >
                 ✕
               </button>
             </div>
 
-            {/* iPhone Frame */}
-            <div className="w-full max-w-[310px] sm:max-w-[350px] h-[520px] sm:h-[700px] max-h-[74vh] sm:max-h-[84vh] bg-[#09201e] rounded-[40px] sm:rounded-[52px] p-2 sm:p-3 shadow-[0_0_0_3px_#d4a55a,0_0_0_6px_#031412,0_30px_80px_-10px_rgba(0,0,0,0.85)] relative flex flex-col">
-              <div className="flex-1 w-full h-full bg-white rounded-[32px] sm:rounded-[42px] overflow-hidden relative flex flex-col">
-                {/* Status Bar */}
-                <div className="absolute top-0 inset-x-0 h-11 z-30 flex items-center justify-between px-6 pointer-events-none text-xs font-semibold text-black bg-gradient-to-b from-white/95 to-transparent">
+            {/* Android Flagship Frame */}
+            <div className="w-[325px] sm:w-[365px] max-w-[90vw] h-[640px] sm:h-[780px] max-h-[85vh] sm:max-h-[89vh] bg-[#09201e] rounded-[30px] sm:rounded-[36px] p-[8px] sm:p-[9px] shadow-[0_0_0_2.5px_#d4a55a,0_0_0_5px_#031412,0_30px_80px_-10px_rgba(0,0,0,0.85)] relative flex flex-col">
+              <div className="flex-1 w-full h-full bg-white rounded-[23px] sm:rounded-[28px] overflow-hidden relative flex flex-col">
+                {/* Android Status Bar with Center Punch-Hole Camera */}
+                <div className="absolute top-0 inset-x-0 h-8 z-30 flex items-center justify-between px-4 sm:px-5 pointer-events-none text-[11px] font-medium text-neutral-900 bg-gradient-to-b from-white/95 via-white/80 to-transparent">
                   <span>9:41</span>
-                  <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full z-35 flex items-center justify-end pr-2.5">
-                    <span className="w-2 h-2 rounded-full bg-[#101c2c] border border-[#1a2c3f]" />
+                  <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-black rounded-full z-35 border border-[#1a2c3f] flex items-center justify-center">
+                    <span className="w-1 h-1 rounded-full bg-[#132437]" />
                   </div>
-                  <span>5G 􀛨</span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <span>5G</span>
+                    <svg width="16" height="9" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+                      <rect x="0.75" y="1" width="14.5" height="8" rx="1.8" stroke="currentColor" strokeWidth="1.2" />
+                      <rect x="2.2" y="2.4" width="10.2" height="5.2" rx="0.8" fill="currentColor" />
+                      <path d="M16.5 3.3V6.7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                    </svg>
+                  </span>
                 </div>
 
                 {/* Viewport */}
-                <div className="w-full h-full pt-11 pb-5 overflow-y-auto bg-[#041412] flex items-center justify-center">
+                <div className="w-full h-full pt-8 pb-3 overflow-y-auto bg-[#041412] flex items-center justify-center">
                   {activeMockup.videoUrl ? (
                     <video
                       src={activeMockup.videoUrl}
@@ -1722,8 +1729,8 @@ export function RenovatedPortfolio() {
                   )}
                 </div>
 
-                {/* Home Indicator */}
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/60 rounded-full z-35 pointer-events-none" />
+                {/* Android Gesture Navigation Pill */}
+                <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-24 h-[3px] bg-black/45 rounded-full z-35 pointer-events-none" />
               </div>
             </div>
           </div>
