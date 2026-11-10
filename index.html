@@ -2270,6 +2270,49 @@
         margin-top: 10px;
       }
 
+      /* Dedicated Works Catalogue Page: 2-Column Lookbook Grid on Mobile */
+      #view-works .works-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin: 0 auto 28px;
+        padding: 0;
+        width: 100%;
+        overflow: visible;
+      }
+
+      #view-works .work-card {
+        flex: none;
+        width: 100%;
+        padding: 13px 10px;
+        border-radius: 14px;
+        aspect-ratio: 3 / 4;
+      }
+
+      #view-works .work-card .card-inner-border {
+        inset: 6px;
+        border-radius: 10px;
+      }
+
+      #view-works .work-card .card-name {
+        font-size: 20px;
+      }
+
+      #view-works .work-card .card-sub {
+        font-size: 10px;
+      }
+
+      #view-works .work-card .card-label {
+        font-size: 8.5px;
+        letter-spacing: 0.12em;
+      }
+
+      #view-works .work-card.has-thumb .preview-pill {
+        font-size: 8.5px;
+        padding: 3px 10px;
+        margin-top: 8px;
+      }
+
       .iphone-frame {
         width: 100% !important;
         max-width: 310px !important;

@@ -30,7 +30,6 @@ export function RenovatedPortfolio() {
     message: "",
   });
 
-  const [showAllWorks, setShowAllWorks] = useState(false);
 
   // Close modals on Escape key & arrow keys navigation
   useEffect(() => {
@@ -535,9 +534,17 @@ export function RenovatedPortfolio() {
             border-radius: 18px;
             transform: none !important;
           }
+          .tilt-card-container.catalogue-card {
+            padding: 13px 10px;
+            border-radius: 14px;
+          }
           .card-inner-gold {
             inset: 9px;
             border-radius: 12px;
+          }
+          .catalogue-card .card-inner-gold {
+            inset: 6px;
+            border-radius: 10px;
           }
           .tilt-card-container:hover .card-inner-gold {
             inset: 6px;
@@ -1331,49 +1338,67 @@ export function RenovatedPortfolio() {
       )}
 
       {/* =====================================================================
-          VIEW: WORKS (#works)
+          VIEW: WORKS (#works — Portfolio Catalogue)
           ===================================================================== */}
-      {currentRoute === "works" && (
-        <section className="pt-24 sm:pt-32 pb-16 px-4 sm:px-6 max-w-5xl mx-auto space-y-8 sm:space-y-10 w-full overflow-hidden">
-          <div className="text-center space-y-2 sm:space-y-3">
-            <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
-              Portfolio Gallery
+      {currentRoute === "works" && (() => {
+        const filteredWorks = works.filter(
+          (w) => activeFilter === "all" || w.category === activeFilter
+        );
+        const categoryCounts: Record<string, number> = {
+          all: works.length,
+          websites: works.filter((w) => w.category === "websites").length,
+          invitations: works.filter((w) => w.category === "invitations").length,
+          videos: works.filter((w) => w.category === "videos").length,
+          business: works.filter((w) => w.category === "business").length,
+        };
+
+        return (
+          <section className="pt-24 sm:pt-32 pb-16 px-3 sm:px-6 max-w-5xl mx-auto space-y-6 sm:space-y-10 w-full">
+            <div className="text-center space-y-2 sm:space-y-3">
+              <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
+                Portfolio Catalogue
+              </div>
+              <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#00756e] leading-snug">
+                A collection of meaningful creations.
+              </h1>
             </div>
-            <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#00756e] leading-snug">
-              A collection of meaningful creations.
-            </h1>
-          </div>
 
-          {/* Filter Pills */}
-          <div className="flex flex-wrap justify-center items-center gap-1.5 sm:gap-3 max-w-full px-2">
-            {[
-              { id: "all", label: "All" },
-              { id: "websites", label: "Wedding Websites" },
-              { id: "invitations", label: "Invitations" },
-              { id: "videos", label: "Video Invites" },
-              { id: "business", label: "Business Websites" },
-            ].map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => setActiveFilter(f.id)}
-                className={`font-ui text-[10px] sm:text-xs tracking-wider sm:tracking-widest uppercase px-3 sm:px-5 py-1.5 sm:py-2 rounded-full border transition-all ${
-                  activeFilter === f.id
-                    ? "bg-[#00756e] text-[#f3e3c0] border-[#00756e]"
-                    : "border-[#d4a55a]/40 text-[#0d3b38] hover:border-[#00756e]"
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
+            {/* Catalogue Filter Bar */}
+            <div className="space-y-3">
+              <div className="flex flex-wrap justify-center items-center gap-1.5 sm:gap-2.5 max-w-full px-1">
+                {[
+                  { id: "all", label: "All" },
+                  { id: "websites", label: "Wedding Websites" },
+                  { id: "invitations", label: "Invitations" },
+                  { id: "videos", label: "Video Invites" },
+                  { id: "business", label: "Business Websites" },
+                ].map((f) => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    onClick={() => setActiveFilter(f.id)}
+                    className={`font-ui text-[10px] sm:text-xs tracking-wider sm:tracking-widest uppercase px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border transition-all inline-flex items-center gap-1.5 ${
+                      activeFilter === f.id
+                        ? "bg-[#00756e] text-[#f3e3c0] border-[#00756e] shadow-sm"
+                        : "border-[#d4a55a]/40 text-[#0d3b38] hover:border-[#00756e] bg-white/60"
+                    }`}
+                  >
+                    <span>{f.label}</span>
+                    <span className="opacity-65 text-[9px] sm:text-[10px]">
+                      ({categoryCounts[f.id] ?? 0})
+                    </span>
+                  </button>
+                ))}
+              </div>
 
-          {/* Horizontal scroll on mobile, grid of 3:4 cards on tablet/desktop */}
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 -mx-4 px-4 scroll-pl-4 no-scrollbar sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-8 w-auto sm:w-full">
-            {works
-              .filter((w) => activeFilter === "all" || w.category === activeFilter)
-              .slice(0, activeFilter === "all" && !showAllWorks ? 6 : undefined)
-              .map((item) => (
+              <div className="text-center font-ui text-[10px] tracking-[0.22em] uppercase text-[#b8893c]/85">
+                Showing {filteredWorks.length} {filteredWorks.length === 1 ? "creation" : "creations"}
+              </div>
+            </div>
+
+            {/* 2-Column Mobile / 3-Column Desktop Catalogue Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8 w-full">
+              {filteredWorks.map((item) => (
                 <article
                   key={item.id}
                   onClick={() => {
@@ -1396,7 +1421,7 @@ export function RenovatedPortfolio() {
                       window.location.hash = "#contact";
                     }
                   }}
-                  className={`w-[215px] shrink-0 snap-start sm:w-auto tilt-card-container ${item.theme || ""} relative overflow-hidden group cursor-pointer`}
+                  className={`tilt-card-container catalogue-card ${item.theme || ""} relative overflow-hidden group cursor-pointer`}
                   style={item.thumb ? { backgroundImage: `url(${item.thumb})`, backgroundSize: "cover", backgroundPosition: "center" } : {}}
                   onMouseMove={handleCardMouseMove}
                   onMouseLeave={handleCardMouseLeave}
@@ -1406,42 +1431,28 @@ export function RenovatedPortfolio() {
                     <div className="absolute inset-0 bg-gradient-to-b from-[#002d2a]/90 via-[#004641]/35 to-[#002320]/95 z-0 transition-opacity duration-300 group-hover:opacity-90" />
                   )}
                   <div className="card-inner-gold" />
-                  <div className="relative z-10 flex justify-between items-center text-[10px] sm:text-xs font-ui tracking-wider sm:tracking-widest uppercase opacity-85">
-                    <span className={item.thumb ? "text-[#f3e3c0]" : ""}>{item.label}</span>
-                    <span className="text-[#d4a55a]">✦</span>
+                  <div className="relative z-10 flex justify-between items-center gap-1 text-[8.5px] sm:text-xs font-ui tracking-wider sm:tracking-widest uppercase opacity-85">
+                    <span className={`truncate ${item.thumb ? "text-[#f3e3c0]" : ""}`}>{item.label}</span>
+                    <span className="text-[#d4a55a] shrink-0">✦</span>
                   </div>
 
-                  <div className="relative z-10 text-center my-auto">
-                    <div className={`font-script text-2xl sm:text-3xl lg:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
-                    <div className={`font-heading text-[11px] sm:text-sm mt-1 leading-snug ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>{item.sub}</div>
-                    <div className="inline-flex items-center justify-center mt-2 sm:mt-3 px-3 sm:px-4 py-0.5 sm:py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                  <div className="relative z-10 text-center my-auto px-1">
+                    <div className={`font-script text-[20px] sm:text-3xl lg:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>
+                      {item.name}
+                    </div>
+                    <div className={`font-heading text-[10px] sm:text-sm mt-1 leading-snug line-clamp-2 ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>
+                      {item.sub}
+                    </div>
+                    <div className="inline-flex items-center justify-center mt-2 sm:mt-3 px-2.5 sm:px-4 py-0.5 sm:py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[8.5px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
                       Preview
                     </div>
                   </div>
                 </article>
               ))}
-            <div className="shrink-0 w-1 sm:hidden" aria-hidden="true" />
-          </div>
-
-          <div className="sm:hidden text-center font-ui text-[10px] tracking-[0.25em] uppercase text-[#b8893c]/80">
-            Swipe to explore →
-          </div>
-
-          {/* Toggle Button for Curated / Full Works */}
-          {activeFilter === "all" && works.length > 6 && (
-            <div className="text-center pt-4">
-              <button
-                type="button"
-                onClick={() => setShowAllWorks(!showAllWorks)}
-                className="btn-pill-renovated"
-              >
-                <span>{showAllWorks ? "Show top 6 curated creations" : `Explore all ${works.length} creations`}</span>
-                <span className="arrow-move">{showAllWorks ? "↑" : "↓"}</span>
-              </button>
             </div>
-          )}
-        </section>
-      )}
+          </section>
+        );
+      })()}
 
       {/* Wavy Divider into Deep Teal Footer */}
       <div className="w-full overflow-hidden leading-none block bg-[#f9fbf8] -mb-[2px] relative z-[2]">
