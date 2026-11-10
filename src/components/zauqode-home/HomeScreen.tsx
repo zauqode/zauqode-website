@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styles from './HomeScreen.module.css';
 import { Navbar } from './Navbar';
 import { Hero } from './Hero';
-import { Cursor } from './Cursor';
 
 /**
  * HomeScreen Component (Hero section only)
@@ -50,9 +49,6 @@ export function HomeScreen() {
     <div className={styles.homeContainer}>
       {/* Fixed soft mint radial background glows in top-left & bottom-right */}
       <div className={styles.backgroundGlows} aria-hidden="true" />
-
-      {/* Custom Desktop Cursor (38px -> 70px) */}
-      <Cursor />
 
       {/* Fixed Glass Blur Navbar */}
       <Navbar activeRoute={activeRoute} onRouteChange={handleRouteChange} />

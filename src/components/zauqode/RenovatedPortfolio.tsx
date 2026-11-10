@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import zauqodeLogo from "../../assets/Logos/zauqode-logo.png";
 import { Hero } from "@/components/zauqode-home/Hero";
-import { Cursor } from "@/components/zauqode-home/Cursor";
 
 export function RenovatedPortfolio() {
   const [currentRoute, setCurrentRoute] = useState("home");
@@ -601,9 +600,6 @@ export function RenovatedPortfolio() {
           transform: scaleX(1);
         }
       `}</style>
-
-      {/* Custom Gold Cursor (Desktop Only) */}
-      <Cursor />
 
       {/* Teal Curtain Page Transition */}
       <div
