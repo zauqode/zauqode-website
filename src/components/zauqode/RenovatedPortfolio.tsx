@@ -742,50 +742,103 @@ export function RenovatedPortfolio() {
             </div>
           </section>
 
-          {/* 3b. Process & Starting Investment (White to Mist transition) */}
-          <section className="bg-white pb-20 px-6">
-            <div className="max-w-4xl mx-auto space-y-16 border-t border-[#d4a55a]/20 pt-16">
-              {/* 3-Step Process */}
-              <div className="space-y-8">
-                <div className="text-center space-y-2">
-                  <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
-                    How It Works
+          {/* 3b. Process Section (Elite Hybrid combining Image 1 wordings & layout with Image 2 card UI) */}
+          <section id="process" className="bg-white pb-20 px-6 scroll-mt-20">
+            <div className="max-w-6xl mx-auto space-y-12 border-t border-[#d4a55a]/20 pt-16">
+              {/* Header */}
+              <div className="text-center space-y-2">
+                <div className="font-ui text-xs tracking-[0.3em] uppercase text-[#b8893c]">
+                  Process
+                </div>
+                <h2 className="font-heading text-3xl sm:text-4xl text-[#005a55]">
+                  How I create <span className="font-script text-4xl sm:text-5xl text-[#00756e] font-normal lowercase">your invitation</span>
+                </h2>
+              </div>
+
+              {/* 4 Process Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* 01: Share your story */}
+                <div className="p-7 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/35 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(0,117,110,0.04)] hover:shadow-[0_12px_28px_-6px_rgba(212,165,90,0.22)] hover:border-[#d4a55a] hover:-translate-y-1.5 transition-all duration-300 relative group">
+                  <div>
+                    {/* Gold accent line */}
+                    <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-heading text-2xl text-[#b8893c] font-semibold">01</span>
+                      <span className="text-[#d4a55a] text-xs">✦</span>
+                    </div>
+                    <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
+                      Share your story
+                    </h3>
+                    <p className="font-body text-xs sm:text-[13px] text-[#0d3b38]/80 font-light leading-relaxed">
+                      Tell me your wishes, your style and your date. I listen first.
+                    </p>
                   </div>
-                  <h3 className="font-heading text-2xl sm:text-3xl text-[#00756e]">
-                    A Seamless 3-Step Journey
-                  </h3>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                  <div className="p-6 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/30 space-y-3">
-                    <div className="w-10 h-10 rounded-full border border-[#d4a55a] bg-[#00756e] text-[#f3e3c0] font-heading text-lg flex items-center justify-center mx-auto">
-                      1
+                {/* 02: I design */}
+                <div className="p-7 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/35 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(0,117,110,0.04)] hover:shadow-[0_12px_28px_-6px_rgba(212,165,90,0.22)] hover:border-[#d4a55a] hover:-translate-y-1.5 transition-all duration-300 relative group">
+                  <div>
+                    {/* Gold accent line */}
+                    <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-heading text-2xl text-[#b8893c] font-semibold">02</span>
+                      <span className="text-[#d4a55a] text-xs">✦</span>
                     </div>
-                    <h4 className="font-heading text-xl text-[#005a55]">Share Your Story</h4>
-                    <p className="text-xs text-[#0d3b38]/75 font-light leading-relaxed">
-                      Tell me about your celebration, wedding dates, venue, and aesthetic inspirations.
+                    <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
+                      I design
+                    </h3>
+                    <p className="font-body text-xs sm:text-[13px] text-[#0d3b38]/80 font-light leading-relaxed">
+                      Your feelings become a custom invitation, made with detail and care.
                     </p>
                   </div>
+                </div>
 
-                  <div className="p-6 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/30 space-y-3">
-                    <div className="w-10 h-10 rounded-full border border-[#d4a55a] bg-[#00756e] text-[#f3e3c0] font-heading text-lg flex items-center justify-center mx-auto">
-                      2
+                {/* 03: Printing, arranged for you */}
+                <div className="p-7 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/35 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(0,117,110,0.04)] hover:shadow-[0_12px_28px_-6px_rgba(212,165,90,0.22)] hover:border-[#d4a55a] hover:-translate-y-1.5 transition-all duration-300 relative group">
+                  <div>
+                    {/* Gold accent line */}
+                    <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-heading text-2xl text-[#b8893c] font-semibold">03</span>
+                      <span className="text-[#d4a55a] text-xs">✦</span>
                     </div>
-                    <h4 className="font-heading text-xl text-[#005a55]">Artisan Design</h4>
-                    <p className="text-xs text-[#0d3b38]/75 font-light leading-relaxed">
-                      I craft your bespoke stationery suites, custom typography, and interactive live previews.
+                    <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
+                      Printing, arranged for you
+                    </h3>
+                    <p className="font-body text-xs sm:text-[13px] text-[#0d3b38]/80 font-light leading-relaxed">
+                      Printing depends on my work schedule. When it is full, my trusted premium printing partners handle it with the same quality. I arrange everything, so you only enjoy the design.
                     </p>
                   </div>
+                </div>
 
-                  <div className="p-6 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/30 space-y-3">
-                    <div className="w-10 h-10 rounded-full border border-[#d4a55a] bg-[#00756e] text-[#f3e3c0] font-heading text-lg flex items-center justify-center mx-auto">
-                      3
+                {/* 04: Delivered with love */}
+                <div className="p-7 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/35 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(0,117,110,0.04)] hover:shadow-[0_12px_28px_-6px_rgba(212,165,90,0.22)] hover:border-[#d4a55a] hover:-translate-y-1.5 transition-all duration-300 relative group">
+                  <div>
+                    {/* Gold accent line */}
+                    <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-heading text-2xl text-[#b8893c] font-semibold">04</span>
+                      <span className="text-[#d4a55a] text-xs">✦</span>
                     </div>
-                    <h4 className="font-heading text-xl text-[#005a55]">Delivery &amp; Joy</h4>
-                    <p className="text-xs text-[#0d3b38]/75 font-light leading-relaxed">
-                      Receive your final print-ready files and published guest portals ready to share with loved ones.
+                    <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
+                      Delivered with love
+                    </h3>
+                    <p className="font-body text-xs sm:text-[13px] text-[#0d3b38]/80 font-light leading-relaxed">
+                      Every detail is checked, and your invitation reaches you ready to share.
                     </p>
                   </div>
+                </div>
+              </div>
+
+              {/* Bottom Script Tagline from Image 1 */}
+              <div className="pt-6 space-y-3">
+                <div className="flex items-center justify-center gap-4 max-w-xs mx-auto">
+                  <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#d4a55a] to-transparent" />
+                  <span className="text-[#d4a55a] text-xs">✦</span>
+                  <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#d4a55a] to-transparent" />
+                </div>
+                <div className="font-script text-2xl sm:text-3xl text-[#00756e] text-center">
+                  Everything handled with care, love and trust.
                 </div>
               </div>
             </div>
