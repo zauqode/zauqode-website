@@ -430,16 +430,24 @@ export function RenovatedPortfolio() {
           color: var(--gold-dark);
         }
 
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+
         @media (max-width: 640px) {
           .tilt-card-container {
-            aspect-ratio: 4 / 5;
-            min-height: 380px;
-            padding: 24px 20px;
-            border-radius: 20px;
+            aspect-ratio: 3 / 4;
+            min-height: 0;
+            padding: 18px 14px;
+            border-radius: 18px;
             transform: none !important;
           }
           .card-inner-gold {
-            inset: 10px;
+            inset: 9px;
             border-radius: 12px;
           }
           .tilt-card-container:hover .card-inner-gold {
@@ -910,8 +918,8 @@ export function RenovatedPortfolio() {
                 </h2>
               </div>
 
-              {/* 4 Curated Cards: 1 Wedding Website, 1 Invitation, 1 Video, 1 Business Website */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 max-w-md sm:max-w-none mx-auto w-full">
+              {/* 4 Curated Cards: horizontal scroll on mobile, 2x2 / 4-col grid on tablet/desktop */}
+              <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 -mx-4 px-4 scroll-pl-4 no-scrollbar sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 w-auto sm:w-full">
                 {homeSelectedWorks.map((item) => (
                   <article
                     key={item.id}
@@ -935,7 +943,7 @@ export function RenovatedPortfolio() {
                         window.location.hash = "#contact";
                       }
                     }}
-                    className={`tilt-card-container ${item.theme || ""} relative overflow-hidden group cursor-pointer`}
+                    className={`w-[215px] shrink-0 snap-start sm:w-auto tilt-card-container ${item.theme || ""} relative overflow-hidden group cursor-pointer`}
                     style={item.thumb ? { backgroundImage: `url(${item.thumb})`, backgroundSize: "cover", backgroundPosition: "center" } : {}}
                     onMouseMove={handleCardMouseMove}
                     onMouseLeave={handleCardMouseLeave}
@@ -945,20 +953,25 @@ export function RenovatedPortfolio() {
                       <div className="absolute inset-0 bg-gradient-to-b from-[#002d2a]/90 via-[#004641]/35 to-[#002320]/95 z-0 transition-opacity duration-300 group-hover:opacity-90" />
                     )}
                     <div className="card-inner-gold" />
-                    <div className="relative z-10 flex justify-between items-center text-xs font-ui tracking-widest uppercase opacity-85">
+                    <div className="relative z-10 flex justify-between items-center text-[10px] sm:text-xs font-ui tracking-wider sm:tracking-widest uppercase opacity-85">
                       <span className={item.thumb ? "text-[#f3e3c0]" : ""}>{item.label}</span>
                       <span className="text-[#d4a55a]">✦</span>
                     </div>
 
                     <div className="relative z-10 text-center my-auto">
-                      <div className={`font-script text-3xl sm:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
-                      <div className={`font-heading text-xs sm:text-sm mt-1 leading-snug ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>{item.sub}</div>
-                      <div className="inline-flex items-center justify-center mt-2.5 sm:mt-3 px-3.5 sm:px-4 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[10px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                      <div className={`font-script text-2xl sm:text-3xl lg:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
+                      <div className={`font-heading text-[11px] sm:text-sm mt-1 leading-snug ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>{item.sub}</div>
+                      <div className="inline-flex items-center justify-center mt-2 sm:mt-3 px-3 sm:px-4 py-0.5 sm:py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
                         Preview
                       </div>
                     </div>
                   </article>
                 ))}
+                <div className="shrink-0 w-1 sm:hidden" aria-hidden="true" />
+              </div>
+
+              <div className="sm:hidden text-center font-ui text-[10px] tracking-[0.25em] uppercase text-[#b8893c]/80 -mt-4">
+                Swipe to explore →
               </div>
 
               <div className="text-center pt-4">
@@ -1231,8 +1244,8 @@ export function RenovatedPortfolio() {
             ))}
           </div>
 
-          {/* Grid of 3:4 Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8 max-w-md sm:max-w-none mx-auto w-full">
+          {/* Horizontal scroll on mobile, grid of 3:4 cards on tablet/desktop */}
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 -mx-4 px-4 scroll-pl-4 no-scrollbar sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-8 w-auto sm:w-full">
             {works
               .filter((w) => activeFilter === "all" || w.category === activeFilter)
               .slice(0, activeFilter === "all" && !showAllWorks ? 6 : undefined)
@@ -1259,7 +1272,7 @@ export function RenovatedPortfolio() {
                       window.location.hash = "#contact";
                     }
                   }}
-                  className={`tilt-card-container ${item.theme || ""} relative overflow-hidden group cursor-pointer`}
+                  className={`w-[215px] shrink-0 snap-start sm:w-auto tilt-card-container ${item.theme || ""} relative overflow-hidden group cursor-pointer`}
                   style={item.thumb ? { backgroundImage: `url(${item.thumb})`, backgroundSize: "cover", backgroundPosition: "center" } : {}}
                   onMouseMove={handleCardMouseMove}
                   onMouseLeave={handleCardMouseLeave}
@@ -1269,20 +1282,25 @@ export function RenovatedPortfolio() {
                     <div className="absolute inset-0 bg-gradient-to-b from-[#002d2a]/90 via-[#004641]/35 to-[#002320]/95 z-0 transition-opacity duration-300 group-hover:opacity-90" />
                   )}
                   <div className="card-inner-gold" />
-                  <div className="relative z-10 flex justify-between items-center text-xs font-ui tracking-widest uppercase opacity-85">
+                  <div className="relative z-10 flex justify-between items-center text-[10px] sm:text-xs font-ui tracking-wider sm:tracking-widest uppercase opacity-85">
                     <span className={item.thumb ? "text-[#f3e3c0]" : ""}>{item.label}</span>
                     <span className="text-[#d4a55a]">✦</span>
                   </div>
 
                   <div className="relative z-10 text-center my-auto">
-                    <div className={`font-script text-3xl sm:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
-                    <div className={`font-heading text-xs sm:text-sm mt-1 leading-snug ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>{item.sub}</div>
-                    <div className="inline-flex items-center justify-center mt-2.5 sm:mt-3 px-3.5 sm:px-4 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[10px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                    <div className={`font-script text-2xl sm:text-3xl lg:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
+                    <div className={`font-heading text-[11px] sm:text-sm mt-1 leading-snug ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>{item.sub}</div>
+                    <div className="inline-flex items-center justify-center mt-2 sm:mt-3 px-3 sm:px-4 py-0.5 sm:py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
                       Preview
                     </div>
                   </div>
                 </article>
               ))}
+            <div className="shrink-0 w-1 sm:hidden" aria-hidden="true" />
+          </div>
+
+          <div className="sm:hidden text-center font-ui text-[10px] tracking-[0.25em] uppercase text-[#b8893c]/80">
+            Swipe to explore →
           </div>
 
           {/* Toggle Button for Curated / Full Works */}

@@ -1992,24 +1992,38 @@
       }
 
       .works-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-        max-width: 420px;
-        margin: 0 auto 36px;
-        width: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding-left: 16px;
+        gap: 16px;
+        margin: 0 -16px 28px;
+        padding: 0 16px 8px;
+        max-width: none;
+        width: auto;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .works-grid::-webkit-scrollbar {
+        display: none;
       }
 
       .work-card {
-        padding: 24px 20px;
-        border-radius: 20px;
-        aspect-ratio: 4 / 5;
-        min-height: 380px;
+        flex: 0 0 215px;
+        width: 215px;
+        scroll-snap-align: start;
+        padding: 18px 14px;
+        border-radius: 18px;
+        aspect-ratio: 3 / 4;
+        min-height: 0;
         box-shadow: 0 8px 24px -6px rgba(13, 59, 56, 0.1);
         transform: none !important;
       }
 
       .work-card .card-inner-border {
-        inset: 10px;
+        inset: 9px;
         border-radius: 12px;
       }
 
@@ -2018,13 +2032,13 @@
       }
 
       .work-card .card-name {
-        font-size: clamp(26px, 7.5vw, 34px);
+        font-size: 24px;
         line-height: 1.2;
         word-break: break-word;
       }
 
       .work-card .card-sub {
-        font-size: 12px;
+        font-size: 11px;
         letter-spacing: 0.03em;
         line-height: 1.4;
         margin-top: 4px;
@@ -2032,18 +2046,18 @@
       }
 
       .work-card .card-label {
-        font-size: 10px;
+        font-size: 9px;
         letter-spacing: 0.16em;
       }
 
       .work-card .card-star {
-        font-size: 11px;
+        font-size: 10px;
       }
 
       .work-card.has-thumb .preview-pill {
-        font-size: 10px;
-        padding: 5px 14px;
-        margin-top: 12px;
+        font-size: 9px;
+        padding: 4px 12px;
+        margin-top: 10px;
       }
 
       .iphone-frame {
