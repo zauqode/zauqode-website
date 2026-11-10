@@ -458,14 +458,17 @@
     .hero-fixed-line-mask {
       display: block;
       overflow: hidden;
+      padding: 4px 8px clamp(8px, 1.2vw, 16px);
+      margin-bottom: calc(-1 * clamp(12px, 1.8vw, 24px));
     }
 
     .hero-fixed-line {
       display: inline-block;
       font-family: var(--font-heading);
       font-size: clamp(32px, 5.1vw, 72px);
-      line-height: 1.08;
+      line-height: 1.2;
       letter-spacing: 0.02em;
+      padding: 0.04em 0.06em 0.18em;
       color: var(--teal-deep);
       animation: heroSlideUp 1.15s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s backwards;
     }
@@ -653,7 +656,7 @@
     }
 
     @keyframes heroSlideUp {
-      from { transform: translateY(115%); opacity: 0; }
+      from { transform: translateY(145%); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
 
