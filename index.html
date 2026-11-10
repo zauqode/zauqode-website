@@ -907,6 +907,8 @@
       gap: 14px;
       position: relative;
       max-width: 100%;
+      max-height: 96vh;
+      overflow-y: auto;
       transform: scale(0.93) translateY(16px);
       transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -1528,7 +1530,8 @@
       }
 
       .works-grid {
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 720px;
         gap: 24px;
         margin-bottom: 40px;
       }
@@ -1593,16 +1596,17 @@
 
       .works-grid {
         grid-template-columns: 1fr;
-        gap: 18px;
-        max-width: 360px;
-        margin: 0 auto 32px;
+        gap: 20px;
+        max-width: 420px;
+        margin: 0 auto 36px;
         width: 100%;
       }
 
       .work-card {
-        padding: 22px 18px;
+        padding: 24px 20px;
         border-radius: 20px;
         aspect-ratio: 4 / 5;
+        min-height: 380px;
         box-shadow: 0 8px 24px -6px rgba(13, 59, 56, 0.1);
         transform: none !important;
       }
@@ -1617,15 +1621,17 @@
       }
 
       .work-card .card-name {
-        font-size: clamp(28px, 8vw, 36px);
-        line-height: 1.15;
+        font-size: clamp(26px, 7.5vw, 34px);
+        line-height: 1.2;
+        word-break: break-word;
       }
 
       .work-card .card-sub {
-        font-size: 13px;
+        font-size: 12px;
         letter-spacing: 0.03em;
-        line-height: 1.35;
+        line-height: 1.4;
         margin-top: 4px;
+        word-break: break-word;
       }
 
       .work-card .card-label {
@@ -1639,15 +1645,15 @@
 
       .work-card.has-thumb .preview-pill {
         font-size: 10px;
-        padding: 5px 12px;
-        margin-top: 10px;
+        padding: 5px 14px;
+        margin-top: 12px;
       }
 
       .iphone-frame {
         width: 100% !important;
         max-width: 310px !important;
-        height: 570px !important;
-        max-height: 76vh !important;
+        height: 540px !important;
+        max-height: 74vh !important;
         border-radius: 40px !important;
         padding: 10px !important;
       }
@@ -1871,7 +1877,7 @@
           <div class="card-center">
             <div class="card-name">Sonali &amp; Pallav</div>
             <div class="card-sub">Occasion Website &amp; RSVP Concierge</div>
-            <div class="preview-pill">📱 Mobile Preview ↗</div>
+            <div class="preview-pill">Preview</div>
           </div>
         </article>
 
@@ -1887,7 +1893,7 @@
           <div class="card-center">
             <div class="card-name">Akash &amp; Yazhini</div>
             <div class="card-sub">Four-Ceremony Royal Folio Suite</div>
-            <div class="preview-pill">Preview ↗</div>
+            <div class="preview-pill">Preview</div>
           </div>
         </article>
 
@@ -1903,7 +1909,7 @@
           <div class="card-center">
             <div class="card-name">Dr. Vamsi &amp; Ritika</div>
             <div class="card-sub">Traditional Musical &amp; Vedic Motion Suite</div>
-            <div class="preview-pill">🎬 Play Video Invite ↗</div>
+            <div class="preview-pill">Preview</div>
           </div>
         </article>
 
@@ -1919,7 +1925,7 @@
           <div class="card-center">
             <div class="card-name">Zara Invitations</div>
             <div class="card-sub">Artisan Stationery &amp; Bespoke Showcase</div>
-            <div class="preview-pill">📱 Mobile Preview ↗</div>
+            <div class="preview-pill">Preview</div>
           </div>
         </article>
       </div>
@@ -2057,7 +2063,7 @@
         <div class="card-center">
           <div class="card-name">Sonali &amp; Pallav</div>
           <div class="card-sub">Occasion Website &amp; RSVP Concierge</div>
-          <div class="preview-pill">📱 Mobile Preview ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
 
@@ -2073,7 +2079,7 @@
         <div class="card-center">
           <div class="card-name">Bala &amp; Shahin</div>
           <div class="card-sub">Grand Celebration &amp; Itinerary Portal</div>
-          <div class="preview-pill">📱 Mobile Preview ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
 
@@ -2089,7 +2095,7 @@
         <div class="card-center">
           <div class="card-name">Aravinda &amp; Salini</div>
           <div class="card-sub">Sacred Temple Wedding Portal</div>
-          <div class="preview-pill">📱 Mobile Preview ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
 
@@ -2105,7 +2111,7 @@
         <div class="card-center">
           <div class="card-name">Akash &amp; Megha</div>
           <div class="card-sub">Celebration Portal &amp; Digital Invitation</div>
-          <div class="preview-pill">📱 Mobile Preview ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
 
@@ -2121,7 +2127,7 @@
         <div class="card-center">
           <div class="card-name">Giridhar &amp; Renee</div>
           <div class="card-sub">A Sacred Wedding Celebration &amp; Portal</div>
-          <div class="preview-pill">📱 Mobile Preview ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
 
@@ -2137,7 +2143,7 @@
         <div class="card-center">
           <div class="card-name">Akash &amp; Yazhini</div>
           <div class="card-sub">Four-Ceremony Royal Folio Suite</div>
-          <div class="preview-pill">Preview ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
 
@@ -2153,7 +2159,7 @@
         <div class="card-center">
           <div class="card-name">Karthik &amp; Divya</div>
           <div class="card-sub">Emerald Lotus &amp; Translucent Vellum Suite</div>
-          <div class="preview-pill">Preview ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
 
@@ -2169,7 +2175,7 @@
         <div class="card-center">
           <div class="card-name">Mohammed &amp; Shakila</div>
           <div class="card-sub">Imperial Burgundy &amp; Gold Arch Suite</div>
-          <div class="preview-pill">Preview ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
 
@@ -2185,7 +2191,7 @@
         <div class="card-center">
           <div class="card-name">Malligai Manam</div>
           <div class="card-sub">மல்லிகை மணம் சூடிக்கொள் — Jasmine Suite</div>
-          <div class="preview-pill">Preview ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
 
@@ -2201,7 +2207,7 @@
         <div class="card-center">
           <div class="card-name">Kaadhalum Valaiyalum</div>
           <div class="card-sub">காதலும் கை வளையலும் — Bangle Ceremony</div>
-          <div class="preview-pill">Preview ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
 
@@ -2217,7 +2223,7 @@
         <div class="card-center">
           <div class="card-name">Dr. Vamsi &amp; Ritika</div>
           <div class="card-sub">Traditional Musical &amp; Vedic Motion Suite</div>
-          <div class="preview-pill">🎬 Play Video Invite ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
 
@@ -2233,7 +2239,7 @@
         <div class="card-center">
           <div class="card-name">Zara Invitations</div>
           <div class="card-sub">Artisan Stationery &amp; Bespoke Showcase</div>
-          <div class="preview-pill">📱 Mobile Preview ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
 
@@ -2249,7 +2255,7 @@
         <div class="card-center">
           <div class="card-name">Thrive Properties</div>
           <div class="card-sub">Premium Real Estate &amp; Property Discovery</div>
-          <div class="preview-pill">📱 Mobile Preview ↗</div>
+          <div class="preview-pill">Preview</div>
         </div>
       </article>
     </div>

@@ -389,7 +389,8 @@ export function RenovatedPortfolio() {
         @media (max-width: 640px) {
           .tilt-card-container {
             aspect-ratio: 4 / 5;
-            padding: 22px 18px;
+            min-height: 380px;
+            padding: 24px 20px;
             border-radius: 20px;
             transform: none !important;
           }
@@ -695,7 +696,7 @@ export function RenovatedPortfolio() {
               </div>
 
               {/* 4 Curated Cards: 1 Wedding Website, 1 Invitation, 1 Video, 1 Business Website */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 max-w-sm sm:max-w-none mx-auto w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 max-w-md sm:max-w-none mx-auto w-full">
                 {homeSelectedWorks.map((item) => (
                   <article
                     key={item.id}
@@ -740,31 +741,9 @@ export function RenovatedPortfolio() {
                     <div className="relative z-10 text-center my-auto">
                       <div className={`font-script text-3xl sm:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
                       <div className={`font-heading text-xs sm:text-sm mt-1 leading-snug ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>{item.sub}</div>
-                      {item.videoUrl ? (
-                        <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
-                          🎬 Play Video Invite ↗
-                        </div>
-                      ) : item.category === "invitations" ? (
-                        <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
-                          Preview ↗
-                        </div>
-                      ) : item.thumb ? (
-                        <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
-                          📱 Mobile Preview ↗
-                        </div>
-                      ) : item.category === "videos" ? (
-                        <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[9px] sm:text-[10px] tracking-widest uppercase">
-                          🎬 Motion Story ↗
-                        </div>
-                      ) : item.category === "business" ? (
-                        <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[9px] sm:text-[10px] tracking-widest uppercase">
-                          ✦ Digital Platform ↗
-                        </div>
-                      ) : (
-                        <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[9px] sm:text-[10px] tracking-widest uppercase">
-                          💌 Heirloom Suite ↗
-                        </div>
-                      )}
+                      <div className="inline-flex items-center justify-center mt-2.5 sm:mt-3 px-3.5 sm:px-4 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[10px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                        Preview
+                      </div>
                     </div>
                   </article>
                 ))}
@@ -919,7 +898,7 @@ export function RenovatedPortfolio() {
           </div>
 
           {/* Filter Pills */}
-          <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3 max-w-full px-2">
+          <div className="flex flex-wrap justify-center items-center gap-1.5 sm:gap-3 max-w-full px-2">
             {[
               { id: "all", label: "All" },
               { id: "websites", label: "Wedding Websites" },
@@ -931,7 +910,7 @@ export function RenovatedPortfolio() {
                 key={f.id}
                 type="button"
                 onClick={() => setActiveFilter(f.id)}
-                className={`font-ui text-[11px] sm:text-xs tracking-wider sm:tracking-widest uppercase px-3.5 sm:px-6 py-1.5 sm:py-2 rounded-full border transition-all ${
+                className={`font-ui text-[10px] sm:text-xs tracking-wider sm:tracking-widest uppercase px-3 sm:px-5 py-1.5 sm:py-2 rounded-full border transition-all ${
                   activeFilter === f.id
                     ? "bg-[#00756e] text-[#f3e3c0] border-[#00756e]"
                     : "border-[#d4a55a]/40 text-[#0d3b38] hover:border-[#00756e]"
@@ -943,7 +922,7 @@ export function RenovatedPortfolio() {
           </div>
 
           {/* Grid of 3:4 Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8 max-w-sm sm:max-w-none mx-auto w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8 max-w-md sm:max-w-none mx-auto w-full">
             {works
               .filter((w) => activeFilter === "all" || w.category === activeFilter)
               .map((item) => (
@@ -990,31 +969,9 @@ export function RenovatedPortfolio() {
                   <div className="relative z-10 text-center my-auto">
                     <div className={`font-script text-3xl sm:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
                     <div className={`font-heading text-xs sm:text-sm mt-1 leading-snug ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>{item.sub}</div>
-                    {item.videoUrl ? (
-                      <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
-                        🎬 Play Video Invite ↗
-                      </div>
-                    ) : item.category === "invitations" ? (
-                      <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
-                        Preview ↗
-                      </div>
-                    ) : item.thumb ? (
-                      <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[10px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
-                        📱 Mobile Preview ↗
-                      </div>
-                    ) : item.category === "videos" ? (
-                      <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[9px] sm:text-[10px] tracking-widest uppercase">
-                        🎬 Motion Story ↗
-                      </div>
-                    ) : item.category === "business" ? (
-                      <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[9px] sm:text-[10px] tracking-widest uppercase">
-                        ✦ Digital Platform ↗
-                      </div>
-                    ) : (
-                      <div className="inline-flex items-center gap-1.5 mt-2.5 sm:mt-3 px-3 sm:px-3.5 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 font-ui text-[9px] sm:text-[10px] tracking-widest uppercase">
-                        💌 Heirloom Suite ↗
-                      </div>
-                    )}
+                    <div className="inline-flex items-center justify-center mt-2.5 sm:mt-3 px-3.5 sm:px-4 py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[10px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                      Preview
+                    </div>
                   </div>
                 </article>
               ))}
@@ -1064,11 +1021,11 @@ export function RenovatedPortfolio() {
       {/* Invitation Image Preview Modal (Clean Lightbox, Not Mobile View) */}
       {activeImagePreview && (
         <div
-          className="fixed inset-0 z-[99999] bg-[#041412]/90 backdrop-blur-md flex items-center justify-center p-4 transition-all duration-300"
+          className="fixed inset-0 z-[99999] bg-[#041412]/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto transition-all duration-300"
           onClick={() => setActiveImagePreview(null)}
         >
           <div
-            className="flex flex-col items-center gap-3 relative max-w-[94vw] max-h-[94vh]"
+            className="flex flex-col items-center gap-2.5 sm:gap-3 relative max-w-[94vw] max-h-[94vh] my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top Bar */}
@@ -1108,15 +1065,15 @@ export function RenovatedPortfolio() {
       {/* iPhone Mobile Mockup Modal */}
       {activeMockup && (
         <div
-          className="fixed inset-0 z-[99999] bg-[#041412]/85 backdrop-blur-md flex items-center justify-center p-4 transition-all duration-300"
+          className="fixed inset-0 z-[99999] bg-[#041412]/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto transition-all duration-300"
           onClick={() => setActiveMockup(null)}
         >
           <div
-            className="flex flex-col items-center gap-3 relative max-w-full"
+            className="flex flex-col items-center gap-2.5 sm:gap-3 relative max-w-full my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Top Bar */}
-            <div className="flex items-center justify-between w-full max-w-[320px] sm:max-w-[350px] px-2 text-[#f3e3c0]">
+            <div className="flex items-center justify-between w-full max-w-[310px] sm:max-w-[350px] px-2 text-[#f3e3c0]">
               <span className="font-heading text-sm sm:text-base tracking-wide truncate pr-2">{activeMockup.title}</span>
               <button
                 type="button"
@@ -1129,7 +1086,7 @@ export function RenovatedPortfolio() {
             </div>
 
             {/* iPhone Frame */}
-            <div className="w-full max-w-[320px] sm:max-w-[350px] h-[580px] sm:h-[700px] max-h-[78vh] sm:max-h-[84vh] bg-[#09201e] rounded-[40px] sm:rounded-[52px] p-2.5 sm:p-3 shadow-[0_0_0_3px_#d4a55a,0_0_0_6px_#031412,0_30px_80px_-10px_rgba(0,0,0,0.85)] relative flex flex-col">
+            <div className="w-full max-w-[310px] sm:max-w-[350px] h-[520px] sm:h-[700px] max-h-[74vh] sm:max-h-[84vh] bg-[#09201e] rounded-[40px] sm:rounded-[52px] p-2 sm:p-3 shadow-[0_0_0_3px_#d4a55a,0_0_0_6px_#031412,0_30px_80px_-10px_rgba(0,0,0,0.85)] relative flex flex-col">
               <div className="flex-1 w-full h-full bg-white rounded-[32px] sm:rounded-[42px] overflow-hidden relative flex flex-col">
                 {/* Status Bar */}
                 <div className="absolute top-0 inset-x-0 h-11 z-30 flex items-center justify-between px-6 pointer-events-none text-xs font-semibold text-black bg-gradient-to-b from-white/95 to-transparent">
