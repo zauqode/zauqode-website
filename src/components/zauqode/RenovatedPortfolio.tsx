@@ -137,6 +137,17 @@ export function RenovatedPortfolio() {
     },
     {
       id: "05",
+      name: "Giridhar & Renee",
+      sub: "A Sacred Wedding Celebration & Portal",
+      category: "websites",
+      label: "Wedding Celebration",
+      thumb: "/works/giridhar-renee.jpg",
+      url: "https://giridhar-weds-renee.vercel.app/",
+      mobileImg: "/works/mobile-giridhar-renee.jpg",
+      canIframe: true,
+    },
+    {
+      id: "06",
       name: "Akash & Yazhini",
       sub: "Four-Ceremony Royal Folio Suite",
       category: "invitations",
@@ -146,7 +157,7 @@ export function RenovatedPortfolio() {
       canIframe: false,
     },
     {
-      id: "06",
+      id: "07",
       name: "Karthik & Divya",
       sub: "Emerald Lotus & Translucent Vellum Suite",
       category: "invitations",
@@ -156,7 +167,7 @@ export function RenovatedPortfolio() {
       canIframe: false,
     },
     {
-      id: "07",
+      id: "08",
       name: "Mohammed & Shakila",
       sub: "Imperial Burgundy & Gold Arch Suite",
       category: "invitations",
@@ -166,7 +177,7 @@ export function RenovatedPortfolio() {
       canIframe: false,
     },
     {
-      id: "08",
+      id: "09",
       name: "Malligai Manam",
       sub: "மல்லிகை மணம் சூடிக்கொள் — Jasmine Suite",
       category: "invitations",
@@ -176,7 +187,7 @@ export function RenovatedPortfolio() {
       canIframe: false,
     },
     {
-      id: "09",
+      id: "10",
       name: "Kaadhalum Valaiyalum",
       sub: "காதலும் கை வளையலும் — Bangle Ceremony",
       category: "invitations",
@@ -186,7 +197,7 @@ export function RenovatedPortfolio() {
       canIframe: false,
     },
     {
-      id: "10",
+      id: "11",
       name: "Dr. Vamsi & Ritika",
       sub: "Traditional Musical & Vedic Motion Suite",
       category: "videos",
@@ -196,7 +207,7 @@ export function RenovatedPortfolio() {
       canIframe: false,
     },
     {
-      id: "11",
+      id: "12",
       name: "Zara Invitations",
       sub: "Artisan Stationery & Bespoke Showcase",
       category: "business",
@@ -207,7 +218,7 @@ export function RenovatedPortfolio() {
       canIframe: true,
     },
     {
-      id: "12",
+      id: "13",
       name: "Thrive Properties",
       sub: "Premium Real Estate & Property Discovery",
       category: "business",
@@ -222,9 +233,9 @@ export function RenovatedPortfolio() {
   // Curated 4 items for Home Page Selected Works: 1 Wedding Website, 1 Invitation, 1 Video, 1 Business Website
   const homeSelectedWorks = [
     works.find((w) => w.id === "01")!,
-    works.find((w) => w.id === "05")!,
-    works.find((w) => w.id === "10")!,
-    works.find((w) => w.id === "12")!,
+    works.find((w) => w.id === "06")!,
+    works.find((w) => w.id === "11")!,
+    works.find((w) => w.id === "13")!,
   ].filter(Boolean);
 
   return (
