@@ -212,30 +212,30 @@ export function RenovatedPortfolio() {
     {
       id: "09",
       name: "Malligai Manam",
-      sub: "மல்லிகை மணம் சூடிக்கொள் — Jasmine Suite",
-      category: "invitations",
-      label: "Heritage Tamil",
+      sub: "மல்லிகை மணம் சூடிக்கொள் — Jasmine Stall Board",
+      category: "stalls",
+      label: "Wedding Stall Board",
       thumb: "/works/invite-jasmine.jpg",
       mobileImg: "/works/invite-jasmine.jpg",
       canIframe: false,
-      story: "Rooted in Tamil poetic fragrance (மல்லிகை மணம்). Designed with fragrant white jasmine garlands against sacred auspicious crimson and Tamil classical script.",
-      occasion: "Tamil Heritage Thirumana Suite",
-      style: "Sacred Crimson & Jasmine Flora",
-      included: ["Tamil Typography Card", "Muhurtham Keepsake", "Traditional Kolam Accents", "WhatsApp Folio"],
+      story: "Custom wedding event stall board crafted for a fresh jasmine flower counter. Designed with auspicious emerald-teal tones, hand-drawn kolam motifs, and poetic Tamil calligraphy.",
+      occasion: "Wedding Event Flower Stall",
+      style: "Emerald Teal, Temple Gold & Tamil Script",
+      included: ["Custom Event Stall Signage", "Tamil Calligraphy Artwork", "Large-Format Print Ready", "Traditional Kolam Borders"],
     },
     {
       id: "10",
       name: "Kaadhalum Valaiyalum",
-      sub: "காதலும் கை வளையலும் — Bangle Ceremony",
-      category: "invitations",
-      label: "Ceremony Keepsake",
+      sub: "காதலும் கை வளையலும் — Bangle Stall Board",
+      category: "stalls",
+      label: "Wedding Stall Board",
       thumb: "/works/invite-valaiyal.jpg",
       mobileImg: "/works/invite-valaiyal.jpg",
       canIframe: false,
-      story: "Honoring traditional glass bangle blessings with warm temple architecture illustrations, festive marigold accents, and nostalgic celebratory lyricism.",
-      occasion: "Valaikappu & Bangle Ceremony",
-      style: "Temple Arch & Festive Marigold",
-      included: ["Ceremony Keepsake Card", "Song Lyric Accent", "Blessing Card", "Family WhatsApp Suite"],
+      story: "Bespoke event stall board crafted for a traditional wedding bangle counter. Combines nostalgic Tamil lyrical charm with illustrated bangle stand artwork, temple bells, and festive borders.",
+      occasion: "Wedding Event Bangle Stall",
+      style: "Warm Ivory, Crimson & Festive Gold",
+      included: ["Event Counter Display Board", "Custom Bangle Illustration", "Large-Format Print Ready", "Themed Event Coordination"],
     },
     {
       id: "11",
@@ -279,7 +279,7 @@ export function RenovatedPortfolio() {
     works.find((w) => w.id === "12")!,
   ].filter(Boolean);
 
-  const invitationWorks = works.filter((w) => w.category === "invitations");
+  const invitationWorks = works.filter((w) => w.category === "invitations" || w.category === "stalls");
   const activeInv = activeInvitationIndex !== null ? invitationWorks[activeInvitationIndex] : null;
 
   const testimonials = [
@@ -1069,7 +1069,7 @@ export function RenovatedPortfolio() {
                   <article
                     key={item.id}
                     onClick={() => {
-                      if (item.category === "invitations") {
+                      if (item.category === "invitations" || item.category === "stalls") {
                         const idx = invitationWorks.findIndex((inv) => inv.id === item.id);
                         setActiveInvitationIndex(idx !== -1 ? idx : 0);
                       } else if (item.videoUrl) {
@@ -1348,6 +1348,7 @@ export function RenovatedPortfolio() {
           all: works.length,
           websites: works.filter((w) => w.category === "websites").length,
           invitations: works.filter((w) => w.category === "invitations").length,
+          stalls: works.filter((w) => w.category === "stalls").length,
           videos: works.filter((w) => w.category === "videos").length,
           business: works.filter((w) => w.category === "business").length,
         };
@@ -1370,6 +1371,7 @@ export function RenovatedPortfolio() {
                   { id: "all", label: "All" },
                   { id: "websites", label: "Wedding Websites" },
                   { id: "invitations", label: "Invitations" },
+                  { id: "stalls", label: "Stall Boards" },
                   { id: "videos", label: "Video Invites" },
                   { id: "business", label: "Business Websites" },
                 ].map((f) => (
@@ -1402,7 +1404,7 @@ export function RenovatedPortfolio() {
                 <article
                   key={item.id}
                   onClick={() => {
-                    if (item.category === "invitations") {
+                    if (item.category === "invitations" || item.category === "stalls") {
                       const idx = invitationWorks.findIndex((inv) => inv.id === item.id);
                       setActiveInvitationIndex(idx !== -1 ? idx : 0);
                     } else if (item.videoUrl) {
@@ -1507,7 +1509,7 @@ export function RenovatedPortfolio() {
             <div className="flex items-center justify-between px-5 sm:px-8 py-3.5 border-b border-[#d4a55a]/20 bg-[#011412]/80 shrink-0">
               <div className="flex items-center gap-3">
                 <span className="font-ui text-xs tracking-[0.25em] uppercase text-[#d4a55a]">
-                  Bespoke Invitation Suite
+                  {activeInv.category === "stalls" ? "Wedding Event Stall Board" : "Bespoke Invitation Suite"}
                 </span>
                 <span className="font-ui text-xs text-[#cdeee3]/40">•</span>
                 <span className="font-ui text-xs tracking-widest text-[#cdeee3]/80">
@@ -1615,7 +1617,7 @@ export function RenovatedPortfolio() {
                     {activeInv.included && activeInv.included.length > 0 && (
                       <div className="space-y-1.5">
                         <span className="font-ui text-[10px] uppercase tracking-wider text-[#d4a55a]">
-                          Suite Inclusions
+                          {activeInv.category === "stalls" ? "Board Details" : "Suite Inclusions"}
                         </span>
                         <div className="flex flex-wrap gap-1.5">
                           {activeInv.included.map((item, idx) => (
@@ -1636,7 +1638,7 @@ export function RenovatedPortfolio() {
                 <div className="pt-4 border-t border-[#d4a55a]/20 space-y-2">
                   <a
                     href={`https://wa.me/918946077234?text=${encodeURIComponent(
-                      `Hi Zauqode, I saw your "${activeInv.name}" bespoke invitation and would love to design something similar for our upcoming event.`
+                      `Hi Zauqode, I saw your "${activeInv.name}" ${activeInv.category === "stalls" ? "wedding stall board" : "bespoke invitation"} and would love to design something similar for my upcoming event.`
                     )}`}
                     target="_blank"
                     rel="noreferrer"

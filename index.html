@@ -3127,11 +3127,12 @@
 
     <!-- Filter Pills -->
     <div class="filter-pills">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="websites">Wedding Websites</button>
-      <button class="filter-btn" data-filter="invitations">Invitations</button>
-      <button class="filter-btn" data-filter="videos">Video Invites</button>
-      <button class="filter-btn" data-filter="business">Business Websites</button>
+      <button class="filter-btn active" data-filter="all">All (13)</button>
+      <button class="filter-btn" data-filter="websites">Wedding Websites (5)</button>
+      <button class="filter-btn" data-filter="invitations">Invitations (3)</button>
+      <button class="filter-btn" data-filter="stalls">Stall Boards (2)</button>
+      <button class="filter-btn" data-filter="videos">Video Invites (1)</button>
+      <button class="filter-btn" data-filter="business">Business Websites (2)</button>
     </div>
 
     <div class="works-grid" id="worksGrid">
@@ -3263,34 +3264,34 @@
         </div>
       </article>
 
-      <!-- 08: Invitations - Malligai Manam -->
-      <article class="work-card has-thumb tilt-card" data-category="invitations"
+      <!-- 08: Wedding Event Stall Boards - Malligai Manam -->
+      <article class="work-card has-thumb tilt-card" data-category="stalls"
                style="background-image: url('/works/invite-jasmine.jpg');"
                onclick="openInvitationModal(3)">
         <div class="card-inner-border"></div>
         <div class="card-top">
-          <span class="card-label">Heritage Tamil</span>
+          <span class="card-label">Wedding Stall Board</span>
           <span class="card-star">✦</span>
         </div>
         <div class="card-center">
           <div class="card-name">Malligai Manam</div>
-          <div class="card-sub">மல்லிகை மணம் சூடிக்கொள் — Jasmine Suite</div>
+          <div class="card-sub">மல்லிகை மணம் சூடிக்கொள் — Jasmine Stall Board</div>
           <div class="preview-pill">Preview</div>
         </div>
       </article>
 
-      <!-- 09: Invitations - Kaadhalum Valaiyalum -->
-      <article class="work-card has-thumb tilt-card" data-category="invitations"
+      <!-- 09: Wedding Event Stall Boards - Kaadhalum Valaiyalum -->
+      <article class="work-card has-thumb tilt-card" data-category="stalls"
                style="background-image: url('/works/invite-valaiyal.jpg');"
                onclick="openInvitationModal(4)">
         <div class="card-inner-border"></div>
         <div class="card-top">
-          <span class="card-label">Ceremony Keepsake</span>
+          <span class="card-label">Wedding Stall Board</span>
           <span class="card-star">✦</span>
         </div>
         <div class="card-center">
           <div class="card-name">Kaadhalum Valaiyalum</div>
-          <div class="card-sub">காதலும் கை வளையலும் — Bangle Ceremony</div>
+          <div class="card-sub">காதலும் கை வளையலும் — Bangle Stall Board</div>
           <div class="preview-pill">Preview</div>
         </div>
       </article>
@@ -3684,22 +3685,24 @@
         included: ["Gilded Arch Main Folio", "Reception Card", "Bespoke Calligraphy", "Mobile Preview Suite"]
       },
       {
+        category: "stalls",
         name: "Malligai Manam",
-        sub: "மல்லிகை மணம் சூடிக்கொள் — Jasmine Suite",
+        sub: "மல்லிகை மணம் சூடிக்கொள் — Jasmine Stall Board",
         img: "/works/invite-jasmine.jpg",
-        story: "Rooted in Tamil poetic fragrance (மல்லிகை மணம்). Designed with fragrant white jasmine garlands against sacred auspicious crimson and Tamil classical script.",
-        occasion: "Tamil Heritage Thirumana Suite",
-        style: "Sacred Crimson & Jasmine Flora",
-        included: ["Tamil Typography Card", "Muhurtham Keepsake", "Traditional Kolam Accents", "WhatsApp Folio"]
+        story: "Custom wedding event stall board crafted for a fresh jasmine flower counter. Designed with auspicious emerald-teal tones, hand-drawn kolam motifs, and poetic Tamil calligraphy.",
+        occasion: "Wedding Event Flower Stall",
+        style: "Emerald Teal, Temple Gold & Tamil Script",
+        included: ["Custom Event Stall Signage", "Tamil Calligraphy Artwork", "Large-Format Print Ready", "Traditional Kolam Borders"]
       },
       {
+        category: "stalls",
         name: "Kaadhalum Valaiyalum",
-        sub: "காதலும் கை வளையலும் — Bangle Ceremony",
+        sub: "காதலும் கை வளையலும் — Bangle Stall Board",
         img: "/works/invite-valaiyal.jpg",
-        story: "Honoring traditional glass bangle blessings with warm temple architecture illustrations, festive marigold accents, and nostalgic celebratory lyricism.",
-        occasion: "Valaikappu & Bangle Ceremony",
-        style: "Temple Arch & Festive Marigold",
-        included: ["Ceremony Keepsake Card", "Song Lyric Accent", "Blessing Card", "Family WhatsApp Suite"]
+        story: "Bespoke event stall board crafted for a traditional wedding bangle counter. Combines nostalgic Tamil lyrical charm with illustrated bangle stand artwork, temple bells, and festive borders.",
+        occasion: "Wedding Event Bangle Stall",
+        style: "Warm Ivory, Crimson & Festive Gold",
+        included: ["Event Counter Display Board", "Custom Bangle Illustration", "Large-Format Print Ready", "Themed Event Coordination"]
       }
     ];
 
@@ -3753,8 +3756,14 @@
       if (inclusionsEl) {
         inclusionsEl.innerHTML = item.included.map(inc => `<span class="inv-tag">✦ ${inc}</span>`).join('');
       }
+      const topTagEl = document.getElementById('invTopTag');
+      const incLabelEl = document.getElementById('invInclusionsLabel');
+      const isStall = item.category === 'stalls';
+      if (topTagEl) topTagEl.textContent = isStall ? 'Wedding Event Stall Board' : 'Bespoke Invitation Suite';
+      if (incLabelEl) incLabelEl.textContent = isStall ? 'Board Details' : 'Suite Inclusions';
       if (waBtnEl) {
-        const msg = encodeURIComponent(`Hi Zauqode, I saw your "${item.name}" bespoke invitation and would love to design something similar for our upcoming event.`);
+        const kindText = isStall ? 'wedding stall board' : 'bespoke invitation';
+        const msg = encodeURIComponent(`Hi Zauqode, I saw your "${item.name}" ${kindText} and would love to design something similar for my upcoming event.`);
         waBtnEl.href = `https://wa.me/918946077234?text=${msg}`;
       }
     }
@@ -3897,7 +3906,7 @@
     <div class="image-modal-container" onclick="event.stopPropagation()">
       <div class="image-modal-top-bar">
         <div class="inv-top-left">
-          <span class="inv-top-tag">Bespoke Invitation Suite</span>
+          <span class="inv-top-tag" id="invTopTag">Bespoke Invitation Suite</span>
           <span style="color: rgba(205, 238, 227, 0.4);">•</span>
           <span class="inv-top-counter" id="invCounter">01 / 05</span>
         </div>
@@ -3939,7 +3948,7 @@
             </div>
 
             <div>
-              <span class="inv-detail-label" style="margin-bottom: 4px;">Suite Inclusions</span>
+              <span class="inv-detail-label" id="invInclusionsLabel" style="margin-bottom: 4px;">Suite Inclusions</span>
               <div class="inv-inclusions-wrap" id="invInclusions"></div>
             </div>
           </div>
