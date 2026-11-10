@@ -438,7 +438,7 @@
       position: relative;
       z-index: 20;
       width: 100%;
-      max-width: 780px;
+      max-width: 960px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -463,7 +463,7 @@
     .hero-fixed-line {
       display: inline-block;
       font-family: var(--font-heading);
-      font-size: clamp(38px, 6.2vw, 86px);
+      font-size: clamp(32px, 5.1vw, 72px);
       line-height: 1.08;
       letter-spacing: 0.02em;
       color: var(--teal-deep);
@@ -507,8 +507,7 @@
 
     .hero-mantra-copy {
       margin: 18px 0 0;
-      max-width: 560px;
-      min-height: 48px;
+      max-width: 580px;
       font-family: var(--font-body);
       font-weight: 300;
       font-size: clamp(14px, 1.15vw, 16.5px);
@@ -592,11 +591,8 @@
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--teal-deep);
-      cursor: pointer;
-      transition: color 0.25s ease, transform 0.25s ease;
+      cursor: default;
     }
-
-    .hero-craft-chip:hover { color: var(--teal); transform: translateY(-1px); }
 
     .hero-studio-standard {
       position: absolute;
@@ -671,9 +667,9 @@
       .hero-gold-frame { top: 80px; bottom: 20px; left: 2.5vw; right: 2.5vw; }
       .hero-top-label-left { top: 98px; left: calc(2.5vw + 14px); font-size: 10.5px; letter-spacing: 0.22em; }
       .hero-top-label-right, .hero-vertical-tag { display: none; }
-      .hero-fixed-line { font-size: clamp(32px, 8.8vw, 48px); }
+      .hero-fixed-line { font-size: clamp(23px, 6.7vw, 44px); letter-spacing: 0.01em; }
       .hero-rotating-curly { font-size: clamp(44px, 12vw, 64px); }
-      .hero-mantra-copy { margin-top: 16px; min-height: 64px; font-size: 13.5px; line-height: 1.6; }
+      .hero-mantra-copy { margin-top: 16px; font-size: 13.5px; line-height: 1.6; }
       .hero-btn-group { margin-top: 20px; }
       .hero-craft-strip { margin-top: 24px; padding-top: 14px; gap: 6px 12px; }
       .hero-craft-chip { font-size: 10.5px; letter-spacing: 0.12em; padding: 4px 6px; }
@@ -2325,15 +2321,15 @@
       <div class="hero-banner-center">
         <h1 class="hero-headline">
           <span class="hero-fixed-line-mask">
-            <span class="hero-fixed-line">Design with</span>
+            <span class="hero-fixed-line">Where elegance meets</span>
           </span>
           <span class="hero-curly-mask" aria-live="polite">
-            <span id="heroRotatingCurly" class="hero-rotating-curly">intention.</span>
+            <span id="heroRotatingCurly" class="hero-rotating-curly">emotion.</span>
           </span>
         </h1>
 
         <p class="hero-mantra-copy" id="heroMantraCopy">
-          Nothing templated. Nothing rushed. I design bespoke invitations and interactive occasion websites where artistry meets enduring precision.
+          Bespoke design and digital experiences, crafted with artistry, care and feeling.
         </p>
 
         <div class="hero-btn-group">
@@ -2347,16 +2343,16 @@
           </a>
         </div>
 
-        <div class="hero-craft-strip">
-          <button type="button" class="hero-craft-chip" data-cat="invitations" data-note="Heirloom foil print suites, custom monograms &amp; digital folios.">
-            <span style="color: var(--gold); font-size: 9px;">✦</span><span>Invitations</span>
-          </button>
-          <button type="button" class="hero-craft-chip" data-cat="websites" data-note="Interactive wedding &amp; celebration portals with live RSVP concierge.">
-            <span style="color: var(--gold); font-size: 9px;">✦</span><span>Occasion Web</span>
-          </button>
-          <button type="button" class="hero-craft-chip" data-cat="business" data-note="Editorial digital flagships engineered with restraint and speed.">
-            <span style="color: var(--gold); font-size: 9px;">✦</span><span>Brand Web</span>
-          </button>
+        <div class="hero-craft-strip" aria-label="Studio attributes">
+          <span class="hero-craft-chip">
+            <span style="color: var(--gold); font-size: 9px;" aria-hidden="true">✦</span><span>Bespoke</span>
+          </span>
+          <span class="hero-craft-chip">
+            <span style="color: var(--gold); font-size: 9px;" aria-hidden="true">✦</span><span>Elegant</span>
+          </span>
+          <span class="hero-craft-chip">
+            <span style="color: var(--gold); font-size: 9px;" aria-hidden="true">✦</span><span>Heartfelt</span>
+          </span>
         </div>
       </div>
 
@@ -3613,8 +3609,8 @@
       }
     });
 
-    // Rotating Banner Mantra & Craft Strip
-    const mantraWordsHtml = ['intention.', 'emotion.', 'devotion.', 'distinction.', 'grace.'];
+    // Rotating Banner Mantra
+    const mantraWordsHtml = ['emotion.', 'memory.', 'meaning.', 'feeling.'];
     let mantraIdx = 0;
 
     function setMantraWord(idx) {
@@ -3633,25 +3629,6 @@
       applyRoute(getHashRoute(), false);
       initCardTilt();
       checkReveals();
-
-      const defaultMantraText = 'Nothing templated. Nothing rushed. I design bespoke invitations and interactive occasion websites where artistry meets enduring precision.';
-      const mantraCopyEl = document.getElementById('heroMantraCopy');
-
-      document.querySelectorAll('.hero-craft-chip').forEach((chip) => {
-        const note = chip.getAttribute('data-note');
-        const cat = chip.getAttribute('data-cat');
-        chip.addEventListener('mouseenter', () => {
-          if (mantraCopyEl && note) mantraCopyEl.textContent = note;
-        });
-        chip.addEventListener('mouseleave', () => {
-          if (mantraCopyEl) mantraCopyEl.textContent = defaultMantraText;
-        });
-        chip.addEventListener('click', () => {
-          window.location.hash = '#works';
-          const btn = document.querySelector(`.filter-btn[data-filter="${cat}"]`);
-          if (btn) btn.click();
-        });
-      });
 
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         window.setInterval(() => setMantraWord(mantraIdx + 1), 3200);

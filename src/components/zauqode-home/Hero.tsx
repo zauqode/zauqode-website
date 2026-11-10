@@ -1,49 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styles from './Hero.module.css';
-import { Button } from './Button';
+import React, { useEffect, useRef, useState } from "react";
+import styles from "./Hero.module.css";
+import { Button } from "./Button";
 
 export interface HeroProps {
   onSelectCategory?: (category: string) => void;
 }
 
-const mantraWords = [
-  'intention.',
-  'emotion.',
-  'devotion.',
-  'distinction.',
-  'grace.',
-];
+const mantraWords = ["emotion.", "memory.", "meaning.", "feeling."];
 
-const craftLinks = [
-  {
-    label: 'Invitations',
-    category: 'invitations',
-    note: 'Heirloom foil print suites, custom monograms & digital folios.',
-  },
-  {
-    label: 'Occasion Web',
-    category: 'websites',
-    note: 'Interactive wedding & celebration portals with live RSVP concierge.',
-  },
-  {
-    label: 'Brand Web',
-    category: 'business',
-    note: 'Editorial digital flagships engineered with restraint and speed.',
-  },
-];
+const studioTags = ["Bespoke", "Elegant", "Heartfelt"];
 
 /**
  * Hero Component
  * Luxury studio banner with fixed editorial line and rotating Sacramento mantra word.
  */
-export function Hero({ onSelectCategory }: HeroProps) {
+export function Hero(_props: HeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const [wordIdx, setWordIdx] = useState(0);
-  const [hoveredCraft, setHoveredCraft] = useState<number | null>(null);
 
   // Cycle the curly script mantra word smoothly (disabled if user prefers reduced motion)
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       return;
     }
     const timer = window.setInterval(() => {
@@ -58,23 +38,11 @@ export function Hero({ onSelectCategory }: HeroProps) {
     const rect = heroRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    heroRef.current.style.setProperty('--gx', `${x}px`);
-    heroRef.current.style.setProperty('--gy', `${y}px`);
-  };
-
-  const handleExploreCraft = (category: string) => {
-    if (onSelectCategory) {
-      onSelectCategory(category);
-    } else {
-      window.location.hash = '#works';
-    }
+    heroRef.current.style.setProperty("--gx", `${x}px`);
+    heroRef.current.style.setProperty("--gy", `${y}px`);
   };
 
   const activeWord = mantraWords[wordIdx] || mantraWords[0];
-  const activeCraftNote =
-    hoveredCraft !== null
-      ? craftLinks[hoveredCraft]?.note
-      : 'Nothing templated. Nothing rushed. I design bespoke invitations and interactive occasion websites where artistry meets enduring precision.';
 
   return (
     <section
@@ -99,7 +67,7 @@ export function Hero({ onSelectCategory }: HeroProps) {
         {/* 2-Line Banner Headline: Line 1 Fixed + Line 2 Changing Curly Mantra */}
         <h1 className={styles.headline}>
           <span className={styles.fixedLineMask}>
-            <span className={styles.fixedLine}>Design with</span>
+            <span className={styles.fixedLine}>Where elegance meets</span>
           </span>
           <span className={styles.curlyLineMask} aria-live="polite">
             <span key={activeWord} className={styles.rotatingCurlyWord}>
@@ -108,9 +76,9 @@ export function Hero({ onSelectCategory }: HeroProps) {
           </span>
         </h1>
 
-        {/* Concise Mantra Statement / Interactive Craft Insight */}
-        <p className={styles.mantraCopy} key={hoveredCraft !== null ? `hover-${hoveredCraft}` : 'default'}>
-          {activeCraftNote}
+        {/* Concise Mantra Sub-line */}
+        <p className={styles.mantraCopy}>
+          Bespoke design and digital experiences, crafted with artistry, care and feeling.
         </p>
 
         {/* Centered Compact Action Pills */}
@@ -128,22 +96,15 @@ export function Hero({ onSelectCategory }: HeroProps) {
           </Button>
         </div>
 
-        {/* Interactive Minimal Discipline Links Bar */}
-        <div className={styles.craftStrip} aria-label="Explore crafts by discipline">
-          {craftLinks.map((craft, idx) => (
-            <button
-              key={craft.category}
-              type="button"
-              onClick={() => handleExploreCraft(craft.category)}
-              onMouseEnter={() => setHoveredCraft(idx)}
-              onMouseLeave={() => setHoveredCraft(null)}
-              onFocus={() => setHoveredCraft(idx)}
-              onBlur={() => setHoveredCraft(null)}
-              className={styles.craftChip}
-            >
-              <span className={styles.craftDot}>✦</span>
-              <span>{craft.label}</span>
-            </button>
+        {/* Studio Ethos Tag Row */}
+        <div className={styles.craftStrip} aria-label="Studio attributes">
+          {studioTags.map((tag) => (
+            <span key={tag} className={styles.craftChip}>
+              <span className={styles.craftDot} aria-hidden="true">
+                ✦
+              </span>
+              <span>{tag}</span>
+            </span>
           ))}
         </div>
       </div>
@@ -162,11 +123,7 @@ export function Hero({ onSelectCategory }: HeroProps) {
 
       {/* Bottom-Right Rotating Badge */}
       <div className={styles.badgeContainer} aria-hidden="true">
-        <svg
-          viewBox="0 0 112 112"
-          className={styles.rotatingSvg}
-          aria-hidden="true"
-        >
+        <svg viewBox="0 0 112 112" className={styles.rotatingSvg} aria-hidden="true">
           <defs>
             <path
               id="badgeCirclePath"
