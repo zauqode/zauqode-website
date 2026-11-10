@@ -6,22 +6,31 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 16px 34px;
+  gap: 6px;
+  padding: 10px 22px;
   border: 1px solid var(--teal, #00756e);
   border-radius: 100px;
   background: transparent;
   color: var(--teal, #00756e);
   font-family: 'Poiret One', cursive, sans-serif;
-  font-size: 15px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
   overflow: hidden;
   isolation: isolate;
   transition: color 0.5s cubic-bezier(0.7, 0, 0.2, 1);
   box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .button {
+    padding: 8px 18px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+  }
 }
 
 .button::before {
