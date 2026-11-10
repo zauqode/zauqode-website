@@ -927,17 +927,21 @@
       padding: 0 4px;
     }
 
-    /* Image Lightbox Modal Styles */
+    /* Elite Full-Screen Invitation Modal Styles */
     .image-modal-container {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 12px;
       position: relative;
-      max-width: 94vw;
-      max-height: 94vh;
-      transform: scale(0.93) translateY(16px);
-      transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+      max-width: 1060px;
+      max-height: 92vh;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #041c19 0%, #021816 50%, #01100f 100%);
+      border: 1px solid rgba(212, 165, 90, 0.4);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(205, 238, 227, 0.15);
+      overflow: hidden;
+      transform: scale(0.95) translateY(16px);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .mockup-modal-backdrop.open .image-modal-container {
@@ -950,42 +954,214 @@
       justify-content: space-between;
       width: 100%;
       color: #f3e3c0;
-      padding: 0 4px;
+      padding: 14px 24px;
+      border-bottom: 1px solid rgba(212, 165, 90, 0.2);
+      background: rgba(1, 20, 18, 0.8);
       gap: 16px;
     }
 
-    .image-modal-title {
-      font-family: var(--font-heading);
-      font-size: 1.15rem;
-      color: #f3e3c0;
-      letter-spacing: 0.05em;
+    .inv-top-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
-    .image-modal-sub {
-      font-size: 0.8rem;
+    .inv-top-tag {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
       color: var(--gold);
-      margin-top: 2px;
     }
 
-    .image-modal-body {
-      max-width: 90vw;
-      max-height: 82vh;
-      overflow: hidden;
-      border-radius: 16px;
-      border: 1px solid rgba(212, 165, 90, 0.45);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 30px rgba(0, 117, 110, 0.3);
-      background: #002d2a;
+    .inv-top-counter {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: rgba(205, 238, 227, 0.8);
+    }
+
+    .inv-nav-btns {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .inv-nav-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(212, 165, 90, 0.4);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--gold);
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .inv-nav-btn:hover {
+      background: var(--gold);
+      color: #005a55;
+    }
+
+    .image-modal-body-split {
+      display: flex;
+      flex-direction: row;
+      overflow-y: auto;
+      max-height: calc(92vh - 62px);
+    }
+
+    .image-modal-left {
+      width: 54%;
+      padding: 24px;
+      background: rgba(1, 15, 14, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
 
     .image-modal-content {
-      max-width: 90vw;
-      max-height: 82vh;
+      max-height: 72vh;
+      max-width: 100%;
       object-fit: contain;
+      border-radius: 16px;
+      border: 1px solid rgba(212, 165, 90, 0.3);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .image-modal-left:hover .image-modal-content {
+      transform: scale(1.03);
+    }
+
+    .image-modal-right {
+      width: 46%;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-left: 1px solid rgba(212, 165, 90, 0.2);
+      background: rgba(3, 24, 22, 0.75);
+      gap: 20px;
+    }
+
+    .inv-header {
+      border-bottom: 1px solid rgba(212, 165, 90, 0.2);
+      padding-bottom: 16px;
+    }
+
+    .inv-sub {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .inv-name {
+      font-family: var(--font-script);
+      font-size: 40px;
+      color: #f3e3c0;
+      line-height: 1.15;
+    }
+
+    .inv-story-box {
+      margin: 16px 0;
+    }
+
+    .inv-story-label {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: rgba(212, 165, 90, 0.85);
       display: block;
-      border-radius: 15px;
+      margin-bottom: 6px;
+    }
+
+    .inv-story-text {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-style: italic;
+      color: rgba(243, 227, 192, 0.9);
+      line-height: 1.6;
+      border-left: 2px solid rgba(212, 165, 90, 0.6);
+      padding-left: 14px;
+    }
+
+    .inv-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .inv-detail-card {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(212, 165, 90, 0.2);
+    }
+
+    .inv-detail-label {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      display: block;
+    }
+
+    .inv-detail-val {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: #f3e3c0;
+      margin-top: 2px;
+    }
+
+    .inv-inclusions-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .inv-tag {
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-family: var(--font-body);
+      background: rgba(0, 117, 110, 0.25);
+      color: #cdeee3;
+      border: 1px solid rgba(212, 165, 90, 0.3);
+    }
+
+    .inv-btn-book {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 12px 24px;
+      border-radius: 9999px;
+      background: var(--gold);
+      color: #021816;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      text-decoration: none;
+      box-shadow: 0 4px 25px rgba(212, 165, 90, 0.35);
+      transition: background 0.2s ease;
+    }
+
+    .inv-btn-book:hover {
+      background: var(--gold-dark);
+      color: #ffffff;
     }
 
     .mockup-title {
@@ -1662,13 +1838,25 @@
         border-radius: 32px !important;
       }
 
-      .image-modal-body, .image-modal-content {
-        max-width: 94vw !important;
-        max-height: 74vh !important;
+      .image-modal-body-split {
+        flex-direction: column !important;
       }
-
-      .image-modal-title {
-        font-size: 1rem;
+      .image-modal-left {
+        width: 100% !important;
+        padding: 16px !important;
+      }
+      .image-modal-content {
+        max-height: 52vh !important;
+        max-width: 100% !important;
+      }
+      .image-modal-right {
+        width: 100% !important;
+        padding: 20px !important;
+        border-left: none !important;
+        border-top: 1px solid rgba(212, 165, 90, 0.2) !important;
+      }
+      .inv-name {
+        font-size: 32px !important;
       }
 
       .mockup-top-bar {
@@ -1943,7 +2131,7 @@
         <!-- 2. Invitation Design: Akash & Yazhini (Real Photography) -->
         <article class="work-card has-thumb tilt-card reveal delay-1" 
                  style="background-image: url('/works/invite-akash-yazhini.jpg');" 
-                 onclick="openImagePreview('/works/invite-akash-yazhini.jpg', 'Akash &amp; Yazhini', 'Four-Ceremony Royal Folio Suite')">
+                 onclick="openInvitationModal(0)">
           <div class="card-inner-border"></div>
           <div class="card-top">
             <span class="card-label">Invitation Design</span>
@@ -2259,7 +2447,7 @@
       <!-- 05: Invitations - Akash & Yazhini -->
       <article class="work-card has-thumb tilt-card" data-category="invitations"
                style="background-image: url('/works/invite-akash-yazhini.jpg');"
-               onclick="openImagePreview('/works/invite-akash-yazhini.jpg', 'Akash &amp; Yazhini', 'Four-Ceremony Royal Folio Suite')">
+               onclick="openInvitationModal(0)">
         <div class="card-inner-border"></div>
         <div class="card-top">
           <span class="card-label">Heirloom Suite</span>
@@ -2275,7 +2463,7 @@
       <!-- 06: Invitations - Karthik & Divya -->
       <article class="work-card has-thumb tilt-card" data-category="invitations"
                style="background-image: url('/works/invite-karthik-divya.jpg');"
-               onclick="openImagePreview('/works/invite-karthik-divya.jpg', 'Karthik &amp; Divya', 'Emerald Lotus &amp; Translucent Vellum Suite')">
+               onclick="openInvitationModal(1)">
         <div class="card-inner-border"></div>
         <div class="card-top">
           <span class="card-label">Vellum &amp; Lotus</span>
@@ -2291,7 +2479,7 @@
       <!-- 07: Invitations - Mohammed & Shakila Banu -->
       <article class="work-card has-thumb tilt-card" data-category="invitations"
                style="background-image: url('/works/invite-nikkah.jpg');"
-               onclick="openImagePreview('/works/invite-nikkah.jpg', 'Mohammed &amp; Shakila', 'Imperial Burgundy &amp; Gold Arch Suite')">
+               onclick="openInvitationModal(2)">
         <div class="card-inner-border"></div>
         <div class="card-top">
           <span class="card-label">Royal Nikkah</span>
@@ -2307,7 +2495,7 @@
       <!-- 08: Invitations - Malligai Manam -->
       <article class="work-card has-thumb tilt-card" data-category="invitations"
                style="background-image: url('/works/invite-jasmine.jpg');"
-               onclick="openImagePreview('/works/invite-jasmine.jpg', 'Malligai Manam', 'மல்லிகை மணம் சூடிக்கொள் — Jasmine Suite')">
+               onclick="openInvitationModal(3)">
         <div class="card-inner-border"></div>
         <div class="card-top">
           <span class="card-label">Heritage Tamil</span>
@@ -2323,7 +2511,7 @@
       <!-- 09: Invitations - Kaadhalum Valaiyalum -->
       <article class="work-card has-thumb tilt-card" data-category="invitations"
                style="background-image: url('/works/invite-valaiyal.jpg');"
-               onclick="openImagePreview('/works/invite-valaiyal.jpg', 'Kaadhalum Valaiyalum', 'காதலும் கை வளையலும் — Bangle Ceremony')">
+               onclick="openInvitationModal(4)">
         <div class="card-inner-border"></div>
         <div class="card-top">
           <span class="card-label">Ceremony Keepsake</span>
@@ -2695,36 +2883,127 @@
       }, 350);
     }
 
-    // 8. Image Lightbox Modal Controller (Clean Image View, Not Mobile)
-    function openImagePreview(imgSrc, title, sub) {
+    // 8. Elite Full-Screen Invitation Modal Controller
+    const invitationsData = [
+      {
+        name: "Akash & Yazhini",
+        sub: "Four-Ceremony Royal Folio Suite",
+        img: "/works/invite-akash-yazhini.jpg",
+        story: "The couple wished for an opulent royal heritage tribute to their lineage. We crafted a four-ceremony folio with emerald foil borders, sacred kolam motifs, and dedicated ceremony cards.",
+        occasion: "Four-Ceremony Royal Wedding",
+        style: "Deep Forest & Heritage Gold Folio",
+        included: ["4 Ceremony Folios", "Custom Monogram", "Wax Seal Motif", "WhatsApp Suite"]
+      },
+      {
+        name: "Karthik & Divya",
+        sub: "Emerald Lotus & Translucent Vellum Suite",
+        img: "/works/invite-karthik-divya.jpg",
+        story: "A modern botanical dream requested with ethereal serenity. Hand-painted emerald lotus blossoms paired with translucent vellum overlays and delicate gold serif typography.",
+        occasion: "Traditional Temple Wedding",
+        style: "Emerald Lotus & Translucent Vellum",
+        included: ["Translucent Vellum Overlay", "Hand-Painted Lotus Card", "Keepsake RSVP", "Digital Envelope"]
+      },
+      {
+        name: "Mohammed & Shakila",
+        sub: "Imperial Burgundy & Gold Arch Suite",
+        img: "/works/invite-nikkah.jpg",
+        story: "Designed for a grand imperial celebration. Incorporates majestic Islamic arch silhouettes, intricate damask borders, and rich imperial burgundy hues with gilded calligraphy.",
+        occasion: "Royal Nikkah Celebration",
+        style: "Imperial Burgundy & Gilded Arch",
+        included: ["Gilded Arch Main Folio", "Reception Card", "Bespoke Calligraphy", "Mobile Preview Suite"]
+      },
+      {
+        name: "Malligai Manam",
+        sub: "மல்லிகை மணம் சூடிக்கொள் — Jasmine Suite",
+        img: "/works/invite-jasmine.jpg",
+        story: "Rooted in Tamil poetic fragrance (மல்லிகை மணம்). Designed with fragrant white jasmine garlands against sacred auspicious crimson and Tamil classical script.",
+        occasion: "Tamil Heritage Thirumana Suite",
+        style: "Sacred Crimson & Jasmine Flora",
+        included: ["Tamil Typography Card", "Muhurtham Keepsake", "Traditional Kolam Accents", "WhatsApp Folio"]
+      },
+      {
+        name: "Kaadhalum Valaiyalum",
+        sub: "காதலும் கை வளையலும் — Bangle Ceremony",
+        img: "/works/invite-valaiyal.jpg",
+        story: "Honoring traditional glass bangle blessings with warm temple architecture illustrations, festive marigold accents, and nostalgic celebratory lyricism.",
+        occasion: "Valaikappu & Bangle Ceremony",
+        style: "Temple Arch & Festive Marigold",
+        included: ["Ceremony Keepsake Card", "Song Lyric Accent", "Blessing Card", "Family WhatsApp Suite"]
+      }
+    ];
+
+    let activeInvitationIdx = null;
+
+    function openInvitationModal(idx) {
+      activeInvitationIdx = typeof idx === 'number' ? idx : 0;
+      renderInvitationModal();
       const modal = document.getElementById('imageModal');
-      const titleEl = document.getElementById('imageModalTitle');
-      const subEl = document.getElementById('imageModalSub');
-      const imgEl = document.getElementById('imageModalImg');
-
-      titleEl.innerHTML = title || 'Invitation Preview';
-      subEl.innerHTML = sub || 'Bespoke Stationery Design';
-      imgEl.src = imgSrc;
-
-      modal.classList.add('open');
+      if (modal) modal.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
 
-    function closeImageModal(e) {
-      if (e && e.target !== e.currentTarget && !e.target.classList.contains('mockup-close-btn')) return;
-      const modal = document.getElementById('imageModal');
+    function prevInvitation(e) {
+      if (e) e.stopPropagation();
+      if (activeInvitationIdx === null) return;
+      activeInvitationIdx = (activeInvitationIdx - 1 + invitationsData.length) % invitationsData.length;
+      renderInvitationModal();
+    }
+
+    function nextInvitation(e) {
+      if (e) e.stopPropagation();
+      if (activeInvitationIdx === null) return;
+      activeInvitationIdx = (activeInvitationIdx + 1) % invitationsData.length;
+      renderInvitationModal();
+    }
+
+    function renderInvitationModal() {
+      if (activeInvitationIdx === null) return;
+      const item = invitationsData[activeInvitationIdx];
+      const counterEl = document.getElementById('invCounter');
+      const nameEl = document.getElementById('invName');
+      const subEl = document.getElementById('invSub');
+      const storyEl = document.getElementById('invStory');
+      const occasionEl = document.getElementById('invOccasion');
+      const styleEl = document.getElementById('invStyle');
+      const inclusionsEl = document.getElementById('invInclusions');
       const imgEl = document.getElementById('imageModalImg');
-      modal.classList.remove('open');
+      const waBtnEl = document.getElementById('invWaBtn');
+
+      if (counterEl) counterEl.textContent = `0${activeInvitationIdx + 1} / 0${invitationsData.length}`;
+      if (nameEl) nameEl.textContent = item.name;
+      if (subEl) subEl.textContent = item.sub;
+      if (storyEl) storyEl.textContent = `"${item.story}"`;
+      if (occasionEl) occasionEl.textContent = item.occasion;
+      if (styleEl) styleEl.textContent = item.style;
+      if (imgEl) {
+        imgEl.src = item.img;
+        imgEl.alt = item.name;
+      }
+      if (inclusionsEl) {
+        inclusionsEl.innerHTML = item.included.map(inc => `<span class="inv-tag">✦ ${inc}</span>`).join('');
+      }
+      if (waBtnEl) {
+        const msg = encodeURIComponent(`Hi Zauqode, I saw your "${item.name}" bespoke invitation and would love to design something similar for our upcoming event.`);
+        waBtnEl.href = `https://wa.me/918946077234?text=${msg}`;
+      }
+    }
+
+    function closeImageModal(e) {
+      if (e && e.target !== e.currentTarget && !e.target.classList.contains('mockup-close-btn') && !e.target.classList.contains('inv-nav-btn')) return;
+      const modal = document.getElementById('imageModal');
+      activeInvitationIdx = null;
+      if (modal) modal.classList.remove('open');
       document.body.style.overflow = '';
-      setTimeout(() => {
-        if (imgEl) imgEl.src = '';
-      }, 350);
     }
 
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeIphoneMockup();
         closeImageModal();
+      } else if (e.key === 'ArrowLeft') {
+        prevInvitation();
+      } else if (e.key === 'ArrowRight') {
+        nextInvitation();
       }
     });
 
@@ -2771,20 +3050,68 @@
   </div>
 
   <!-- ==========================================================================
-       INVITATION IMAGE LIGHTBOX PREVIEW (Not Mobile View)
+       ELITE FULL-SCREEN INVITATION MODAL
        ========================================================================== -->
   <div id="imageModal" class="mockup-modal-backdrop" onclick="closeImageModal(event)">
     <div class="image-modal-container" onclick="event.stopPropagation()">
       <div class="image-modal-top-bar">
-        <div>
-          <div class="image-modal-title" id="imageModalTitle">Invitation Preview</div>
-          <div class="image-modal-sub" id="imageModalSub">Bespoke Stationery Design</div>
+        <div class="inv-top-left">
+          <span class="inv-top-tag">Bespoke Invitation Suite</span>
+          <span style="color: rgba(205, 238, 227, 0.4);">•</span>
+          <span class="inv-top-counter" id="invCounter">01 / 05</span>
         </div>
-        <button type="button" class="mockup-close-btn" onclick="closeImageModal()" aria-label="Close Preview">✕</button>
+        <div class="inv-nav-btns">
+          <button type="button" class="inv-nav-btn" onclick="prevInvitation(event)" aria-label="Previous Invitation" title="Previous (←)">←</button>
+          <button type="button" class="inv-nav-btn" onclick="nextInvitation(event)" aria-label="Next Invitation" title="Next (→)">→</button>
+          <button type="button" class="inv-nav-btn" onclick="closeImageModal()" aria-label="Close Preview" title="Close (Esc)" style="margin-left: 6px;">✕</button>
+        </div>
       </div>
 
-      <div class="image-modal-body">
-        <img id="imageModalImg" src="" alt="Invitation Preview" class="image-modal-content">
+      <div class="image-modal-body-split">
+        <!-- Left Side: Large Invitation Image with Gentle Zoom -->
+        <div class="image-modal-left">
+          <img id="imageModalImg" src="" alt="Invitation Preview" class="image-modal-content">
+        </div>
+
+        <!-- Right Side: 3-Part Description -->
+        <div class="image-modal-right">
+          <div>
+            <div class="inv-header">
+              <div class="inv-sub" id="invSub">Four-Ceremony Royal Folio Suite</div>
+              <div class="inv-name" id="invName">Akash &amp; Yazhini</div>
+            </div>
+
+            <div class="inv-story-box">
+              <span class="inv-story-label">Design Story</span>
+              <p class="inv-story-text" id="invStory"></p>
+            </div>
+
+            <div class="inv-details-grid">
+              <div class="inv-detail-card">
+                <span class="inv-detail-label">Occasion</span>
+                <div class="inv-detail-val" id="invOccasion"></div>
+              </div>
+              <div class="inv-detail-card">
+                <span class="inv-detail-label">Style &amp; Palette</span>
+                <div class="inv-detail-val" id="invStyle"></div>
+              </div>
+            </div>
+
+            <div>
+              <span class="inv-detail-label" style="margin-bottom: 4px;">Suite Inclusions</span>
+              <div class="inv-inclusions-wrap" id="invInclusions"></div>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid rgba(212, 165, 90, 0.2); padding-top: 16px;">
+            <a id="invWaBtn" href="#" target="_blank" rel="noreferrer" class="inv-btn-book">
+              Book a similar design
+            </a>
+            <div style="font-size: 11px; text-align: center; color: rgba(205, 238, 227, 0.6); margin-top: 6px; font-family: var(--font-body);">
+              Direct consultation with our principal designer via WhatsApp
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

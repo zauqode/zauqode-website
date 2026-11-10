@@ -15,11 +15,7 @@ export function RenovatedPortfolio() {
     canIframe?: boolean;
   } | null>(null);
 
-  const [activeImagePreview, setActiveImagePreview] = useState<{
-    img: string;
-    title: string;
-    sub?: string;
-  } | null>(null);
+  const [activeInvitationIndex, setActiveInvitationIndex] = useState<number | null>(null);
 
   // Form State
   const [form, setForm] = useState({
@@ -32,13 +28,17 @@ export function RenovatedPortfolio() {
 
   const [showAllWorks, setShowAllWorks] = useState(false);
 
-  // Close modals on Escape key
+  // Close modals on Escape key & arrow keys navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setActiveMockup(null);
-        setActiveImagePreview(null);
+        setActiveInvitationIndex(null);
         setMobileMenuOpen(false);
+      } else if (e.key === "ArrowLeft") {
+        setActiveInvitationIndex((prev) => (prev !== null ? (prev - 1 + 5) % 5 : null));
+      } else if (e.key === "ArrowRight") {
+        setActiveInvitationIndex((prev) => (prev !== null ? (prev + 1) % 5 : null));
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -173,6 +173,10 @@ export function RenovatedPortfolio() {
       thumb: "/works/invite-akash-yazhini.jpg",
       mobileImg: "/works/invite-akash-yazhini.jpg",
       canIframe: false,
+      story: "The couple wished for an opulent royal heritage tribute to their lineage. We crafted a four-ceremony folio with emerald foil borders, sacred kolam motifs, and dedicated ceremony cards.",
+      occasion: "Four-Ceremony Royal Wedding",
+      style: "Deep Forest & Heritage Gold Folio",
+      included: ["4 Ceremony Folios", "Custom Monogram", "Wax Seal Motif", "WhatsApp Suite"],
     },
     {
       id: "07",
@@ -183,6 +187,10 @@ export function RenovatedPortfolio() {
       thumb: "/works/invite-karthik-divya.jpg",
       mobileImg: "/works/invite-karthik-divya.jpg",
       canIframe: false,
+      story: "A modern botanical dream requested with ethereal serenity. Hand-painted emerald lotus blossoms paired with translucent vellum overlays and delicate gold serif typography.",
+      occasion: "Traditional Temple Wedding",
+      style: "Emerald Lotus & Translucent Vellum",
+      included: ["Translucent Vellum Overlay", "Hand-Painted Lotus Card", "Keepsake RSVP", "Digital Envelope"],
     },
     {
       id: "08",
@@ -193,6 +201,10 @@ export function RenovatedPortfolio() {
       thumb: "/works/invite-nikkah.jpg",
       mobileImg: "/works/invite-nikkah.jpg",
       canIframe: false,
+      story: "Designed for a grand imperial celebration. Incorporates majestic Islamic arch silhouettes, intricate damask borders, and rich imperial burgundy hues with gilded calligraphy.",
+      occasion: "Royal Nikkah Celebration",
+      style: "Imperial Burgundy & Gilded Arch",
+      included: ["Gilded Arch Main Folio", "Reception Card", "Bespoke Calligraphy", "Mobile Preview Suite"],
     },
     {
       id: "09",
@@ -203,6 +215,10 @@ export function RenovatedPortfolio() {
       thumb: "/works/invite-jasmine.jpg",
       mobileImg: "/works/invite-jasmine.jpg",
       canIframe: false,
+      story: "Rooted in Tamil poetic fragrance (மல்லிகை மணம்). Designed with fragrant white jasmine garlands against sacred auspicious crimson and Tamil classical script.",
+      occasion: "Tamil Heritage Thirumana Suite",
+      style: "Sacred Crimson & Jasmine Flora",
+      included: ["Tamil Typography Card", "Muhurtham Keepsake", "Traditional Kolam Accents", "WhatsApp Folio"],
     },
     {
       id: "10",
@@ -213,6 +229,10 @@ export function RenovatedPortfolio() {
       thumb: "/works/invite-valaiyal.jpg",
       mobileImg: "/works/invite-valaiyal.jpg",
       canIframe: false,
+      story: "Honoring traditional glass bangle blessings with warm temple architecture illustrations, festive marigold accents, and nostalgic celebratory lyricism.",
+      occasion: "Valaikappu & Bangle Ceremony",
+      style: "Temple Arch & Festive Marigold",
+      included: ["Ceremony Keepsake Card", "Song Lyric Accent", "Blessing Card", "Family WhatsApp Suite"],
     },
     {
       id: "11",
@@ -255,6 +275,9 @@ export function RenovatedPortfolio() {
     works.find((w) => w.id === "11")!,
     works.find((w) => w.id === "12")!,
   ].filter(Boolean);
+
+  const invitationWorks = works.filter((w) => w.category === "invitations");
+  const activeInv = activeInvitationIndex !== null ? invitationWorks[activeInvitationIndex] : null;
 
   return (
     <div className="renovated-app min-h-screen relative overflow-x-hidden">
@@ -825,11 +848,8 @@ export function RenovatedPortfolio() {
                     key={item.id}
                     onClick={() => {
                       if (item.category === "invitations") {
-                        setActiveImagePreview({
-                          img: item.thumb || item.mobileImg || "",
-                          title: item.name,
-                          sub: item.sub,
-                        });
+                        const idx = invitationWorks.findIndex((inv) => inv.id === item.id);
+                        setActiveInvitationIndex(idx !== -1 ? idx : 0);
                       } else if (item.videoUrl) {
                         setActiveMockup({
                           title: item.name + " — Video Invitation",
@@ -1151,11 +1171,8 @@ export function RenovatedPortfolio() {
                   key={item.id}
                   onClick={() => {
                     if (item.category === "invitations") {
-                      setActiveImagePreview({
-                        img: item.thumb || item.mobileImg || "",
-                        title: item.name,
-                        sub: item.sub,
-                      });
+                      const idx = invitationWorks.findIndex((inv) => inv.id === item.id);
+                      setActiveInvitationIndex(idx !== -1 ? idx : 0);
                     } else if (item.videoUrl) {
                       setActiveMockup({
                         title: item.name + " — Video Invitation",
@@ -1253,45 +1270,162 @@ export function RenovatedPortfolio() {
         </div>
       </footer>
 
-      {/* Invitation Image Preview Modal (Clean Lightbox, Not Mobile View) */}
-      {activeImagePreview && (
+      {/* Elite Full-Screen Invitation Modal */}
+      {activeInv && (
         <div
-          className="fixed inset-0 z-[99999] bg-[#041412]/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto transition-all duration-300"
-          onClick={() => setActiveImagePreview(null)}
+          className="fixed inset-0 z-[99999] bg-[#021816]/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 lg:p-8 overflow-y-auto animate-fade-in"
+          onClick={() => setActiveInvitationIndex(null)}
         >
           <div
-            className="flex flex-col items-center gap-2.5 sm:gap-3 relative max-w-[94vw] max-h-[94vh] my-auto"
+            className="relative w-full max-w-5xl max-h-[92vh] bg-gradient-to-br from-[#041c19] via-[#021816] to-[#01100f] border border-[#d4a55a]/40 rounded-3xl shadow-[0_25px_80px_rgba(0,0,0,0.85),0_0_50px_rgba(205,238,227,0.15)] overflow-hidden flex flex-col my-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Top Bar */}
-            <div className="flex items-center justify-between w-full px-2 text-[#f3e3c0]">
-              <div>
-                <span className="font-heading text-lg sm:text-xl tracking-wide text-[#f3e3c0]">
-                  {activeImagePreview.title}
+            {/* Top Header Bar */}
+            <div className="flex items-center justify-between px-5 sm:px-8 py-3.5 border-b border-[#d4a55a]/20 bg-[#011412]/80 shrink-0">
+              <div className="flex items-center gap-3">
+                <span className="font-ui text-xs tracking-[0.25em] uppercase text-[#d4a55a]">
+                  Bespoke Invitation Suite
                 </span>
-                {activeImagePreview.sub && (
-                  <p className="text-xs sm:text-sm text-[#d4a55a] font-light mt-0.5">
-                    {activeImagePreview.sub}
-                  </p>
-                )}
+                <span className="font-ui text-xs text-[#cdeee3]/40">•</span>
+                <span className="font-ui text-xs tracking-widest text-[#cdeee3]/80">
+                  {String(activeInvitationIndex! + 1).padStart(2, "0")} / {String(invitationWorks.length).padStart(2, "0")}
+                </span>
               </div>
-              <button
-                type="button"
-                onClick={() => setActiveImagePreview(null)}
-                className="w-9 h-9 rounded-full border border-[#d4a55a] bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer ml-4"
-                aria-label="Close"
-              >
-                ✕
-              </button>
+
+              <div className="flex items-center gap-2">
+                {/* Previous & Next Navigation Arrows */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveInvitationIndex((prev) =>
+                      prev !== null ? (prev - 1 + invitationWorks.length) % invitationWorks.length : null
+                    )
+                  }
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#d4a55a]/40 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer text-sm"
+                  aria-label="Previous Invitation"
+                  title="Previous (←)"
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveInvitationIndex((prev) =>
+                      prev !== null ? (prev + 1) % invitationWorks.length : null
+                    )
+                  }
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#d4a55a]/40 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer text-sm"
+                  aria-label="Next Invitation"
+                  title="Next (→)"
+                >
+                  →
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveInvitationIndex(null)}
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#d4a55a]/40 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer text-sm ml-2"
+                  aria-label="Close"
+                  title="Close (Esc)"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
-            {/* High-Resolution Image Container */}
-            <div className="max-w-[90vw] max-h-[82vh] overflow-hidden rounded-2xl border border-[#d4a55a]/45 shadow-[0_25px_60px_rgba(0,0,0,0.75),0_0_30px_rgba(0,117,110,0.3)] bg-[#002d2a] flex items-center justify-center">
-              <img
-                src={activeImagePreview.img}
-                alt={activeImagePreview.title}
-                className="max-w-[90vw] max-h-[82vh] object-contain block rounded-2xl"
-              />
+            {/* Main 2-Column Content */}
+            <div className="flex flex-col md:flex-row overflow-y-auto max-h-[calc(92vh-60px)]">
+              {/* Left Side: Large Invitation with Gentle Zoom */}
+              <div className="w-full md:w-[52%] lg:w-[55%] p-4 sm:p-6 lg:p-8 flex items-center justify-center bg-[#010f0e]/60 relative overflow-hidden group">
+                <div className="relative max-h-[55vh] md:max-h-[72vh] flex items-center justify-center">
+                  <img
+                    src={activeInv.thumb || activeInv.mobileImg}
+                    alt={activeInv.name}
+                    className="max-h-[55vh] md:max-h-[72vh] w-auto max-w-full object-contain rounded-2xl shadow-[0_15px_45px_rgba(0,0,0,0.6)] border border-[#d4a55a]/30 transition-transform duration-700 ease-out group-hover:scale-[1.03] select-none"
+                  />
+                </div>
+              </div>
+
+              {/* Right Side: 3-Part Description */}
+              <div className="w-full md:w-[48%] lg:w-[45%] p-6 sm:p-8 flex flex-col justify-between border-t md:border-t-0 md:border-l border-[#d4a55a]/20 bg-[#031816]/75 space-y-6">
+                <div className="space-y-5">
+                  {/* Part 1: Couple or occasion name in the script font */}
+                  <div className="space-y-1.5 border-b border-[#d4a55a]/20 pb-4">
+                    <span className="font-ui text-[11px] uppercase tracking-[0.22em] text-[#d4a55a]">
+                      {activeInv.sub}
+                    </span>
+                    <h3 className="font-script text-3xl sm:text-4xl lg:text-5xl text-[#f3e3c0] leading-tight">
+                      {activeInv.name}
+                    </h3>
+                  </div>
+
+                  {/* Part 2: 2-line story in the Jost font */}
+                  <div className="space-y-1.5">
+                    <span className="font-ui text-[10px] uppercase tracking-[0.2em] text-[#d4a55a]/85">
+                      Design Story
+                    </span>
+                    <p className="font-body text-sm sm:text-base text-[#f3e3c0]/90 font-light leading-relaxed border-l-2 border-[#d4a55a]/60 pl-3.5 italic">
+                      "{activeInv.story}"
+                    </p>
+                  </div>
+
+                  {/* Part 3: Small details (Occasion, Style, Included) */}
+                  <div className="space-y-3.5 pt-1">
+                    <div className="grid grid-cols-2 gap-2.5 text-left">
+                      <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.03] border border-[#d4a55a]/20">
+                        <span className="block font-ui text-[10px] uppercase tracking-wider text-[#d4a55a]">
+                          Occasion
+                        </span>
+                        <span className="font-body text-xs sm:text-sm text-[#f3e3c0] font-normal">
+                          {activeInv.occasion || "Celebration"}
+                        </span>
+                      </div>
+                      <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.03] border border-[#d4a55a]/20">
+                        <span className="block font-ui text-[10px] uppercase tracking-wider text-[#d4a55a]">
+                          Style &amp; Palette
+                        </span>
+                        <span className="font-body text-xs sm:text-sm text-[#f3e3c0] font-normal">
+                          {activeInv.style || "Bespoke Stationery"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {activeInv.included && activeInv.included.length > 0 && (
+                      <div className="space-y-1.5">
+                        <span className="font-ui text-[10px] uppercase tracking-wider text-[#d4a55a]">
+                          Suite Inclusions
+                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {activeInv.included.map((item, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-body font-light bg-[#00756e]/25 text-[#cdeee3] border border-[#d4a55a]/30"
+                            >
+                              ✦ {item}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* WhatsApp Booking Button */}
+                <div className="pt-4 border-t border-[#d4a55a]/20 space-y-2">
+                  <a
+                    href={`https://wa.me/918946077234?text=${encodeURIComponent(
+                      `Hi Zauqode, I saw your "${activeInv.name}" bespoke invitation and would love to design something similar for our upcoming event.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full inline-flex items-center justify-center gap-2 py-3 px-6 rounded-full bg-[#d4a55a] hover:bg-[#b8893c] text-[#021816] font-ui text-xs sm:text-sm font-semibold tracking-wider uppercase shadow-[0_4px_25px_rgba(212,165,90,0.35)] transition-all cursor-pointer"
+                  >
+                    Book a similar design
+                  </a>
+                  <p className="text-[11px] text-center text-[#cdeee3]/60 font-body">
+                    Direct consultation with our principal designer via WhatsApp
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
