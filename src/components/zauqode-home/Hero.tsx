@@ -48,7 +48,7 @@ export function Hero({ onSelectCategory }: HeroProps) {
     }
     const timer = window.setInterval(() => {
       setWordIdx((prev) => (prev + 1) % mantraWords.length);
-    }, 2600);
+    }, 3200);
     return () => window.clearInterval(timer);
   }, []);
 

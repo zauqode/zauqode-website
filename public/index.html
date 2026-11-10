@@ -472,10 +472,10 @@
 
     .hero-curly-mask {
       display: block;
-      overflow: hidden;
-      padding: 0.08em 0.18em 0.28em;
-      margin-bottom: -0.22em;
-      min-height: 1.38em;
+      overflow: visible;
+      padding: 0.02em 0.1em 0.12em;
+      margin-bottom: -0.1em;
+      min-height: 1.42em;
     }
 
     .hero-rotating-curly {
@@ -485,12 +485,24 @@
       line-height: 1.05;
       color: var(--teal);
       font-weight: 400;
-      animation: heroCurlyReveal 0.72s cubic-bezier(0.2, 0.75, 0.25, 1) forwards;
+      padding: 0.08em 0.24em 0.24em;
+      -webkit-mask-image: linear-gradient(to right, #000 0%, #000 48%, transparent 54%);
+      mask-image: linear-gradient(to right, #000 0%, #000 48%, transparent 54%);
+      -webkit-mask-size: 240% 100%;
+      mask-size: 240% 100%;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: 100% 0;
+      mask-position: 100% 0;
+      animation: heroHandwritingReveal 3.2s cubic-bezier(0.37, 0, 0.2, 1) forwards;
     }
 
-    @keyframes heroCurlyReveal {
-      0% { opacity: 0; transform: translateY(65%); }
-      100% { opacity: 1; transform: translateY(0); }
+    @keyframes heroHandwritingReveal {
+      0% { opacity: 0.15; transform: translateY(2px); -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+      8% { opacity: 1; }
+      44% { opacity: 1; transform: translateY(0); -webkit-mask-position: 0% 0; mask-position: 0% 0; }
+      86% { opacity: 1; transform: translateY(0); -webkit-mask-position: 0% 0; mask-position: 0% 0; }
+      100% { opacity: 0; transform: translateY(-4px); -webkit-mask-position: 0% 0; mask-position: 0% 0; }
     }
 
     .hero-mantra-copy {
@@ -2243,6 +2255,12 @@
       }
       .custom-cursor { display: none !important; }
       #curtain { display: none !important; }
+      .hero-rotating-curly {
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        animation: none !important;
+        opacity: 1 !important;
+      }
     }
   </style>
 </head>
@@ -3636,7 +3654,7 @@
       });
 
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        window.setInterval(() => setMantraWord(mantraIdx + 1), 2600);
+        window.setInterval(() => setMantraWord(mantraIdx + 1), 3200);
       }
     });
   </script>

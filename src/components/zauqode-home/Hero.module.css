@@ -117,10 +117,10 @@
 
 .curlyLineMask {
   display: block;
-  overflow: hidden;
-  padding: 0.08em 0.18em 0.28em;
-  margin-bottom: -0.22em;
-  min-height: 1.38em;
+  overflow: visible;
+  padding: 0.02em 0.1em 0.12em;
+  margin-bottom: -0.1em;
+  min-height: 1.42em;
 }
 
 .rotatingCurlyWord {
@@ -130,17 +130,45 @@
   line-height: 1.05;
   color: var(--teal, #00756e);
   font-weight: 400;
-  animation: curlyReveal 0.72s cubic-bezier(0.2, 0.75, 0.25, 1) forwards;
+  padding: 0.08em 0.24em 0.24em;
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 48%, transparent 54%);
+  mask-image: linear-gradient(to right, #000 0%, #000 48%, transparent 54%);
+  -webkit-mask-size: 240% 100%;
+  mask-size: 240% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+  animation: handwritingReveal 3.2s cubic-bezier(0.37, 0, 0.2, 1) forwards;
 }
 
-@keyframes curlyReveal {
+@keyframes handwritingReveal {
   0% {
-    opacity: 0;
-    transform: translateY(65%);
+    opacity: 0.15;
+    transform: translateY(2px);
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
   }
-  100% {
+  8% {
+    opacity: 1;
+  }
+  44% {
     opacity: 1;
     transform: translateY(0);
+    -webkit-mask-position: 0% 0;
+    mask-position: 0% 0;
+  }
+  86% {
+    opacity: 1;
+    transform: translateY(0);
+    -webkit-mask-position: 0% 0;
+    mask-position: 0% 0;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-4px);
+    -webkit-mask-position: 0% 0;
+    mask-position: 0% 0;
   }
 }
 
@@ -374,6 +402,11 @@
     animation: none !important;
     transition: none !important;
     transform: none !important;
+  }
+  .rotatingCurlyWord {
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    opacity: 1 !important;
   }
   .fixedLine {
     transform: translateY(0) !important;
