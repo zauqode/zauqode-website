@@ -934,29 +934,6 @@ export function RenovatedPortfolio() {
               </h2>
             </div>
 
-            {/* Direct WhatsApp Quick Chat Button */}
-            <div className="flex flex-col items-center justify-center p-6 bg-[#eef8f3] border border-[#d4a55a]/40 rounded-2xl text-center space-y-3">
-              <span className="font-ui text-xs tracking-wider uppercase text-[#005a55] font-medium">Prefer an instant reply?</span>
-              <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light max-w-md">
-                Chat directly with me on WhatsApp for quick estimates and instant design advice.
-              </p>
-              <a
-                href="https://wa.me/918946077234?text=Hi%20Zauqode%2C%20I'd%20love%20to%20discuss%20an%20invitation%20%2F%20website%20for%20my%20upcoming%20celebration."
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#25D366] text-white font-ui text-xs uppercase tracking-widest font-semibold hover:bg-[#20ba59] transition-all shadow-sm"
-              >
-                <span>Chat on WhatsApp</span>
-                <span>↗</span>
-              </a>
-            </div>
-
-            <div className="flex items-center gap-4 my-2">
-              <div className="h-[1px] bg-[#d4a55a]/25 flex-1" />
-              <span className="font-ui text-[10px] uppercase tracking-widest text-[#b8893c]">Or send a message below</span>
-              <div className="h-[1px] bg-[#d4a55a]/25 flex-1" />
-            </div>
-
             {!formSubmitted ? (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
