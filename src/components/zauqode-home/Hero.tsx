@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './Hero.module.css';
 import { Button } from './Button';
 
@@ -6,60 +6,63 @@ export interface HeroProps {
   onSelectCategory?: (category: string) => void;
 }
 
-const disciplines = [
+const mantraWords = [
+  'intention.',
+  'emotion.',
+  'devotion.',
+  'distinction.',
+  'grace.',
+];
+
+const craftLinks = [
   {
-    num: '01',
-    shortLabel: 'Invitations',
-    title: 'Bespoke Invitations',
+    label: 'Invitations',
     category: 'invitations',
-    description:
-      'Heirloom stationery suites, custom monograms, and refined digital keepsake invitations tailored to your celebration.',
-    deliverables: 'Print Suites · Custom Monograms · WhatsApp Cards',
-    cta: 'Explore invitation craft',
+    note: 'Heirloom foil print suites, custom monograms & digital folios.',
   },
   {
-    num: '02',
-    shortLabel: 'Occasion Web',
-    title: 'Occasion & Wedding Websites',
+    label: 'Occasion Web',
     category: 'websites',
-    description:
-      'Interactive celebration portals featuring custom storytelling, live RSVP tracking, itineraries, and guest concierge.',
-    deliverables: 'Celebration Portals · Live RSVP · Custom Domains',
-    cta: 'View wedding portals',
+    note: 'Interactive wedding & celebration portals with live RSVP concierge.',
   },
   {
-    num: '03',
-    shortLabel: 'Motion',
-    title: 'Motion & Video Invites',
+    label: 'Stall Boards',
+    category: 'stalls',
+    note: 'Custom event signage & illustrated boards crafted for wedding counters.',
+  },
+  {
+    label: 'Motion',
     category: 'videos',
-    description:
-      'Atmospheric vertical video reveals and audio-synced invitation reels designed to delight loved ones instantly.',
-    deliverables: 'Vertical Reels · Musical Sync · Share-Ready MP4',
-    cta: 'Watch video invites',
+    note: 'Cinematic musical reels & animated invitation stories.',
   },
   {
-    num: '04',
-    shortLabel: 'Brand Web',
-    title: 'Brand & Business Websites',
+    label: 'Brand Web',
     category: 'business',
-    description:
-      'Editorial, high-trust digital flagships engineered from scratch to elevate discerning studios and businesses.',
-    deliverables: 'Bespoke UI · Clean Code · Mobile Craft',
-    cta: 'Explore brand builds',
+    note: 'Editorial digital flagships engineered with restraint and speed.',
   },
 ];
 
 /**
  * Hero Component
- * Editorial, interactive atelier hero showcasing Zauqode's Craft & Positioning.
+ * Luxury studio banner with fixed editorial line and rotating Sacramento mantra word.
  */
 export function Hero({ onSelectCategory }: HeroProps) {
   const heroRef = useRef<HTMLElement>(null);
-  const [activeIdx, setActiveIdx] = useState(0);
+  const [wordIdx, setWordIdx] = useState(0);
+  const [hoveredCraft, setHoveredCraft] = useState<number | null>(null);
 
-  const activeDiscipline = disciplines[activeIdx] || disciplines[0];
+  // Cycle the curly script mantra word smoothly (disabled if user prefers reduced motion)
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setWordIdx((prev) => (prev + 1) % mantraWords.length);
+    }, 2600);
+    return () => window.clearInterval(timer);
+  }, []);
 
-  // Track mouse for soft radial ambient glow behind hero content
+  // Track mouse for subtle ambient mint glow
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
@@ -69,7 +72,7 @@ export function Hero({ onSelectCategory }: HeroProps) {
     heroRef.current.style.setProperty('--gy', `${y}px`);
   };
 
-  const handleDisciplineExplore = (category: string) => {
+  const handleExploreCraft = (category: string) => {
     if (onSelectCategory) {
       onSelectCategory(category);
     } else {
@@ -77,13 +80,19 @@ export function Hero({ onSelectCategory }: HeroProps) {
     }
   };
 
+  const activeWord = mantraWords[wordIdx] || mantraWords[0];
+  const activeCraftNote =
+    hoveredCraft !== null
+      ? craftLinks[hoveredCraft]?.note
+      : 'Nothing templated. Nothing rushed. I design bespoke invitations and interactive occasion websites where artistry meets enduring precision.';
+
   return (
     <section
       ref={heroRef}
       id="home"
       className={styles.hero}
       onMouseMove={handleMouseMove}
-      aria-label="Hero Section"
+      aria-label="Hero Banner"
     >
       {/* Ambient Mint Cursor Glow */}
       <div className={styles.cursorGlow} aria-hidden="true" />
@@ -91,129 +100,96 @@ export function Hero({ onSelectCategory }: HeroProps) {
       {/* Outer Architectural 1px Gold Frame */}
       <div className={styles.goldFrame} aria-hidden="true" />
 
-      {/* Top Frame Corner Labels */}
+      {/* Top Corner Labels inside frame */}
       <div className={styles.topLabelLeft}>Designer &amp; Developer</div>
-      <div className={styles.topLabelRight}>Crafted with Feeling</div>
+      <div className={styles.topLabelRight}>Bespoke Design Studio</div>
 
-      {/* Main 2-Column Editorial Composition */}
-      <div className={styles.heroGrid}>
-        {/* Left Column: Headline, Clear Positioning & CTAs */}
-        <div className={styles.heroPrimary}>
-          <div className={styles.headlineWrap}>
-            <h1 className={styles.headline}>
-              <span className={styles.lineMask}>
-                <span className={styles.line1}>Design that</span>
-              </span>
-              <span className={styles.lineMask}>
-                <span className={styles.line2}>
-                  feels
-                  <span className={styles.scriptWord}>personal.</span>
-                </span>
-              </span>
-            </h1>
-          </div>
-
-          <p className={styles.leadCopy}>
-            I design bespoke digital &amp; heirloom invitations, interactive occasion websites, and tailored brand flagships—crafted from genuine feeling and clean code.
-          </p>
-
-          <div className={styles.actionRow}>
-            <div className={styles.buttonGroup}>
-              <Button href="#works" arrow="→">
-                View Works
-              </Button>
-              <Button
-                href="https://wa.me/918946077234"
-                target="_blank"
-                rel="noopener noreferrer"
-                arrow="↗"
-              >
-                Chat on WhatsApp
-              </Button>
-            </div>
-          </div>
+      {/* Centered Banner Content */}
+      <div className={styles.bannerCenter}>
+        {/* Discipline Eyebrow */}
+        <div className={styles.bannerEyebrow}>
+          <span>Invitations</span>
+          <span className={styles.eyebrowStar}>✦</span>
+          <span>Occasion Websites</span>
+          <span className={styles.eyebrowStar}>✦</span>
+          <span>Digital Craft</span>
         </div>
 
-        {/* Right Column: Interactive Signature Discipline Rail */}
-        <aside className={styles.disciplineRail} aria-label="Studio Craft Disciplines">
-          <div className={styles.railHeader}>
-            <span className={styles.railEyebrow}>What I Craft</span>
-            <span className={styles.railHint}>Select to inspect</span>
-          </div>
+        {/* 2-Line Banner Headline: Line 1 Fixed + Line 2 Changing Curly Mantra */}
+        <h1 className={styles.headline}>
+          <span className={styles.fixedLineMask}>
+            <span className={styles.fixedLine}>Design with</span>
+          </span>
+          <span className={styles.curlyLineMask} aria-live="polite">
+            <span key={activeWord} className={styles.rotatingCurlyWord}>
+              {activeWord}
+            </span>
+          </span>
+        </h1>
 
-          <div className={styles.disciplineList} role="tablist" aria-label="Disciplines">
-            {disciplines.map((item, idx) => {
-              const isActive = idx === activeIdx;
-              return (
-                <button
-                  key={item.num}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => setActiveIdx(idx)}
-                  onMouseEnter={() => setActiveIdx(idx)}
-                  className={`${styles.disciplineItem} ${isActive ? styles.disciplineActive : ''}`}
-                >
-                  <span className={styles.disciplineNum}>{item.num}</span>
-                  <span className={styles.disciplineName}>{item.title}</span>
-                  <span className={styles.disciplineArrow} aria-hidden="true">
-                    {isActive ? '✦' : '›'}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Mobile quick tabs for ultra-compact view */}
-          <div className={styles.mobileTabs} role="tablist" aria-label="Disciplines Mobile">
-            {disciplines.map((item, idx) => {
-              const isActive = idx === activeIdx;
-              return (
-                <button
-                  key={`m-${item.num}`}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => setActiveIdx(idx)}
-                  className={`${styles.mobileTab} ${isActive ? styles.mobileTabActive : ''}`}
-                >
-                  <span className={styles.mobileTabNum}>{item.num}</span>
-                  <span>{item.shortLabel}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Live Detail Inspector Panel */}
-          <div className={styles.detailCard} key={activeDiscipline.num}>
-            <div className={styles.detailTop}>
-              <span className={styles.detailTitle}>{activeDiscipline.title}</span>
-              <span className={styles.detailBadge}>{activeDiscipline.num}</span>
-            </div>
-            <p className={styles.detailDesc}>{activeDiscipline.description}</p>
-            <div className={styles.detailDeliverables}>{activeDiscipline.deliverables}</div>
+        {/* Subtle Mantra Progress Dots (Clickable) */}
+        <div className={styles.mantraPips} role="tablist" aria-label="Studio Mantra Words">
+          {mantraWords.map((word, idx) => (
             <button
+              key={word}
               type="button"
-              onClick={() => handleDisciplineExplore(activeDiscipline.category)}
-              className={styles.detailAction}
+              role="tab"
+              aria-selected={idx === wordIdx}
+              aria-label={`Select ${word.replace('.', '')}`}
+              onClick={() => setWordIdx(idx)}
+              className={`${styles.mantraPip} ${idx === wordIdx ? styles.mantraPipActive : ''}`}
+            />
+          ))}
+        </div>
+
+        {/* Concise Mantra Statement / Interactive Craft Insight */}
+        <p className={styles.mantraCopy} key={hoveredCraft !== null ? `hover-${hoveredCraft}` : 'default'}>
+          {activeCraftNote}
+        </p>
+
+        {/* Centered Compact Action Pills */}
+        <div className={styles.buttonGroup}>
+          <Button href="#works" arrow="→">
+            View Works
+          </Button>
+          <Button
+            href="https://wa.me/918946077234"
+            target="_blank"
+            rel="noopener noreferrer"
+            arrow="↗"
+          >
+            Chat on WhatsApp
+          </Button>
+        </div>
+
+        {/* Interactive Minimal Discipline Links Bar */}
+        <div className={styles.craftStrip} aria-label="Explore crafts by discipline">
+          {craftLinks.map((craft, idx) => (
+            <button
+              key={craft.category}
+              type="button"
+              onClick={() => handleExploreCraft(craft.category)}
+              onMouseEnter={() => setHoveredCraft(idx)}
+              onMouseLeave={() => setHoveredCraft(null)}
+              onFocus={() => setHoveredCraft(idx)}
+              onBlur={() => setHoveredCraft(null)}
+              className={styles.craftChip}
             >
-              <span>{activeDiscipline.cta}</span>
-              <span className={styles.detailArrow}>→</span>
+              <span className={styles.craftDot}>✦</span>
+              <span>{craft.label}</span>
             </button>
-          </div>
-        </aside>
+          ))}
+        </div>
       </div>
 
-      {/* Bottom-Left Studio Standard Line */}
+      {/* Bottom-Left Studio Standard Credo */}
       <div className={styles.studioStandard}>
         <span>Zero Templates</span>
         <span className={styles.standardStar}>✦</span>
-        <span>Tailored to Emotion</span>
-        <span className={`${styles.standardStar} ${styles.hideOnNarrow}`}>✦</span>
-        <span className={styles.hideOnNarrow}>1-on-1 Concierge Craft</span>
+        <span>Crafted to Endure</span>
       </div>
 
-      {/* Right Frame Edge Vertical Signature */}
+      {/* Right Frame Vertical Signature */}
       <div className={styles.verticalText} aria-hidden="true">
         Design . Code . Elevate
       </div>
