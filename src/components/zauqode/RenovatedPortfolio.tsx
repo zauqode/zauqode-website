@@ -1147,7 +1147,7 @@ export function RenovatedPortfolio() {
                     onMouseEnter={handleMouseEnter}
                   >
                     {item.thumb && (
-                      <div className="absolute inset-0 bg-gradient-to-b from-[#002d2a]/90 via-[#004641]/35 to-[#002320]/95 z-0 transition-opacity duration-300 group-hover:opacity-90" />
+                      <div className="absolute inset-0 bg-gradient-to-b from-[#002d2a]/90 via-[#003430]/65 to-[#002320]/95 z-0 transition-opacity duration-300 group-hover:opacity-90" />
                     )}
                     <div className="card-inner-gold" />
                     <div className="relative z-10 flex justify-between items-center text-[10px] sm:text-xs font-ui tracking-wider sm:tracking-widest uppercase opacity-85">
@@ -1482,7 +1482,7 @@ export function RenovatedPortfolio() {
                   onMouseEnter={handleMouseEnter}
                 >
                   {item.thumb && (
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#002d2a]/90 via-[#004641]/35 to-[#002320]/95 z-0 transition-opacity duration-300 group-hover:opacity-90" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#002d2a]/90 via-[#003430]/65 to-[#002320]/95 z-0 transition-opacity duration-300 group-hover:opacity-90" />
                   )}
                   <div className="card-inner-gold" />
                   <div className="relative z-10 flex justify-between items-center gap-1 text-[8.5px] sm:text-xs font-ui tracking-wider sm:tracking-widest uppercase opacity-85">
@@ -1760,7 +1760,13 @@ export function RenovatedPortfolio() {
                 </div>
 
                 {/* Viewport */}
-                <div className="w-full h-full pt-8 pb-3 overflow-y-auto bg-[#041412] flex items-center justify-center">
+                <div
+                  className={`w-full h-full pt-8 pb-3 bg-[#041412] ${
+                    activeMockup.videoUrl || activeMockup.canIframe
+                      ? "overflow-hidden flex items-center justify-center"
+                      : "overflow-y-auto no-scrollbar block"
+                  }`}
+                >
                   {activeMockup.videoUrl ? (
                     <video
                       src={activeMockup.videoUrl}
