@@ -382,37 +382,64 @@
     }
 
     /* ==========================================================================
-       HERO SECTION (Minimal, Sleek Artist-Portfolio Layout)
+       HERO SECTION (Atelier Editorial Layout)
        ========================================================================== */
     .hero-section {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 130px 7vw 100px;
+      padding: 132px 6.5vw 105px;
       position: relative;
       overflow: hidden;
       box-sizing: border-box;
+      isolation: isolate;
+    }
+
+    .hero-silk-canvas {
+      position: absolute;
+      inset: -4%;
+      width: 108%;
+      height: 108%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.9;
+    }
+
+    .hero-silk-1 { stroke-dasharray: 900 1100; animation: heroSilkFlow 16s ease-in-out infinite alternate; }
+    .hero-silk-2 { stroke-dasharray: 1100 1000; animation: heroSilkFlowRev 21s ease-in-out infinite alternate; }
+    .hero-silk-3 { stroke-dasharray: 850 1200; animation: heroSilkFlow 18s ease-in-out 2s infinite alternate; }
+    .hero-silk-4 { stroke-dasharray: 1050 950; animation: heroSilkFlowRev 24s ease-in-out 1s infinite alternate; }
+
+    @keyframes heroSilkFlow {
+      0% { stroke-dashoffset: 600; opacity: 0.45; }
+      50% { opacity: 0.95; }
+      100% { stroke-dashoffset: -700; opacity: 0.55; }
+    }
+    @keyframes heroSilkFlowRev {
+      0% { stroke-dashoffset: -650; opacity: 0.4; }
+      50% { opacity: 0.9; }
+      100% { stroke-dashoffset: 650; opacity: 0.5; }
     }
 
     .hero-gold-frame {
       position: absolute;
-      top: 92px;
-      bottom: 28px;
+      top: 88px;
+      bottom: 24px;
       left: 3vw;
       right: 3vw;
-      border: 1px solid rgba(212, 165, 90, 0.55);
+      border: 1px solid rgba(212, 165, 90, 0.52);
       pointer-events: none;
       z-index: 10;
     }
 
     .hero-top-label-left {
       position: absolute;
-      top: 122px;
+      top: 112px;
       left: calc(3vw + 24px);
       font-family: var(--font-ui);
-      font-size: 13px;
-      letter-spacing: 0.3em;
+      font-size: 12px;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
       color: var(--gold-dark);
       pointer-events: none;
@@ -421,27 +448,38 @@
 
     .hero-top-label-right {
       position: absolute;
-      top: 122px;
+      top: 112px;
       right: calc(3vw + 24px);
       font-family: var(--font-ui);
-      font-size: 13px;
-      letter-spacing: 0.3em;
+      font-size: 12px;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
       color: var(--gold-dark);
       pointer-events: none;
       z-index: 15;
     }
 
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.85fr);
+      align-items: center;
+      gap: clamp(32px, 4.5vw, 72px);
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      z-index: 20;
+      position: relative;
+    }
+
     .hero-headline-wrap {
-      margin-top: auto;
-      margin-bottom: 0;
+      margin: 0;
       position: relative;
       z-index: 20;
     }
 
     .hero-headline {
       font-family: var(--font-heading);
-      font-size: clamp(38px, 6.6vw, 96px);
+      font-size: clamp(38px, 5.4vw, 82px);
       line-height: 1.08;
       letter-spacing: 0.01em;
       color: var(--teal-deep);
@@ -458,48 +496,41 @@
 
     .hero-line-1 {
       display: inline-block;
-      animation: heroSlideUp 1.3s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s backwards;
+      animation: heroSlideUp 1.25s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s backwards;
     }
 
     .hero-line-2 {
       display: inline-block;
-      margin-left: clamp(0px, 9vw, 150px);
-      animation: heroSlideUp 1.3s cubic-bezier(0.2, 0.7, 0.2, 1) 0.45s backwards;
+      margin-left: clamp(0px, 5vw, 90px);
+      animation: heroSlideUp 1.25s cubic-bezier(0.2, 0.7, 0.2, 1) 0.35s backwards;
     }
 
     .hero-script-word {
       font-family: var(--font-script);
-      font-size: 1.2em;
+      font-size: 1.22em;
       color: var(--teal);
-      margin-left: 0.25em;
+      margin-left: 0.15em;
       font-weight: normal;
     }
 
+    .hero-lead-copy {
+      margin: 24px 0 0;
+      max-width: 500px;
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: clamp(14.5px, 1.15vw, 16.5px);
+      line-height: 1.7;
+      color: rgba(13, 59, 56, 0.85);
+    }
+
     .hero-action-row {
-      margin-top: 46px;
-      margin-bottom: auto;
+      margin-top: 30px;
       display: flex;
       align-items: center;
-      gap: 28px;
+      gap: 16px;
       flex-wrap: wrap;
       position: relative;
       z-index: 20;
-    }
-
-    .hero-tagline-croissant {
-      font-family: var(--font-brand);
-      font-size: 18px;
-      color: var(--teal-deep);
-      margin: 0;
-      letter-spacing: 0.02em;
-    }
-
-    .hero-divider-gold-line {
-      flex: 1;
-      max-width: 200px;
-      min-width: 60px;
-      height: 1px;
-      background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
     }
 
     .hero-btn-group {
@@ -557,54 +588,151 @@
       transform: translateY(0);
     }
 
+    /* Discipline Rail */
+    .hero-discipline-rail {
+      border-left: 1px solid rgba(212, 165, 90, 0.45);
+      padding-left: clamp(22px, 2.5vw, 36px);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .hero-rail-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .hero-rail-eyebrow {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+    }
+
+    .hero-rail-hint {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 11px;
+      color: rgba(13, 59, 56, 0.55);
+    }
+
+    .hero-discipline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hero-discipline-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 9px 12px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-discipline-item:hover {
+      background: rgba(255, 255, 255, 0.6);
+      border-color: rgba(212, 165, 90, 0.3);
+    }
+
+    .hero-discipline-item.active {
+      background: rgba(255, 255, 255, 0.85);
+      border-color: rgba(212, 165, 90, 0.55);
+      box-shadow: 0 6px 18px -6px rgba(0, 90, 85, 0.08);
+    }
+
+    .hero-discipline-num {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--gold-dark);
+    }
+
+    .hero-discipline-name {
+      font-family: var(--font-heading);
+      font-size: 17px;
+      color: var(--teal-deep);
+      flex: 1;
+    }
+
+    .hero-discipline-detail {
+      padding: 16px 18px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(212, 165, 90, 0.42);
+      box-shadow: 0 10px 26px -10px rgba(0, 90, 85, 0.08);
+    }
+
+    .hero-mobile-tabs { display: none; }
+    .hero-mobile-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(212, 165, 90, 0.4);
+      background: rgba(255, 255, 255, 0.55);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-deep);
+      cursor: pointer;
+    }
+    .hero-mobile-tab.active {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #f9fbf8;
+    }
+
+    .hero-studio-standard {
+      position: absolute;
+      left: calc(3vw + 24px);
+      bottom: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      pointer-events: none;
+      z-index: 15;
+    }
+
     .hero-vertical-tag {
       position: absolute;
-      right: calc(3vw + 16px);
+      right: calc(3vw + 14px);
       top: 50%;
       transform: translateY(-50%);
       writing-mode: vertical-rl;
       font-family: var(--font-ui);
-      font-size: 13px;
-      letter-spacing: 0.4em;
+      font-size: 12px;
+      letter-spacing: 0.38em;
       text-transform: uppercase;
       color: var(--teal);
       pointer-events: none;
       z-index: 15;
     }
 
-    .hero-scroll-cue {
-      position: absolute;
-      bottom: 52px;
-      left: calc(3vw + 24px);
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      pointer-events: none;
-      z-index: 15;
-    }
-
-    .hero-scroll-line {
-      width: 1px;
-      height: 46px;
-      background: var(--gold);
-      transform-origin: top;
-      animation: heroScrollPulse 2.2s ease-in-out infinite;
-    }
-
-    .hero-scroll-word {
-      font-family: var(--font-ui);
-      font-size: 13px;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--text-ink);
-    }
-
     .hero-badge-wrap {
       position: absolute;
-      bottom: 44px;
-      right: calc(3vw + 24px);
-      width: 112px;
-      height: 112px;
+      bottom: 40px;
+      right: calc(3vw + 22px);
+      width: 104px;
+      height: 104px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -631,29 +759,33 @@
       to { transform: translateY(0); opacity: 1; }
     }
 
-    @keyframes heroScrollPulse {
-      0% { transform: scaleY(0); opacity: 0; }
-      40% { transform: scaleY(1); opacity: 1; }
-      80% { transform: scaleY(1); opacity: 0; }
-      100% { transform: scaleY(0); opacity: 0; }
-    }
-
     @keyframes heroRotateBadge {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
 
-    @media (max-width: 820px) {
-      .hero-top-label-right,
-      .hero-vertical-tag {
-        display: none;
-      }
-      .hero-badge-wrap {
-        width: 84px;
-        height: 84px;
-        bottom: 36px;
-        right: calc(3vw + 12px);
-      }
+    @media (max-width: 960px) {
+      .hero-section { padding: 118px 6vw 112px; min-height: auto; }
+      .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+      .hero-discipline-rail { border-left: none; padding-left: 0; border-top: 1px solid rgba(212, 165, 90, 0.35); padding-top: 20px; }
+      .hero-discipline-list { display: none; }
+      .hero-mobile-tabs { display: flex; flex-wrap: wrap; gap: 7px; }
+      .hero-vertical-tag { display: none; }
+      .hero-badge-wrap { width: 78px; height: 78px; bottom: 32px; right: calc(3vw + 14px); }
+      .hero-studio-standard { bottom: 40px; font-size: 10px; letter-spacing: 0.16em; max-width: calc(100% - 125px); flex-wrap: wrap; }
+    }
+
+    @media (max-width: 640px) {
+      .hero-section { padding: 108px 6vw 106px; }
+      .hero-gold-frame { top: 78px; bottom: 18px; left: 2.5vw; right: 2.5vw; }
+      .hero-top-label-left { top: 94px; left: calc(2.5vw + 14px); font-size: 10.5px; letter-spacing: 0.22em; }
+      .hero-top-label-right { display: none; }
+      .hero-headline { font-size: clamp(34px, 9.8vw, 44px); }
+      .hero-line-2 { margin-left: 26px; }
+      .hero-lead-copy { margin-top: 14px; font-size: 13.5px; line-height: 1.6; }
+      .hero-action-row { margin-top: 20px; }
+      .hero-studio-standard { left: calc(2.5vw + 14px); bottom: 32px; font-size: 9.5px; letter-spacing: 0.15em; }
+      .hero-badge-wrap { right: calc(2.5vw + 12px); bottom: 24px; width: 70px; height: 70px; }
     }
 
     /* ==========================================================================
@@ -2237,47 +2369,137 @@
        ========================================================================== -->
   <main id="view-home" class="page-view active-view">
 
-    <!-- 1. HERO SECTION (Redesigned Minimal Sleek Artist-Portfolio Layout) -->
+    <!-- 1. HERO SECTION (Atelier Editorial Layout) -->
     <section class="hero-section" id="home">
+      <!-- Architectural Silk Flow Lines -->
+      <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" class="hero-silk-canvas" aria-hidden="true">
+        <defs>
+          <linearGradient id="goldSilkGradHtml" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="rgba(212, 165, 90, 0)" />
+            <stop offset="30%" stop-color="rgba(212, 165, 90, 0.36)" />
+            <stop offset="70%" stop-color="rgba(184, 137, 60, 0.28)" />
+            <stop offset="100%" stop-color="rgba(212, 165, 90, 0)" />
+          </linearGradient>
+          <linearGradient id="tealSilkGradHtml" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="rgba(0, 117, 110, 0)" />
+            <stop offset="35%" stop-color="rgba(0, 117, 110, 0.2)" />
+            <stop offset="65%" stop-color="rgba(104, 184, 174, 0.32)" />
+            <stop offset="100%" stop-color="rgba(0, 117, 110, 0)" />
+          </linearGradient>
+        </defs>
+        <path d="M -120 170 C 260 110, 620 260, 1560 140" stroke="url(#goldSilkGradHtml)" stroke-width="1.1" stroke-linecap="round" class="hero-silk-1" />
+        <path d="M -100 340 C 380 270, 820 430, 1540 290" stroke="url(#tealSilkGradHtml)" stroke-width="1.3" stroke-linecap="round" class="hero-silk-2" />
+        <path d="M -140 500 C 310 560, 740 390, 1560 520" stroke="url(#goldSilkGradHtml)" stroke-width="0.9" stroke-linecap="round" class="hero-silk-3" />
+        <path d="M -100 660 C 420 590, 920 710, 1560 610" stroke="url(#tealSilkGradHtml)" stroke-width="1.0" stroke-linecap="round" class="hero-silk-4" />
+      </svg>
+
       <!-- Gold Frame -->
       <div class="hero-gold-frame" aria-hidden="true"></div>
 
       <!-- Top Corner Labels -->
-      <div class="hero-top-label-left">Designer & Developer</div>
+      <div class="hero-top-label-left">Designer &amp; Developer</div>
       <div class="hero-top-label-right">Crafted with Feeling</div>
 
-      <!-- Headline -->
-      <div class="hero-headline-wrap">
-        <h1 class="hero-headline">
-          <span class="hero-line-mask"><span class="hero-line-1">Design that</span></span>
-          <span class="hero-line-mask">
-            <span class="hero-line-2">
-              feels
-              <span class="hero-script-word">personal.</span>
-            </span>
-          </span>
-        </h1>
+      <!-- 2-Column Editorial Composition -->
+      <div class="hero-grid">
+        <div>
+          <div class="hero-headline-wrap">
+            <h1 class="hero-headline">
+              <span class="hero-line-mask"><span class="hero-line-1">Design that</span></span>
+              <span class="hero-line-mask">
+                <span class="hero-line-2">
+                  feels
+                  <span class="hero-script-word">personal.</span>
+                </span>
+              </span>
+            </h1>
+          </div>
+
+          <p class="hero-lead-copy">
+            I design bespoke digital &amp; heirloom invitations, interactive occasion websites, and tailored brand flagships—crafted from genuine feeling and clean code.
+          </p>
+
+          <div class="hero-action-row">
+            <div class="hero-btn-group">
+              <a href="#works" class="hero-pill-btn">
+                <span>View Works</span>
+                <span class="arrow">→</span>
+              </a>
+              <a href="https://wa.me/918946077234" target="_blank" rel="noopener noreferrer" class="hero-pill-btn">
+                <span>Chat on WhatsApp</span>
+                <span class="arrow">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Discipline Rail -->
+        <aside class="hero-discipline-rail">
+          <div class="hero-rail-header">
+            <span class="hero-rail-eyebrow">What I Craft</span>
+            <span class="hero-rail-hint">Select to inspect</span>
+          </div>
+
+          <div class="hero-discipline-list" id="heroDisciplineList">
+            <button type="button" class="hero-discipline-item active" data-disc="0">
+              <span class="hero-discipline-num">01</span>
+              <span class="hero-discipline-name">Bespoke Invitations</span>
+              <span style="color: var(--gold);">✦</span>
+            </button>
+            <button type="button" class="hero-discipline-item" data-disc="1">
+              <span class="hero-discipline-num">02</span>
+              <span class="hero-discipline-name">Occasion &amp; Wedding Websites</span>
+              <span style="color: var(--gold);">›</span>
+            </button>
+            <button type="button" class="hero-discipline-item" data-disc="2">
+              <span class="hero-discipline-num">03</span>
+              <span class="hero-discipline-name">Motion &amp; Video Invites</span>
+              <span style="color: var(--gold);">›</span>
+            </button>
+            <button type="button" class="hero-discipline-item" data-disc="3">
+              <span class="hero-discipline-num">04</span>
+              <span class="hero-discipline-name">Brand &amp; Business Websites</span>
+              <span style="color: var(--gold);">›</span>
+            </button>
+          </div>
+
+          <div class="hero-mobile-tabs" id="heroMobileTabs">
+            <button type="button" class="hero-mobile-tab active" data-disc="0">01 Invitations</button>
+            <button type="button" class="hero-mobile-tab" data-disc="1">02 Occasion Web</button>
+            <button type="button" class="hero-mobile-tab" data-disc="2">03 Motion</button>
+            <button type="button" class="hero-mobile-tab" data-disc="3">04 Brand Web</button>
+          </div>
+
+          <div class="hero-discipline-detail">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span id="heroDiscTitle" style="font-family: var(--font-heading); font-size: 17px; color: var(--teal-deep);">Bespoke Invitations</span>
+              <span id="heroDiscNum" style="font-family: var(--font-ui); font-size: 11px; letter-spacing: 0.16em; color: var(--gold-dark);">01</span>
+            </div>
+            <p id="heroDiscDesc" style="margin: 0; font-size: 13px; line-height: 1.55; color: rgba(13, 59, 56, 0.82); font-weight: 300;">
+              Heirloom stationery suites, custom monograms, and refined digital keepsake invitations tailored to your celebration.
+            </p>
+            <div id="heroDiscDeliv" style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(212, 165, 90, 0.22); font-family: var(--font-ui); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dark);">
+              Print Suites · Custom Monograms · WhatsApp Cards
+            </div>
+            <a href="#works" id="heroDiscLink" style="margin-top: 10px; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-ui); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal); text-decoration: none;">
+              <span id="heroDiscCta">Explore invitation craft</span>
+              <span>→</span>
+            </a>
+          </div>
+        </aside>
       </div>
 
-      <!-- Action Row -->
-      <div class="hero-action-row">
-        <p class="hero-tagline-croissant">Crafted with care, love and trust.</p>
-        <div class="hero-divider-gold-line" aria-hidden="true"></div>
-        <div class="hero-btn-group">
-          <a href="#works" class="hero-pill-btn">
-            <span>View Works</span>
-            <span class="arrow">→</span>
-          </a>
-          <a href="https://wa.me/918946077234" target="_blank" rel="noopener noreferrer" class="hero-pill-btn">
-            <span>Chat on WhatsApp</span>
-            <span class="arrow">↗</span>
-          </a>
-        </div>
+      <!-- Studio Standard Bar -->
+      <div class="hero-studio-standard">
+        <span>Zero Templates</span>
+        <span style="color: var(--gold); font-size: 10px;">✦</span>
+        <span>Tailored to Emotion</span>
+        <span style="color: var(--gold); font-size: 10px;">✦</span>
+        <span>1-on-1 Concierge Craft</span>
       </div>
 
       <!-- Vertical Text -->
       <div class="hero-vertical-tag" aria-hidden="true">Design . Code . Elevate</div>
-
 
       <!-- Rotating Badge -->
       <div class="hero-badge-wrap" aria-hidden="true">
@@ -2463,8 +2685,74 @@
       </div>
     </section>
 
-    <!-- Wavy Divider to Mist Band -->
+    <!-- Wavy Divider from White to Ivory (#f9fbf8) -->
     <div class="wave-divider" style="background-color: #ffffff;">
+      <svg viewBox="0 0 1440 60" preserveAspectRatio="none" shape-rendering="geometricPrecision">
+        <path d="M-2,25 C340,55 700,5 1060,35 C1240,50 1380,15 1442,25 L1442,65 L-2,65 Z" fill="#f9fbf8"></path>
+      </svg>
+    </div>
+
+    <!-- 3c. THE ZAUQODE DIFFERENCE (Ivory Band) -->
+    <section id="why-zauqode" style="background-color: #f9fbf8; padding: 72px 24px;">
+      <div style="max-width: 1020px; margin: 0 auto;">
+        <div class="section-header reveal" style="max-width: 660px; margin: 0 auto 44px;">
+          <div class="section-label">The Zauqode Difference</div>
+          <h2 class="section-title">Why <span style="font-family: var(--font-script); font-size: 1.25em; color: var(--teal); font-weight: 400;">Zauqode</span>?</h2>
+          <p style="font-size: 14px; color: rgba(13, 59, 56, 0.75); line-height: 1.65; margin-top: 8px; font-weight: 300;">
+            Every commission is crafted personally from initial concept to final delivery—for discerning clients who value genuine artistry over templates.
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+          <div class="reveal" style="background: rgba(255,255,255,0.85); border: 1px solid rgba(212,165,90,0.3); border-left: 2px solid var(--gold); border-radius: 16px; padding: 28px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-family: var(--font-ui); font-size: 11px; letter-spacing: 0.2em; color: var(--gold-dark);">01</span>
+              <span style="color: var(--gold); font-size: 12px;">✦</span>
+            </div>
+            <h3 style="font-family: var(--font-heading); font-size: 22px; color: #005a55; margin-bottom: 8px;">Thoughtful, not templated.</h3>
+            <p style="font-size: 13.5px; color: rgba(13,59,56,0.78); line-height: 1.6; font-weight: 300;">
+              No mass-produced framework skins. Every layout, serif pairing, and detail is specifically conceived around your celebration or brand’s unique character.
+            </p>
+          </div>
+
+          <div class="reveal delay-1" style="background: rgba(255,255,255,0.85); border: 1px solid rgba(212,165,90,0.3); border-left: 2px solid var(--gold); border-radius: 16px; padding: 28px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-family: var(--font-ui); font-size: 11px; letter-spacing: 0.2em; color: var(--gold-dark);">02</span>
+              <span style="color: var(--gold); font-size: 12px;">✦</span>
+            </div>
+            <h3 style="font-family: var(--font-heading); font-size: 22px; color: #005a55; margin-bottom: 8px;">Beautiful, and engineered to perform.</h3>
+            <p style="font-size: 13.5px; color: rgba(13,59,56,0.78); line-height: 1.6; font-weight: 300;">
+              Editorial visual aesthetics backed by clean custom code, effortless loading, and crisp mobile responsiveness for guests and visitors everywhere.
+            </p>
+          </div>
+
+          <div class="reveal delay-2" style="background: rgba(255,255,255,0.85); border: 1px solid rgba(212,165,90,0.3); border-left: 2px solid var(--gold); border-radius: 16px; padding: 28px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-family: var(--font-ui); font-size: 11px; letter-spacing: 0.2em; color: var(--gold-dark);">03</span>
+              <span style="color: var(--gold); font-size: 12px;">✦</span>
+            </div>
+            <h3 style="font-family: var(--font-heading); font-size: 22px; color: #005a55; margin-bottom: 8px;">Refined, without unnecessary clutter.</h3>
+            <p style="font-size: 13.5px; color: rgba(13,59,56,0.78); line-height: 1.6; font-weight: 300;">
+              Measured interactive motion and intentional white space that invite quiet admiration—elevating delight without overwhelming the moment.
+            </p>
+          </div>
+
+          <div class="reveal delay-3" style="background: rgba(255,255,255,0.85); border: 1px solid rgba(212,165,90,0.3); border-left: 2px solid var(--gold); border-radius: 16px; padding: 28px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-family: var(--font-ui); font-size: 11px; letter-spacing: 0.2em; color: var(--gold-dark);">04</span>
+              <span style="color: var(--gold); font-size: 12px;">✦</span>
+            </div>
+            <h3 style="font-family: var(--font-heading); font-size: 22px; color: #005a55; margin-bottom: 8px;">Direct 1-on-1 creative partnership.</h3>
+            <p style="font-size: 13.5px; color: rgba(13,59,56,0.78); line-height: 1.6; font-weight: 300;">
+              From your very first message to live launch and print coordination, you collaborate directly with me so every nuance feels deeply personal.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Wavy Divider from Ivory (#f9fbf8) to Mist Band -->
+    <div class="wave-divider" style="background-color: #f9fbf8;">
       <svg viewBox="0 0 1440 60" preserveAspectRatio="none" shape-rendering="geometricPrecision">
         <path d="M-2,20 C360,50 720,0 1080,35 C1260,50 1380,20 1442,25 L1442,65 L-2,65 Z" fill="#eef8f3"></path>
       </svg>
@@ -3447,11 +3735,81 @@
       }
     });
 
+    // Interactive Hero Discipline Switcher
+    const heroDisciplines = [
+      {
+        num: '01',
+        title: 'Bespoke Invitations',
+        category: 'invitations',
+        desc: 'Heirloom stationery suites, custom monograms, and refined digital keepsake invitations tailored to your celebration.',
+        deliv: 'Print Suites · Custom Monograms · WhatsApp Cards',
+        cta: 'Explore invitation craft',
+      },
+      {
+        num: '02',
+        title: 'Occasion & Wedding Websites',
+        category: 'websites',
+        desc: 'Interactive celebration portals featuring custom storytelling, live RSVP tracking, itineraries, and guest concierge.',
+        deliv: 'Celebration Portals · Live RSVP · Custom Domains',
+        cta: 'View wedding portals',
+      },
+      {
+        num: '03',
+        title: 'Motion & Video Invites',
+        category: 'videos',
+        desc: 'Atmospheric vertical video reveals and audio-synced invitation reels designed to delight loved ones instantly.',
+        deliv: 'Vertical Reels · Musical Sync · Share-Ready MP4',
+        cta: 'Watch video invites',
+      },
+      {
+        num: '04',
+        title: 'Brand & Business Websites',
+        category: 'business',
+        desc: 'Editorial, high-trust digital flagships engineered from scratch to elevate discerning studios and businesses.',
+        deliv: 'Bespoke UI · Clean Code · Mobile Craft',
+        cta: 'Explore brand builds',
+      },
+    ];
+
+    function setHeroDiscipline(idx) {
+      const d = heroDisciplines[idx] || heroDisciplines[0];
+      const titleEl = document.getElementById('heroDiscTitle');
+      const numEl = document.getElementById('heroDiscNum');
+      const descEl = document.getElementById('heroDiscDesc');
+      const delivEl = document.getElementById('heroDiscDeliv');
+      const ctaEl = document.getElementById('heroDiscCta');
+      const linkEl = document.getElementById('heroDiscLink');
+      if (titleEl) titleEl.textContent = d.title;
+      if (numEl) numEl.textContent = d.num;
+      if (descEl) descEl.textContent = d.desc;
+      if (delivEl) delivEl.textContent = d.deliv;
+      if (ctaEl) ctaEl.textContent = d.cta;
+      if (linkEl) {
+        linkEl.onclick = () => {
+          const btn = document.querySelector(`.filter-btn[data-filter="${d.category}"]`);
+          if (btn) btn.click();
+        };
+      }
+      document.querySelectorAll('.hero-discipline-item, .hero-mobile-tab').forEach((el) => {
+        el.classList.toggle('active', Number(el.getAttribute('data-disc')) === idx);
+      });
+    }
+
     // Initialize initial route & interactions on load
     document.addEventListener('DOMContentLoaded', () => {
       applyRoute(getHashRoute(), false);
       initCardTilt();
       checkReveals();
+      document.querySelectorAll('.hero-discipline-item').forEach((btn) => {
+        const idx = Number(btn.getAttribute('data-disc'));
+        btn.addEventListener('click', () => setHeroDiscipline(idx));
+        btn.addEventListener('mouseenter', () => setHeroDiscipline(idx));
+      });
+      document.querySelectorAll('.hero-mobile-tab').forEach((btn) => {
+        const idx = Number(btn.getAttribute('data-disc'));
+        btn.addEventListener('click', () => setHeroDiscipline(idx));
+      });
+      setHeroDiscipline(0);
     });
   </script>
 

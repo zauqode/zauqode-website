@@ -306,6 +306,33 @@ export function RenovatedPortfolio() {
     },
   ];
 
+  const whyPillars = [
+    {
+      num: "01",
+      title: "Thoughtful, not templated.",
+      description:
+        "No mass-produced framework skins. Every layout, serif pairing, and detail is specifically conceived around your celebration or brand’s unique character.",
+    },
+    {
+      num: "02",
+      title: "Beautiful, and engineered to perform.",
+      description:
+        "Editorial visual aesthetics backed by clean custom code, effortless loading, and crisp mobile responsiveness for guests and visitors everywhere.",
+    },
+    {
+      num: "03",
+      title: "Refined, without unnecessary clutter.",
+      description:
+        "Measured interactive motion and intentional white space that invite quiet admiration—elevating delight without overwhelming the moment.",
+    },
+    {
+      num: "04",
+      title: "Direct 1-on-1 creative partnership.",
+      description:
+        "From your very first message to live launch and print coordination, you collaborate directly with me so every nuance feels deeply personal.",
+    },
+  ];
+
   return (
     <div className="renovated-app min-h-screen relative overflow-x-hidden">
       {/* Inline styles for fonts and effects */}
@@ -714,8 +741,13 @@ export function RenovatedPortfolio() {
           ===================================================================== */}
       {currentRoute === "home" && (
         <div className="space-y-0">
-          {/* 1. Redesigned Minimal Sleek Hero */}
-          <Hero />
+          {/* 1. Interactive Atelier Hero */}
+          <Hero
+            onSelectCategory={(category) => {
+              setActiveFilter(category);
+              window.location.hash = "#works";
+            }}
+          />
 
           {/* Wavy Divider to Mist Band */}
           <div className="w-full overflow-hidden leading-none block">
@@ -961,8 +993,52 @@ export function RenovatedPortfolio() {
             </div>
           </section>
 
-          {/* Wavy Divider to Mist Band */}
+          {/* Wavy Divider from White to Ivory (#f9fbf8) */}
           <div className="w-full overflow-hidden leading-none block bg-white">
+            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block">
+              <path d="M0,25 C340,55 700,5 1060,35 C1240,50 1380,15 1440,25 L1440,60 L0,60 Z" fill="#f9fbf8" />
+            </svg>
+          </div>
+
+          {/* 3c. Why Zauqode / The Zauqode Difference (Ivory Band) */}
+          <section id="why-zauqode" className="bg-[#f9fbf8] py-16 sm:py-22 px-6 scroll-mt-20">
+            <div className="max-w-5xl mx-auto space-y-12">
+              <div className="text-center space-y-2.5 max-w-2xl mx-auto">
+                <div className="font-ui text-xs tracking-[0.28em] uppercase text-[#b8893c]">
+                  The Zauqode Difference
+                </div>
+                <h2 className="font-heading text-3xl sm:text-4xl text-[#005a55]">
+                  Why <span className="font-script text-4xl sm:text-5xl text-[#00756e] font-normal">Zauqode</span>?
+                </h2>
+                <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light leading-relaxed pt-1">
+                  Every commission is crafted personally from initial concept to final delivery—for discerning clients who value genuine artistry over templates.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                {whyPillars.map((pillar) => (
+                  <div
+                    key={pillar.num}
+                    className="group p-6 sm:p-7 rounded-2xl bg-white/80 border border-[#d4a55a]/25 border-l-2 border-l-[#d4a55a] hover:bg-white hover:border-[#d4a55a]/60 hover:border-l-[#00756e] hover:shadow-[0_12px_28px_-8px_rgba(0,90,85,0.08)] transition-all duration-300 space-y-2.5"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-ui text-xs tracking-[0.2em] text-[#b8893c]">{pillar.num}</span>
+                      <span className="text-[#d4a55a] text-xs opacity-70 group-hover:opacity-100 transition-opacity">✦</span>
+                    </div>
+                    <h3 className="font-heading text-xl sm:text-2xl text-[#005a55] leading-snug">
+                      {pillar.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light leading-relaxed">
+                      {pillar.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Wavy Divider from Ivory (#f9fbf8) to Mist Band */}
+          <div className="w-full overflow-hidden leading-none block bg-[#f9fbf8]">
             <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block">
               <path d="M0,20 C360,50 720,0 1080,35 C1260,50 1380,20 1440,25 L1440,60 L0,60 Z" fill="#eef8f3" />
             </svg>
