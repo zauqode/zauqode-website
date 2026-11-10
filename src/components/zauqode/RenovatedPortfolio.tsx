@@ -1137,8 +1137,8 @@ export function RenovatedPortfolio() {
                   <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
                     Client Words
                   </div>
-                  <h3 className="font-heading text-2xl sm:text-3xl text-[#00756e]">
-                    Cherished Celebrations
+                  <h3 className="font-heading text-2xl sm:text-3xl text-[#00756e] leading-snug">
+                    Cherished <span className="font-script text-3xl sm:text-4xl font-normal">Celebrations</span>
                   </h3>
                 </div>
 
@@ -1164,7 +1164,7 @@ export function RenovatedPortfolio() {
                               </p>
                             </div>
                             <div className="pt-2.5 border-t border-[#d4a55a]/20 flex flex-col gap-0.5">
-                              <span className="font-heading text-sm sm:text-[15px] text-[#005a55] leading-tight">
+                              <span className="font-script text-[22px] sm:text-2xl text-[#005a55] leading-snug font-normal">
                                 {t.name}
                               </span>
                               <span className="font-ui text-[9px] sm:text-[10px] text-[#b8893c] uppercase tracking-wider leading-tight">
