@@ -68,7 +68,7 @@ export function Navbar({ activeRoute = 'home', onRouteChange }: NavbarProps) {
         </button>
       </nav>
 
-      {/* Mobile Full-Screen Overlay with Antic Didone 38px links */}
+      {/* Mobile Full-Screen Overlay with normal-sized Antic Didone links */}
       <div
         className={`${styles.mobileOverlay} ${mobileMenuOpen ? styles.open : ''}`}
         aria-hidden={!mobileMenuOpen}

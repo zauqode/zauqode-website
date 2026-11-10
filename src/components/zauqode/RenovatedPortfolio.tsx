@@ -576,10 +576,10 @@ export function RenovatedPortfolio() {
         </div>
       </header>
 
-      {/* Mobile Menu Full-Screen Overlay (<820px, links in Antic Didone 38px) */}
+      {/* Mobile Menu Full-Screen Overlay (<820px) */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-[#f9fbf8] z-[99999] p-8 flex flex-col justify-between">
-          <div className="flex justify-between items-center pb-6 border-b border-[#d4a55a]/25">
+        <div className="fixed inset-0 bg-[#f9fbf8] z-[99999] p-7 flex flex-col justify-between">
+          <div className="flex justify-between items-center pb-5 border-b border-[#d4a55a]/25">
             <span
               style={{
                 fontFamily: "'Croissant One', cursive, serif",
@@ -594,14 +594,14 @@ export function RenovatedPortfolio() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-2xl text-[#005a55] px-2 py-1"
+              className="text-xl text-[#005a55] px-2 py-1"
               aria-label="Close Menu"
             >
               ✕
             </button>
           </div>
 
-          <div className="space-y-6 py-auto my-auto">
+          <div className="space-y-3 py-auto my-auto">
             {[
               { id: "home", label: "Home" },
               { id: "about", label: "About" },
@@ -620,11 +620,12 @@ export function RenovatedPortfolio() {
                     window.history.pushState(null, "", `#${item.id}`);
                   }
                 }}
-                className="block text-[#005a55] hover:text-[#00756e] transition-colors"
+                className="block py-1.5 text-[#005a55] hover:text-[#00756e] transition-colors"
                 style={{
                   fontFamily: "'Antic Didone', serif",
-                  fontSize: "38px",
-                  lineHeight: "1.2",
+                  fontSize: "20px",
+                  lineHeight: "1.4",
+                  letterSpacing: "0.05em",
                 }}
               >
                 {item.label}
@@ -632,7 +633,7 @@ export function RenovatedPortfolio() {
             ))}
           </div>
 
-          <div className="font-script text-2xl text-[#b8893c] pt-6 border-t border-[#d4a55a]/25">
+          <div className="font-script text-xl text-[#b8893c] pt-5 border-t border-[#d4a55a]/25">
             Design . Code . Elevate
           </div>
         </div>
