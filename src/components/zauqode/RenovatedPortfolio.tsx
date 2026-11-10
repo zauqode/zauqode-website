@@ -24,9 +24,26 @@ export function RenovatedPortfolio() {
   // Form State
   const [form, setForm] = useState({
     name: "",
+    eventDate: "",
+    city: "",
     service: "",
     message: "",
   });
+
+  const [showAllWorks, setShowAllWorks] = useState(false);
+
+  // Close modals on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setActiveMockup(null);
+        setActiveImagePreview(null);
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Hash Routing
   useEffect(() => {
@@ -86,7 +103,7 @@ export function RenovatedPortfolio() {
     e.preventDefault();
     setFormSubmitted(true);
     const waMsg = encodeURIComponent(
-      `*New Inquiry via zauqode.com*\n\n*Name:* ${form.name}\n*Need:* ${form.service}\n*Message:* ${form.message}`
+      `*New Inquiry via zauqode.com*\n\n*Name:* ${form.name}\n*Event Date:* ${form.eventDate || "Not specified"}\n*City:* ${form.city || "Not specified"}\n*Need:* ${form.service}\n*Message:* ${form.message}`
     );
     window.open(`https://wa.me/918946077234?text=${waMsg}`, "_blank");
   };
@@ -533,38 +550,34 @@ export function RenovatedPortfolio() {
           </div>
 
           {/* 2. About Me Section (Mist Band) */}
-          <section id="about" className="bg-[#eef8f3] py-24 px-6 scroll-mt-20">
-            <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+          <section id="about" className="bg-[#eef8f3] py-20 px-6 scroll-mt-20">
+            <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
               <div className="md:col-span-4 flex justify-center">
-                <div className="w-48 h-64 border-[1.5px] border-[#d4a55a] rounded-t-full rounded-b-3xl bg-[#eef8f3] shadow-[inset_0_0_0_7px_#f9fbf8] flex flex-col items-center justify-center p-4">
-                  <img src={zauqodeLogo} alt="Zauqode Emblem" className="w-28 h-28 sm:w-[120px] sm:h-[120px] object-contain drop-shadow-md mt-1" />
+                <div className="w-44 h-60 border-[1.5px] border-[#d4a55a] rounded-t-full rounded-b-3xl bg-[#eef8f3] shadow-[inset_0_0_0_7px_#f9fbf8] flex flex-col items-center justify-center p-4">
+                  <img src={zauqodeLogo} alt="Zauqode Emblem" className="w-24 h-24 sm:w-28 sm:h-28 object-contain drop-shadow-md mt-1" />
                   <span className="text-[#d4a55a] text-sm mt-2">✦</span>
                 </div>
               </div>
 
-              <div className="md:col-span-8 space-y-6 text-center md:text-left">
+              <div className="md:col-span-8 space-y-5 text-center md:text-left">
                 <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
                   About Zauqode
                 </div>
-                <h2 className="font-heading text-4xl text-[#005a55] leading-snug">
-                  Where emotion meets <span className="font-script text-5xl text-[#b8893c] font-normal">artistry</span>.
+                <h2 className="font-heading text-3xl sm:text-4xl text-[#005a55] leading-snug">
+                  Where emotion meets <span className="font-script text-4xl sm:text-5xl text-[#b8893c] font-normal">artistry</span>.
                 </h2>
-                <p className="text-[#0d3b38]/85 text-base sm:text-lg leading-relaxed font-light">
-                  I design by understanding clients’ wishes and needs, connecting with their emotions and bringing their feelings into the invitations.
+                <p className="text-[#0d3b38]/85 text-base sm:text-lg leading-relaxed font-light max-w-xl">
+                  I craft bespoke wedding invitations and celebration websites by deeply connecting with your feelings, so your guests experience genuine warmth from their very first glance.
                 </p>
 
                 {/* Three Script Words: Listen ✦ Feel ✦ Create */}
-                <div className="flex items-center justify-center md:justify-start gap-4 font-script text-3xl sm:text-4xl text-[#00756e] py-1">
+                <div className="flex items-center justify-center md:justify-start gap-4 font-script text-2xl sm:text-3xl text-[#00756e] py-1">
                   <span>Listen</span>
-                  <span className="text-[#d4a55a] text-sm">✦</span>
+                  <span className="text-[#d4a55a] text-xs">✦</span>
                   <span>Feel</span>
-                  <span className="text-[#d4a55a] text-sm">✦</span>
+                  <span className="text-[#d4a55a] text-xs">✦</span>
                   <span>Create</span>
                 </div>
-
-                <p className="text-sm text-[#0d3b38]/75 font-light leading-relaxed">
-                  Every occasion carries a unique heartbeat. By combining fine typography, tactile stationery layouts, and seamless digital occasion portals, I ensure your guests experience the warmth and wonder of your celebration from the very first glance.
-                </p>
               </div>
             </div>
           </section>
@@ -577,101 +590,211 @@ export function RenovatedPortfolio() {
           </div>
 
           {/* 3. Services Section (White Band) */}
-          <section id="services" className="bg-white py-24 px-6 scroll-mt-20">
+          <section id="services" className="bg-white py-20 px-6 scroll-mt-20">
             <div className="max-w-4xl mx-auto space-y-12">
-              <div className="text-center space-y-3">
+              <div className="text-center space-y-2">
                 <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
                   Services &amp; Offerings
                 </div>
                 <h2 className="font-heading text-3xl sm:text-4xl text-[#00756e]">
-                  Designed with emotion, coded with elegance.
+                  What We Create
                 </h2>
               </div>
 
-              <div className="space-y-5">
-                {/* Row 01 */}
+              {/* Main Two Core Services */}
+              <div className="space-y-4">
+                {/* Core 01: Occasion & Wedding Websites */}
                 <div
                   onClick={() => (window.location.hash = "#contact")}
-                  className="service-row-card p-8 sm:p-10 rounded-2xl border border-[#d4a55a]/30 bg-[#f9fbf8] flex items-center justify-between gap-6 cursor-pointer"
+                  className="service-row-card p-6 sm:p-8 rounded-2xl border border-[#d4a55a]/40 bg-[#f9fbf8] flex items-center justify-between gap-4 cursor-pointer"
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <div className="flex items-start gap-6 sm:gap-8">
+                  <div className="flex items-center gap-5 sm:gap-6">
                     <span className="font-heading text-2xl text-[#b8893c]">01</span>
-                    <div className="space-y-1">
-                      <h3 className="font-heading text-2xl text-[#005a55]">Invitation Design</h3>
-                      <p className="text-sm text-[#0d3b38]/75 font-light max-w-xl">
-                        Bespoke digital suites, heirloom stationery, calligraphy details, formal invitations, and custom typography tailored for life’s grand celebrations.
+                    <div>
+                      <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">Occasion &amp; Wedding Websites</h3>
+                      <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light mt-0.5">
+                        Interactive celebration portals, live RSVP concierges, and memorable digital guest keepsakes.
                       </p>
                     </div>
                   </div>
-                  <span className="service-arrow-rot text-2xl text-[#00756e] transition-transform duration-300">
+                  <span className="service-arrow-rot text-xl text-[#00756e] shrink-0 transition-transform duration-300">
                     ↗
                   </span>
                 </div>
 
-                {/* Row 02 */}
+                {/* Core 02: Bespoke Invitations */}
                 <div
                   onClick={() => (window.location.hash = "#contact")}
-                  className="service-row-card p-8 sm:p-10 rounded-2xl border border-[#d4a55a]/30 bg-[#f9fbf8] flex items-center justify-between gap-6 cursor-pointer"
+                  className="service-row-card p-6 sm:p-8 rounded-2xl border border-[#d4a55a]/40 bg-[#f9fbf8] flex items-center justify-between gap-4 cursor-pointer"
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <div className="flex items-start gap-6 sm:gap-8">
+                  <div className="flex items-center gap-5 sm:gap-6">
                     <span className="font-heading text-2xl text-[#b8893c]">02</span>
-                    <div className="space-y-1">
-                      <h3 className="font-heading text-2xl text-[#005a55]">Websites for Occasions</h3>
-                      <p className="text-sm text-[#0d3b38]/75 font-light max-w-xl">
-                        Interactive celebration portals, bespoke RSVP management, itinerary coordination, accommodations, and digital keepsakes that guests remember forever.
+                    <div>
+                      <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">Bespoke Invitations</h3>
+                      <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light mt-0.5">
+                        Heirloom stationery, custom typography suites, and digital cards designed with personal emotion.
                       </p>
                     </div>
                   </div>
-                  <span className="service-arrow-rot text-2xl text-[#00756e] transition-transform duration-300">
+                  <span className="service-arrow-rot text-xl text-[#00756e] shrink-0 transition-transform duration-300">
                     ↗
                   </span>
+                </div>
+              </div>
+
+              {/* Also Offered Section (Smaller Compact Cards) */}
+              <div className="space-y-3 pt-2">
+                <div className="font-ui text-[11px] tracking-[0.2em] uppercase text-[#b8893c] text-center sm:text-left">
+                  Also Offered
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Smaller Item: Video Invitations */}
+                  <div
+                    onClick={() => (window.location.hash = "#contact")}
+                    className="p-5 rounded-xl border border-[#d4a55a]/25 bg-[#f9fbf8] hover:border-[#00756e] transition-all cursor-pointer space-y-1"
+                  >
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-heading text-lg text-[#005a55]">Video Invitations</h4>
+                      <span className="text-sm text-[#00756e]">↗</span>
+                    </div>
+                    <p className="text-xs text-[#0d3b38]/70 font-light">
+                      Cinematic motion reveals and audio-synced vertical stories for WhatsApp &amp; Instagram.
+                    </p>
+                  </div>
+
+                  {/* Smaller Item: Business Websites */}
+                  <div
+                    onClick={() => (window.location.hash = "#contact")}
+                    className="p-5 rounded-xl border border-[#d4a55a]/25 bg-[#f9fbf8] hover:border-[#00756e] transition-all cursor-pointer space-y-1"
+                  >
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-heading text-lg text-[#005a55]">Business Websites</h4>
+                      <span className="text-sm text-[#00756e]">↗</span>
+                    </div>
+                    <p className="text-xs text-[#0d3b38]/70 font-light">
+                      Tailored digital flagships and modern portfolios engineered for your brand.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 3b. Process & Starting Investment (White to Mist transition) */}
+          <section className="bg-white pb-20 px-6">
+            <div className="max-w-4xl mx-auto space-y-16 border-t border-[#d4a55a]/20 pt-16">
+              {/* 3-Step Process */}
+              <div className="space-y-8">
+                <div className="text-center space-y-2">
+                  <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
+                    How It Works
+                  </div>
+                  <h3 className="font-heading text-2xl sm:text-3xl text-[#00756e]">
+                    A Seamless 3-Step Journey
+                  </h3>
                 </div>
 
-                {/* Row 03 */}
-                <div
-                  onClick={() => (window.location.hash = "#contact")}
-                  className="service-row-card p-8 sm:p-10 rounded-2xl border border-[#d4a55a]/30 bg-[#f9fbf8] flex items-center justify-between gap-6 cursor-pointer"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <div className="flex items-start gap-6 sm:gap-8">
-                    <span className="font-heading text-2xl text-[#b8893c]">03</span>
-                    <div className="space-y-1">
-                      <h3 className="font-heading text-2xl text-[#005a55]">Video Invitations</h3>
-                      <p className="text-sm text-[#0d3b38]/75 font-light max-w-xl">
-                        Cinematic motion invites, animated typographic stories, audio-synced celebration reveals, and elegant vertical video suites tailored for WhatsApp and Instagram.
-                      </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                  <div className="p-6 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/30 space-y-3">
+                    <div className="w-10 h-10 rounded-full border border-[#d4a55a] bg-[#00756e] text-[#f3e3c0] font-heading text-lg flex items-center justify-center mx-auto">
+                      1
                     </div>
+                    <h4 className="font-heading text-xl text-[#005a55]">Share Your Story</h4>
+                    <p className="text-xs text-[#0d3b38]/75 font-light leading-relaxed">
+                      Tell us about your celebration, wedding dates, venue, and aesthetic inspirations.
+                    </p>
                   </div>
-                  <span className="service-arrow-rot text-2xl text-[#00756e] transition-transform duration-300">
-                    ↗
-                  </span>
+
+                  <div className="p-6 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/30 space-y-3">
+                    <div className="w-10 h-10 rounded-full border border-[#d4a55a] bg-[#00756e] text-[#f3e3c0] font-heading text-lg flex items-center justify-center mx-auto">
+                      2
+                    </div>
+                    <h4 className="font-heading text-xl text-[#005a55]">Artisan Design</h4>
+                    <p className="text-xs text-[#0d3b38]/75 font-light leading-relaxed">
+                      We craft your bespoke stationery suites, custom typography, and interactive live previews.
+                    </p>
+                  </div>
+
+                  <div className="p-6 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/30 space-y-3">
+                    <div className="w-10 h-10 rounded-full border border-[#d4a55a] bg-[#00756e] text-[#f3e3c0] font-heading text-lg flex items-center justify-center mx-auto">
+                      3
+                    </div>
+                    <h4 className="font-heading text-xl text-[#005a55]">Delivery &amp; Joy</h4>
+                    <p className="text-xs text-[#0d3b38]/75 font-light leading-relaxed">
+                      Receive your final print-ready files and published guest portals ready to share with loved ones.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Transparent Starting Pricing */}
+              <div className="space-y-8">
+                <div className="text-center space-y-2">
+                  <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
+                    Investment
+                  </div>
+                  <h3 className="font-heading text-2xl sm:text-3xl text-[#00756e]">
+                    Transparent Packages
+                  </h3>
                 </div>
 
-                {/* Row 04 */}
-                <div
-                  onClick={() => (window.location.hash = "#contact")}
-                  className="service-row-card p-8 sm:p-10 rounded-2xl border border-[#d4a55a]/30 bg-[#f9fbf8] flex items-center justify-between gap-6 cursor-pointer"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <div className="flex items-start gap-6 sm:gap-8">
-                    <span className="font-heading text-2xl text-[#b8893c]">04</span>
-                    <div className="space-y-1">
-                      <h3 className="font-heading text-2xl text-[#005a55]">Business Websites</h3>
-                      <p className="text-sm text-[#0d3b38]/75 font-light max-w-xl">
-                        Tailored digital flagships, high-converting landing pages, portfolio platforms, and bespoke web solutions engineered to elevate your brand presence.
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Package 1 */}
+                  <div className="p-6 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/35 flex flex-col justify-between space-y-4 text-center">
+                    <div className="space-y-2">
+                      <span className="font-ui text-[11px] uppercase tracking-wider text-[#b8893c]">Stationery</span>
+                      <h4 className="font-heading text-xl text-[#005a55]">Bespoke Invitations</h4>
+                      <div className="font-heading text-2xl text-[#b8893c]">Starting from ₹2,499</div>
+                      <p className="text-xs text-[#0d3b38]/70 font-light pt-1">
+                        High-resolution print-ready suites, custom monogram typography, and WhatsApp-ready cards.
                       </p>
                     </div>
+                    <a href="#contact" className="text-xs font-ui uppercase tracking-wider text-[#00756e] hover:text-[#b8893c] transition-colors pt-2">
+                      Inquire now →
+                    </a>
                   </div>
-                  <span className="service-arrow-rot text-2xl text-[#00756e] transition-transform duration-300">
-                    ↗
-                  </span>
+
+                  {/* Package 2 (Featured) */}
+                  <div className="p-6 rounded-2xl bg-[#eef8f3] border-2 border-[#d4a55a] shadow-md flex flex-col justify-between space-y-4 text-center relative">
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#00756e] text-[#f3e3c0] text-[10px] font-ui uppercase tracking-widest px-3 py-0.5 rounded-full">
+                      Most Popular
+                    </span>
+                    <div className="space-y-2 pt-1">
+                      <span className="font-ui text-[11px] uppercase tracking-wider text-[#b8893c]">Digital Experience</span>
+                      <h4 className="font-heading text-xl text-[#005a55]">Occasion Websites</h4>
+                      <div className="font-heading text-2xl text-[#00756e] font-semibold">Starting from ₹4,999</div>
+                      <p className="text-xs text-[#0d3b38]/70 font-light pt-1">
+                        Custom celebration portal, online RSVP management, event itineraries, and guest guides.
+                      </p>
+                    </div>
+                    <a href="#contact" className="text-xs font-ui uppercase tracking-wider text-[#00756e] font-semibold hover:text-[#b8893c] transition-colors pt-2">
+                      Inquire now →
+                    </a>
+                  </div>
+
+                  {/* Package 3 */}
+                  <div className="p-6 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/35 flex flex-col justify-between space-y-4 text-center">
+                    <div className="space-y-2">
+                      <span className="font-ui text-[11px] uppercase tracking-wider text-[#b8893c]">Complete Experience</span>
+                      <h4 className="font-heading text-xl text-[#005a55]">Full Heirloom Suite</h4>
+                      <div className="font-heading text-2xl text-[#b8893c]">Starting from ₹7,999</div>
+                      <p className="text-xs text-[#0d3b38]/70 font-light pt-1">
+                        Wedding website + custom stationery suite + vertical video invitation bundle.
+                      </p>
+                    </div>
+                    <a href="#contact" className="text-xs font-ui uppercase tracking-wider text-[#00756e] hover:text-[#b8893c] transition-colors pt-2">
+                      Inquire now →
+                    </a>
+                  </div>
                 </div>
+
+                <p className="text-center text-xs text-[#0d3b38]/60 font-light italic">
+                  All packages include personalized typography revisions and direct concierge support.
+                </p>
               </div>
             </div>
           </section>
@@ -760,6 +883,44 @@ export function RenovatedPortfolio() {
                   <span className="arrow-move">→</span>
                 </a>
               </div>
+
+              {/* Client Words / Testimonials */}
+              <div className="pt-12 border-t border-[#d4a55a]/25 space-y-8">
+                <div className="text-center space-y-2">
+                  <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
+                    Client Words
+                  </div>
+                  <h3 className="font-heading text-2xl sm:text-3xl text-[#00756e]">
+                    Cherished Celebrations
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                  {/* Quote 1 */}
+                  <div className="p-7 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm space-y-4 relative">
+                    <span className="font-heading text-4xl text-[#d4a55a] leading-none block">“</span>
+                    <p className="font-body text-sm text-[#0d3b38]/85 font-light leading-relaxed -mt-3">
+                      Zauqode brought our wedding vision to life with so much emotion. Our guests were genuinely mesmerized by the RSVP portal and personalized touches!
+                    </p>
+                    <div className="pt-2 border-t border-[#d4a55a]/20 flex items-center justify-between">
+                      <span className="font-heading text-base text-[#005a55]">Sonali &amp; Major Pallav</span>
+                      <span className="font-ui text-[11px] text-[#b8893c] uppercase tracking-wider">Occasion Portal</span>
+                    </div>
+                  </div>
+
+                  {/* Quote 2 */}
+                  <div className="p-7 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm space-y-4 relative">
+                    <span className="font-heading text-4xl text-[#d4a55a] leading-none block">“</span>
+                    <p className="font-body text-sm text-[#0d3b38]/85 font-light leading-relaxed -mt-3">
+                      The stationery design and video invite felt so personal and timeless. Working with Zauqode was effortlessly the best decision we made for our celebrations.
+                    </p>
+                    <div className="pt-2 border-t border-[#d4a55a]/20 flex items-center justify-between">
+                      <span className="font-heading text-base text-[#005a55]">Karthik &amp; Divya</span>
+                      <span className="font-ui text-[11px] text-[#b8893c] uppercase tracking-wider">Heirloom Suite</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -807,20 +968,43 @@ export function RenovatedPortfolio() {
           </div>
 
           {/* 6. Contact Section (On Home Page) */}
-          <section id="contact" className="py-24 px-6 max-w-2xl mx-auto space-y-10 scroll-mt-20">
-            <div className="text-center space-y-3">
+          <section id="contact" className="py-20 px-6 max-w-2xl mx-auto space-y-8 scroll-mt-20">
+            <div className="text-center space-y-2">
               <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
                 Start a Conversation
               </div>
-              <h2 className="font-heading text-4xl text-[#00756e]">
-                Let’s start a conversation.
+              <h2 className="font-heading text-3xl sm:text-4xl text-[#00756e]">
+                Let’s talk about your celebration.
               </h2>
             </div>
 
+            {/* Direct WhatsApp Quick Chat Button */}
+            <div className="flex flex-col items-center justify-center p-6 bg-[#eef8f3] border border-[#d4a55a]/40 rounded-2xl text-center space-y-3">
+              <span className="font-ui text-xs tracking-wider uppercase text-[#005a55] font-medium">Prefer an instant reply?</span>
+              <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light max-w-md">
+                Chat directly with our designer on WhatsApp for quick estimates and instant design advice.
+              </p>
+              <a
+                href="https://wa.me/918946077234?text=Hi%20Zauqode%2C%20I'd%20love%20to%20discuss%20an%20invitation%20%2F%20website%20for%20my%20upcoming%20celebration."
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#25D366] text-white font-ui text-xs uppercase tracking-widest font-semibold hover:bg-[#20ba59] transition-all shadow-sm"
+              >
+                <span>Chat on WhatsApp</span>
+                <span>↗</span>
+              </a>
+            </div>
+
+            <div className="flex items-center gap-4 my-2">
+              <div className="h-[1px] bg-[#d4a55a]/25 flex-1" />
+              <span className="font-ui text-[10px] uppercase tracking-widest text-[#b8893c]">Or send a message below</span>
+              <div className="h-[1px] bg-[#d4a55a]/25 flex-1" />
+            </div>
+
             {!formSubmitted ? (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1.5">
+                  <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1">
                     Your Name
                   </label>
                   <input
@@ -829,39 +1013,68 @@ export function RenovatedPortfolio() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="e.g. Sofia Reyan"
-                    className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e]"
+                    className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e]"
                   />
                 </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1">
+                      Event Date
+                    </label>
+                    <input
+                      type="text"
+                      value={form.eventDate}
+                      onChange={(e) => setForm({ ...form, eventDate: e.target.value })}
+                      placeholder="e.g. Dec 2026 / Winter"
+                      className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1">
+                      City / Venue
+                    </label>
+                    <input
+                      type="text"
+                      value={form.city}
+                      onChange={(e) => setForm({ ...form, city: e.target.value })}
+                      placeholder="e.g. Chennai, Bangalore"
+                      className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e]"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1.5">
+                  <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1">
                     I need
                   </label>
                   <select
                     required
                     value={form.service}
                     onChange={(e) => setForm({ ...form, service: e.target.value })}
-                    className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e]"
+                    className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e]"
                   >
                     <option value="" disabled hidden>Select an offering...</option>
-                    <option value="Invitation Design">Invitation Design</option>
-                    <option value="Website for Occasion">Website for Occasion</option>
+                    <option value="Occasion & Wedding Website">Occasion &amp; Wedding Website</option>
+                    <option value="Bespoke Invitation Suite">Bespoke Invitation Suite</option>
+                    <option value="Full Heirloom Bundle (Web + Invite + Video)">Full Heirloom Bundle (Web + Invite + Video)</option>
                     <option value="Video Invitation">Video Invitation</option>
                     <option value="Business Website">Business Website</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1.5">
-                    Tell me about your date &amp; vision
+                  <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1">
+                    Tell me about your vision
                   </label>
                   <textarea
-                    rows={4}
+                    rows={3}
                     required
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    placeholder="Tell me about your celebration, ideas, and timeline..."
-                    className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e] resize-none"
+                    placeholder="Tell me about your celebration, aesthetic ideas, and timeline..."
+                    className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e] resize-none"
                   />
                 </div>
 
@@ -869,13 +1082,20 @@ export function RenovatedPortfolio() {
                   <span>Send message</span>
                   <span className="arrow-move">→</span>
                 </button>
+
+                <p className="text-center text-xs text-[#0d3b38]/65 font-light pt-1">
+                  ✦ We thoughtfully reply within 24 hours.
+                </p>
               </form>
             ) : (
-              <div className="text-center p-12 bg-white rounded-3xl border border-[#d4a55a] space-y-3">
+              <div className="text-center p-10 bg-white rounded-3xl border border-[#d4a55a] space-y-3">
                 <h3 className="font-heading text-3xl text-[#00756e]">Thank you.</h3>
                 <p className="font-script text-2xl text-[#b8893c]">Your message has been received.</p>
                 <p className="text-sm text-[#0d3b38]/80 font-light">
                   I look forward to discussing your celebration and bringing your feelings to life.
+                </p>
+                <p className="text-xs text-[#005a55] font-medium pt-2">
+                  ✦ We thoughtfully reply within 24 hours.
                 </p>
               </div>
             )}
@@ -925,6 +1145,7 @@ export function RenovatedPortfolio() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8 max-w-md sm:max-w-none mx-auto w-full">
             {works
               .filter((w) => activeFilter === "all" || w.category === activeFilter)
+              .slice(0, activeFilter === "all" && !showAllWorks ? 6 : undefined)
               .map((item) => (
                 <article
                   key={item.id}
@@ -976,6 +1197,20 @@ export function RenovatedPortfolio() {
                 </article>
               ))}
           </div>
+
+          {/* Toggle Button for Curated / Full Works */}
+          {activeFilter === "all" && works.length > 6 && (
+            <div className="text-center pt-4">
+              <button
+                type="button"
+                onClick={() => setShowAllWorks(!showAllWorks)}
+                className="btn-pill-renovated"
+              >
+                <span>{showAllWorks ? "Show top 6 curated creations" : `Explore all ${works.length} creations`}</span>
+                <span className="arrow-move">{showAllWorks ? "↑" : "↓"}</span>
+              </button>
+            </div>
+          )}
         </section>
       )}
 
