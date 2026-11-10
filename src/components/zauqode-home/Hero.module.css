@@ -154,51 +154,6 @@
   white-space: nowrap;
 }
 
-/* 6. Scroll cue bottom-left inside frame (bottom 52px) */
-.scrollCue {
-  position: absolute;
-  left: calc(3vw + 24px);
-  bottom: 52px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  pointer-events: none;
-  z-index: 15;
-}
-
-.scrollLine {
-  width: 1px;
-  height: 46px;
-  background-color: var(--gold, #d4a55a);
-  transform-origin: top;
-  animation: scrollAnim 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-}
-
-.scrollWord {
-  font-family: 'Poiret One', cursive, sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--gold-dark, #b8893c);
-}
-
-@keyframes scrollAnim {
-  0% {
-    transform: scaleY(0);
-    opacity: 0;
-  }
-  30% {
-    opacity: 1;
-  }
-  70% {
-    transform: scaleY(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scaleY(1);
-    opacity: 0;
-  }
-}
 
 /* 7. Rotating badge bottom-right (112px, 84px on mobile) */
 .badgeContainer {
@@ -269,11 +224,6 @@
     display: none;
   }
 
-  .scrollCue {
-    left: calc(2.5vw + 16px);
-    bottom: 36px;
-  }
-
   .badgeContainer {
     right: calc(2.5vw + 16px);
     bottom: 36px;
@@ -298,7 +248,6 @@
 @media (prefers-reduced-motion: reduce) {
   .line1,
   .line2,
-  .scrollLine,
   .rotatingSvg,
   .cursorGlow {
     animation: none !important;
@@ -308,10 +257,6 @@
   .line1,
   .line2 {
     transform: translateY(0) !important;
-  }
-  .scrollLine {
-    transform: scaleY(1) !important;
-    opacity: 0.8 !important;
   }
 }
 

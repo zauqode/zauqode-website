@@ -78,11 +78,6 @@ export function Hero() {
         Design . Code . Elevate
       </div>
 
-      {/* 6. Scroll cue bottom-left inside frame (bottom 52px) */}
-      <div className={styles.scrollCue} aria-hidden="true">
-        <div className={styles.scrollLine} />
-        <span className={styles.scrollWord}>Scroll</span>
-      </div>
 
       {/* 7. Rotating badge bottom-right (112px, 84px on mobile) */}
       <div className={styles.badgeContainer} aria-hidden="true">
