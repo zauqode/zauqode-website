@@ -43,24 +43,18 @@
   z-index: 10;
 }
 
-/* Top Frame Corner Labels */
-.topLabelLeft {
+/* Centered Top Frame Label */
+.topLabel {
   position: absolute;
   top: 112px;
   left: calc(3vw + 24px);
-  font-family: 'Poiret One', cursive, sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--gold-dark, #b8893c);
-  pointer-events: none;
-  z-index: 15;
-}
-
-.topLabelRight {
-  position: absolute;
-  top: 112px;
   right: calc(3vw + 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  text-align: center;
   font-family: 'Poiret One', cursive, sans-serif;
   font-size: 12px;
   letter-spacing: 0.28em;
@@ -303,7 +297,7 @@
    ========================================================================== */
 @media (max-width: 820px) {
   .hero {
-    padding: 116px 6vw 112px;
+    padding: 138px 6vw 112px;
     min-height: 92svh;
   }
 
@@ -314,14 +308,15 @@
     right: 2.5vw;
   }
 
-  .topLabelLeft {
-    top: 98px;
+  .topLabel {
+    top: 96px;
     left: calc(2.5vw + 14px);
-    font-size: 10.5px;
-    letter-spacing: 0.22em;
+    right: calc(2.5vw + 14px);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    gap: 4px 8px;
   }
 
-  .topLabelRight,
   .verticalText {
     display: none;
   }

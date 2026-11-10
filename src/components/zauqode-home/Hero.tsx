@@ -58,9 +58,12 @@ export function Hero(_props: HeroProps) {
       {/* Outer Architectural 1px Gold Frame */}
       <div className={styles.goldFrame} aria-hidden="true" />
 
-      {/* Top Corner Labels inside frame */}
-      <div className={styles.topLabelLeft}>Designer &amp; Developer</div>
-      <div className={styles.topLabelRight}>Bespoke Design Studio</div>
+      {/* Centered Top Frame Label */}
+      <div className={styles.topLabel}>
+        <span>Designer &amp; Developer</span>
+        <span aria-hidden="true">·</span>
+        <span>Bespoke Design Studio</span>
+      </div>
 
       {/* Centered Banner Content */}
       <div className={styles.bannerCenter}>
