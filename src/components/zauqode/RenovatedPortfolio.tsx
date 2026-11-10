@@ -630,7 +630,7 @@ export function RenovatedPortfolio() {
             onMouseLeave={handleMouseLeave}
             aria-label="Zauqode Home"
           >
-            ZAUQODE
+            Zauqode
           </a>
 
           <nav className="hidden md:flex items-center gap-9">
@@ -689,7 +689,7 @@ export function RenovatedPortfolio() {
                 textTransform: "uppercase",
               }}
             >
-              ZAUQODE
+              Zauqode
             </span>
             <button
               type="button"

@@ -11,6 +11,13 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import {
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_NAME,
+  SITE_SCHEMA_JSON,
+  SITE_TITLE,
+} from "../lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -79,14 +86,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#F7F5EF" },
       { name: "format-detection", content: "telephone=no" },
-      { title: "Zauqode | Design & Development Studio" },
-      {
-        name: "description",
-        content:
-          "Zauqode is a bespoke design studio by an invitation & occasion designer, thoughtfully connecting with emotions. I craft premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.",
-      },
-      { name: "author", content: "Zauqode" },
-      { property: "og:site_name", content: "Zauqode" },
+      { title: SITE_TITLE },
+      { name: "description", content: SITE_DESCRIPTION },
+      { name: "keywords", content: SITE_KEYWORDS },
+      { name: "author", content: SITE_NAME },
+      { property: "og:site_name", content: SITE_NAME },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -121,9 +125,12 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
-        <title>Zauqode | Design & Development Studio</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover"
+        />
         <HeadContent />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: SITE_SCHEMA_JSON }} />
       </head>
       <body>
         {children}
