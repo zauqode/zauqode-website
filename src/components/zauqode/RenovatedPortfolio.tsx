@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import zauqodeLogo from "../../assets/Logos/zauqode-logo.png";
+import { Hero } from "@/components/zauqode-home/Hero";
 
 export function RenovatedPortfolio() {
   const [currentRoute, setCurrentRoute] = useState("home");
@@ -537,33 +540,8 @@ export function RenovatedPortfolio() {
           ===================================================================== */}
       {currentRoute === "home" && (
         <div className="space-y-0">
-          {/* 1. Hero */}
-          <section className="min-h-[88vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-20 max-w-4xl mx-auto">
-            <h1 className="font-heading text-6xl sm:text-7xl lg:text-[80px] text-[#00756e] tracking-[0.14em] uppercase leading-none mb-3">
-              ZAUQODE
-            </h1>
-
-            <div className="font-script text-3xl sm:text-4xl text-[#0d3b38] mb-8">
-              Design . Code . Elevate
-            </div>
-
-            {/* Gold Line with Star */}
-            <div className="flex items-center gap-4 w-full max-w-xs mx-auto mb-10">
-              <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#d4a55a] to-transparent" />
-              <span className="text-[#d4a55a] text-sm">✦</span>
-              <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#d4a55a] to-transparent" />
-            </div>
-
-            <a
-              href="#works"
-              className="btn-pill-renovated"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <span>View Works</span>
-              <span className="arrow-move">→</span>
-            </a>
-          </section>
+          {/* 1. Redesigned Minimal Sleek Hero */}
+          <Hero />
 
           {/* Wavy Divider to Mist Band */}
           <div className="w-full overflow-hidden leading-none block">

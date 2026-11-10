@@ -1,5 +1,5 @@
-import { HomeScreen } from "@/components/zauqode-home/HomeScreen";
+import { RenovatedPortfolio } from "@/components/zauqode/RenovatedPortfolio";
 
 export default function Page() {
-  return <HomeScreen />;
+  return <RenovatedPortfolio />;
 }

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { HomeScreen } from "@/components/zauqode-home/HomeScreen";
+import { RenovatedPortfolio } from "@/components/zauqode/RenovatedPortfolio";
 
 const title = "Zauqode | Design & Development Studio";
 const description =
@@ -35,5 +35,5 @@ function Index() {
     document.title = title;
   }, []);
 
-  return <HomeScreen />;
+  return <RenovatedPortfolio />;
 }

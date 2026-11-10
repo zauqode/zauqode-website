@@ -22,6 +22,7 @@ export function Hero() {
   return (
     <section
       ref={heroRef}
+      id="home"
       className={styles.hero}
       onMouseMove={handleMouseMove}
       aria-label="Hero Section"
