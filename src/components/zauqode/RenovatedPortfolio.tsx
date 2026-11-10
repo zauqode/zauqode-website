@@ -445,6 +445,51 @@ export function RenovatedPortfolio() {
             inset: 6px;
           }
         }
+
+        /* Navigation Links: Poiret One with Progress-Style Underline */
+        .nav-progress-link {
+          font-family: 'Poiret One', cursive, sans-serif;
+          font-size: 18px;
+          letter-spacing: 0.14em;
+          text-decoration: none;
+          position: relative;
+          padding: 6px 0 8px;
+          display: inline-block;
+          transition: color 0.3s ease;
+          text-transform: none;
+          cursor: pointer;
+        }
+        .nav-progress-link:hover,
+        .nav-progress-link.active {
+          color: #00756e;
+        }
+        .nav-progress-bar {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          border-radius: 999px;
+          background: linear-gradient(90deg, #b8893c 0%, #d4a55a 70%, #fff0c7 95%, #d4a55a 100%);
+          background-size: 200% 100%;
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.48s cubic-bezier(0.65, 0, 0.2, 1);
+          pointer-events: none;
+        }
+        .nav-progress-link:hover .nav-progress-bar {
+          transform: scaleX(1);
+          animation: navProgressShimmer 1.8s ease-in-out infinite;
+        }
+        .nav-progress-link.active .nav-progress-bar {
+          transform: scaleX(1);
+          box-shadow: 0 0 8px rgba(212, 165, 90, 0.45);
+        }
+        @keyframes navProgressShimmer {
+          0% { background-position: 0% 50%; box-shadow: 0 0 4px rgba(212, 165, 90, 0.4); }
+          50% { background-position: 100% 50%; box-shadow: 0 0 10px rgba(212, 165, 90, 0.7); }
+          100% { background-position: 0% 50%; box-shadow: 0 0 4px rgba(212, 165, 90, 0.4); }
+        }
       `}</style>
 
       {/* Teal Curtain Page Transition */}
@@ -471,30 +516,35 @@ export function RenovatedPortfolio() {
             <span>Zauqode</span>
           </a>
 
-          <nav className="hidden md:flex items-center gap-8">
-            {["home", "about", "services", "works", "contact"].map((route) => (
-              <a
-                key={route}
-                href={`#${route}`}
-                onClick={(e) => {
-                  if ((route === "about" || route === "services" || route === "contact") && currentRoute === "home") {
-                    e.preventDefault();
-                    document.getElementById(route)?.scrollIntoView({ behavior: "smooth" });
-                    window.history.pushState(null, "", `#${route}`);
-                  }
-                }}
-                className={`font-ui text-sm tracking-[0.18em] uppercase py-1 relative capitalize transition-colors ${
-                  currentRoute === route ? "text-[#00756e] font-medium" : "text-[#0d3b38]/80 hover:text-[#00756e]"
-                }`}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                {route}
-                {currentRoute === route && (
-                  <span className="absolute bottom-0 inset-x-0 h-[1.5px] bg-[#d4a55a]" />
-                )}
-              </a>
-            ))}
+          <nav className="hidden md:flex items-center gap-9">
+            {[
+              { id: "home", label: "Home" },
+              { id: "about", label: "About" },
+              { id: "services", label: "Services" },
+              { id: "works", label: "Works" },
+              { id: "contact", label: "Contact" },
+            ].map((item) => {
+              const isActive = currentRoute === item.id;
+              return (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  onClick={(e) => {
+                    if ((item.id === "about" || item.id === "services" || item.id === "contact") && currentRoute === "home") {
+                      e.preventDefault();
+                      document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" });
+                      window.history.pushState(null, "", `#${item.id}`);
+                    }
+                  }}
+                  className={`nav-progress-link ${isActive ? "active text-[#00756e]" : "text-[#005a55]"}`}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <span>{item.label}</span>
+                  <span className="nav-progress-bar" />
+                </a>
+              );
+            })}
           </nav>
 
           <button
@@ -510,22 +560,29 @@ export function RenovatedPortfolio() {
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 top-[65px] bg-[#f9fbf8] z-40 p-8 flex flex-col justify-between">
-          <div className="space-y-4 pt-6">
-            {["home", "about", "services", "works", "contact"].map((route) => (
+          <div className="space-y-5 pt-8">
+            {[
+              { id: "home", label: "Home" },
+              { id: "about", label: "About" },
+              { id: "services", label: "Services" },
+              { id: "works", label: "Works" },
+              { id: "contact", label: "Contact" },
+            ].map((item) => (
               <a
-                key={route}
-                href={`#${route}`}
+                key={item.id}
+                href={`#${item.id}`}
                 onClick={(e) => {
                   setMobileMenuOpen(false);
-                  if ((route === "about" || route === "services" || route === "contact") && currentRoute === "home") {
+                  if ((item.id === "about" || item.id === "services" || item.id === "contact") && currentRoute === "home") {
                     e.preventDefault();
-                    document.getElementById(route)?.scrollIntoView({ behavior: "smooth" });
-                    window.history.pushState(null, "", `#${route}`);
+                    document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" });
+                    window.history.pushState(null, "", `#${item.id}`);
                   }
                 }}
-                className="block font-ui text-base tracking-[0.22em] uppercase text-[#00756e] py-1.5"
+                className="block text-2xl tracking-[0.14em] text-[#005a55] hover:text-[#00756e] py-1.5 transition-colors"
+                style={{ fontFamily: "'Poiret One', cursive, sans-serif" }}
               >
-                {route}
+                {item.label}
               </a>
             ))}
           </div>
