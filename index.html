@@ -396,31 +396,6 @@
       isolation: isolate;
     }
 
-    .hero-silk-canvas {
-      position: absolute;
-      inset: -4%;
-      width: 108%;
-      height: 108%;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.9;
-    }
-
-    .hero-silk-1 { stroke-dasharray: 900 1100; animation: heroSilkFlow 16s ease-in-out infinite alternate; }
-    .hero-silk-2 { stroke-dasharray: 1100 1000; animation: heroSilkFlowRev 21s ease-in-out infinite alternate; }
-    .hero-silk-3 { stroke-dasharray: 850 1200; animation: heroSilkFlow 18s ease-in-out 2s infinite alternate; }
-    .hero-silk-4 { stroke-dasharray: 1050 950; animation: heroSilkFlowRev 24s ease-in-out 1s infinite alternate; }
-
-    @keyframes heroSilkFlow {
-      0% { stroke-dashoffset: 600; opacity: 0.45; }
-      50% { opacity: 0.95; }
-      100% { stroke-dashoffset: -700; opacity: 0.55; }
-    }
-    @keyframes heroSilkFlowRev {
-      0% { stroke-dashoffset: -650; opacity: 0.4; }
-      50% { opacity: 0.9; }
-      100% { stroke-dashoffset: 650; opacity: 0.5; }
-    }
 
     .hero-gold-frame {
       position: absolute;
@@ -2414,28 +2389,6 @@
 
     <!-- 1. HERO SECTION (Atelier Editorial Layout) -->
     <section class="hero-section" id="home">
-      <!-- Architectural Silk Flow Lines -->
-      <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" class="hero-silk-canvas" aria-hidden="true">
-        <defs>
-          <linearGradient id="goldSilkGradHtml" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="rgba(212, 165, 90, 0)" />
-            <stop offset="30%" stop-color="rgba(212, 165, 90, 0.36)" />
-            <stop offset="70%" stop-color="rgba(184, 137, 60, 0.28)" />
-            <stop offset="100%" stop-color="rgba(212, 165, 90, 0)" />
-          </linearGradient>
-          <linearGradient id="tealSilkGradHtml" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="rgba(0, 117, 110, 0)" />
-            <stop offset="35%" stop-color="rgba(0, 117, 110, 0.2)" />
-            <stop offset="65%" stop-color="rgba(104, 184, 174, 0.32)" />
-            <stop offset="100%" stop-color="rgba(0, 117, 110, 0)" />
-          </linearGradient>
-        </defs>
-        <path d="M -120 170 C 260 110, 620 260, 1560 140" stroke="url(#goldSilkGradHtml)" stroke-width="1.1" stroke-linecap="round" class="hero-silk-1" />
-        <path d="M -100 340 C 380 270, 820 430, 1540 290" stroke="url(#tealSilkGradHtml)" stroke-width="1.3" stroke-linecap="round" class="hero-silk-2" />
-        <path d="M -140 500 C 310 560, 740 390, 1560 520" stroke="url(#goldSilkGradHtml)" stroke-width="0.9" stroke-linecap="round" class="hero-silk-3" />
-        <path d="M -100 660 C 420 590, 920 710, 1560 610" stroke="url(#tealSilkGradHtml)" stroke-width="1.0" stroke-linecap="round" class="hero-silk-4" />
-      </svg>
-
       <!-- Gold Frame -->
       <div class="hero-gold-frame" aria-hidden="true"></div>
 

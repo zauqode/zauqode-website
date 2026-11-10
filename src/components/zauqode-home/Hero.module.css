@@ -13,72 +13,6 @@
   box-sizing: border-box;
 }
 
-/* Light-Mode Architectural Silk Flow Lines */
-.silkCanvas {
-  position: absolute;
-  inset: -4%;
-  width: 108%;
-  height: 108%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.9;
-  transform: translate3d(calc(var(--px, 0px) * -0.5), calc(var(--py, 0px) * -0.5), 0);
-  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.silkPath1 {
-  stroke-dasharray: 900 1100;
-  animation: silkFlow 16s ease-in-out infinite alternate;
-}
-
-.silkPath2 {
-  stroke-dasharray: 1100 1000;
-  animation: silkFlowReverse 21s ease-in-out infinite alternate;
-}
-
-.silkPath3 {
-  stroke-dasharray: 850 1200;
-  animation: silkFlow 18s ease-in-out 2s infinite alternate;
-}
-
-.silkPath4 {
-  stroke-dasharray: 1050 950;
-  animation: silkFlowReverse 24s ease-in-out 1s infinite alternate;
-}
-
-.silkPath5 {
-  stroke-dasharray: 750 1250;
-  animation: silkFlow 19s ease-in-out 4s infinite alternate;
-}
-
-@keyframes silkFlow {
-  0% {
-    stroke-dashoffset: 600;
-    opacity: 0.45;
-  }
-  50% {
-    opacity: 0.95;
-  }
-  100% {
-    stroke-dashoffset: -700;
-    opacity: 0.55;
-  }
-}
-
-@keyframes silkFlowReverse {
-  0% {
-    stroke-dashoffset: -650;
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.9;
-  }
-  100% {
-    stroke-dashoffset: 650;
-    opacity: 0.5;
-  }
-}
-
 /* Cursor Glow (560px soft radial-gradient) */
 .cursorGlow {
   position: absolute;
@@ -650,12 +584,6 @@
   .line2,
   .rotatingSvg,
   .cursorGlow,
-  .silkCanvas,
-  .silkPath1,
-  .silkPath2,
-  .silkPath3,
-  .silkPath4,
-  .silkPath5,
   .detailCard {
     animation: none !important;
     transition: none !important;

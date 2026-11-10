@@ -49,39 +49,6 @@ const disciplines = [
   },
 ];
 
-const silkCurves = [
-  {
-    d: 'M -120 170 C 260 110, 620 260, 1560 140',
-    stroke: 'url(#goldSilkGrad)',
-    width: 1.1,
-    cls: styles.silkPath1,
-  },
-  {
-    d: 'M -100 340 C 380 270, 820 430, 1540 290',
-    stroke: 'url(#tealSilkGrad)',
-    width: 1.3,
-    cls: styles.silkPath2,
-  },
-  {
-    d: 'M -140 500 C 310 560, 740 390, 1560 520',
-    stroke: 'url(#goldSilkGrad)',
-    width: 0.9,
-    cls: styles.silkPath3,
-  },
-  {
-    d: 'M -100 660 C 420 590, 920 710, 1560 610',
-    stroke: 'url(#tealSilkGrad)',
-    width: 1.0,
-    cls: styles.silkPath4,
-  },
-  {
-    d: 'M -80 230 C 480 310, 960 150, 1540 240',
-    stroke: 'url(#goldSilkGrad)',
-    width: 0.75,
-    cls: styles.silkPath5,
-  },
-];
-
 /**
  * Hero Component
  * Editorial, interactive atelier hero showcasing Zauqode's Craft & Positioning.
@@ -92,18 +59,14 @@ export function Hero({ onSelectCategory }: HeroProps) {
 
   const activeDiscipline = disciplines[activeIdx] || disciplines[0];
 
-  // Track mouse for radial ambient glow and delicate silk parallax
+  // Track mouse for soft radial ambient glow behind hero content
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    const normX = ((x / rect.width) - 0.5) * 18;
-    const normY = ((y / rect.height) - 0.5) * 14;
     heroRef.current.style.setProperty('--gx', `${x}px`);
     heroRef.current.style.setProperty('--gy', `${y}px`);
-    heroRef.current.style.setProperty('--px', `${normX.toFixed(1)}px`);
-    heroRef.current.style.setProperty('--py', `${normY.toFixed(1)}px`);
   };
 
   const handleDisciplineExplore = (category: string) => {
@@ -124,40 +87,6 @@ export function Hero({ onSelectCategory }: HeroProps) {
     >
       {/* Ambient Mint Cursor Glow */}
       <div className={styles.cursorGlow} aria-hidden="true" />
-
-      {/* Animated Light-Theme Architectural Silk Flow Lines */}
-      <svg
-        viewBox="0 0 1440 800"
-        preserveAspectRatio="xMidYMid slice"
-        fill="none"
-        className={styles.silkCanvas}
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient id="goldSilkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(212, 165, 90, 0)" />
-            <stop offset="30%" stopColor="rgba(212, 165, 90, 0.36)" />
-            <stop offset="70%" stopColor="rgba(184, 137, 60, 0.28)" />
-            <stop offset="100%" stopColor="rgba(212, 165, 90, 0)" />
-          </linearGradient>
-          <linearGradient id="tealSilkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(0, 117, 110, 0)" />
-            <stop offset="35%" stopColor="rgba(0, 117, 110, 0.2)" />
-            <stop offset="65%" stopColor="rgba(104, 184, 174, 0.32)" />
-            <stop offset="100%" stopColor="rgba(0, 117, 110, 0)" />
-          </linearGradient>
-        </defs>
-        {silkCurves.map((curve, idx) => (
-          <path
-            key={idx}
-            d={curve.d}
-            stroke={curve.stroke}
-            strokeWidth={curve.width}
-            strokeLinecap="round"
-            className={curve.cls}
-          />
-        ))}
-      </svg>
 
       {/* Outer Architectural 1px Gold Frame */}
       <div className={styles.goldFrame} aria-hidden="true" />
