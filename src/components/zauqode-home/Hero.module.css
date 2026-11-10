@@ -83,25 +83,6 @@
   text-align: center;
 }
 
-/* Discipline Eyebrow Bar */
-.bannerEyebrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  font-family: 'Poiret One', cursive, sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--gold-dark, #b8893c);
-  margin-bottom: 18px;
-}
-
-.eyebrowStar {
-  color: var(--gold, #d4a55a);
-  font-size: 10px;
-}
 
 /* Main Banner Headline: Fixed Serif + Rotating Curly Script */
 .headline {
@@ -365,13 +346,6 @@
   .topLabelRight,
   .verticalText {
     display: none;
-  }
-
-  .bannerEyebrow {
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    gap: 7px;
-    margin-bottom: 14px;
   }
 
   .fixedLine {

@@ -106,15 +106,6 @@ export function Hero({ onSelectCategory }: HeroProps) {
 
       {/* Centered Banner Content */}
       <div className={styles.bannerCenter}>
-        {/* Discipline Eyebrow */}
-        <div className={styles.bannerEyebrow}>
-          <span>Invitations</span>
-          <span className={styles.eyebrowStar}>✦</span>
-          <span>Occasion Websites</span>
-          <span className={styles.eyebrowStar}>✦</span>
-          <span>Digital Craft</span>
-        </div>
-
         {/* 2-Line Banner Headline: Line 1 Fixed + Line 2 Changing Curly Mantra */}
         <h1 className={styles.headline}>
           <span className={styles.fixedLineMask}>
