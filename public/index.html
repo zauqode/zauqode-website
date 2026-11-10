@@ -493,32 +493,8 @@
       100% { opacity: 1; transform: translateY(0); }
     }
 
-    .hero-mantra-pips {
-      margin-top: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .hero-mantra-pip {
-      width: 18px;
-      height: 2px;
-      padding: 0;
-      border: none;
-      border-radius: 999px;
-      background-color: rgba(212, 165, 90, 0.35);
-      cursor: pointer;
-      transition: width 0.35s ease, background-color 0.35s ease;
-    }
-
-    .hero-mantra-pip.active {
-      width: 34px;
-      background-color: var(--gold);
-    }
-
     .hero-mantra-copy {
-      margin: 22px 0 0;
+      margin: 18px 0 0;
       max-width: 560px;
       min-height: 48px;
       font-family: var(--font-body);
@@ -2337,14 +2313,6 @@
           </span>
         </h1>
 
-        <div class="hero-mantra-pips" id="heroMantraPips">
-          <button type="button" class="hero-mantra-pip active" data-pip="0" aria-label="intention"></button>
-          <button type="button" class="hero-mantra-pip" data-pip="1" aria-label="emotion"></button>
-          <button type="button" class="hero-mantra-pip" data-pip="2" aria-label="devotion"></button>
-          <button type="button" class="hero-mantra-pip" data-pip="3" aria-label="distinction"></button>
-          <button type="button" class="hero-mantra-pip" data-pip="4" aria-label="grace"></button>
-        </div>
-
         <p class="hero-mantra-copy" id="heroMantraCopy">
           Nothing templated. Nothing rushed. I design bespoke invitations and interactive occasion websites where artistry meets enduring precision.
         </p>
@@ -3639,9 +3607,6 @@
         curlyEl.textContent = mantraWordsHtml[mantraIdx];
         curlyEl.style.animation = '';
       }
-      document.querySelectorAll('.hero-mantra-pip').forEach((pip) => {
-        pip.classList.toggle('active', Number(pip.getAttribute('data-pip')) === mantraIdx);
-      });
     }
 
     // Initialize initial route & interactions on load
@@ -3652,10 +3617,6 @@
 
       const defaultMantraText = 'Nothing templated. Nothing rushed. I design bespoke invitations and interactive occasion websites where artistry meets enduring precision.';
       const mantraCopyEl = document.getElementById('heroMantraCopy');
-
-      document.querySelectorAll('.hero-mantra-pip').forEach((pip) => {
-        pip.addEventListener('click', () => setMantraWord(Number(pip.getAttribute('data-pip'))));
-      });
 
       document.querySelectorAll('.hero-craft-chip').forEach((chip) => {
         const note = chip.getAttribute('data-note');

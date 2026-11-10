@@ -108,21 +108,6 @@ export function Hero({ onSelectCategory }: HeroProps) {
           </span>
         </h1>
 
-        {/* Subtle Mantra Progress Dots (Clickable) */}
-        <div className={styles.mantraPips} role="tablist" aria-label="Studio Mantra Words">
-          {mantraWords.map((word, idx) => (
-            <button
-              key={word}
-              type="button"
-              role="tab"
-              aria-selected={idx === wordIdx}
-              aria-label={`Select ${word.replace('.', '')}`}
-              onClick={() => setWordIdx(idx)}
-              className={`${styles.mantraPip} ${idx === wordIdx ? styles.mantraPipActive : ''}`}
-            />
-          ))}
-        </div>
-
         {/* Concise Mantra Statement / Interactive Craft Insight */}
         <p className={styles.mantraCopy} key={hoveredCraft !== null ? `hover-${hoveredCraft}` : 'default'}>
           {activeCraftNote}
