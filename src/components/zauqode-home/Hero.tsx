@@ -1,35 +1,74 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./Hero.module.css";
 import { Button } from "./Button";
+import { HERO_MANTRA_SVGS } from "./heroMantraSvgs";
 
 export interface HeroProps {
   onSelectCategory?: (category: string) => void;
 }
 
-const mantraWords = ["emotion.", "memory.", "meaning.", "feeling."];
-
 const studioTags = ["Bespoke", "Elegant", "Heartfelt"];
 
 /**
  * Hero Component
- * Luxury studio banner with fixed editorial line and rotating Sacramento mantra word.
+ * Luxury studio banner with fixed editorial line and rotating stroke-animated Sacramento SVGs.
  */
 export function Hero(_props: HeroProps) {
   const heroRef = useRef<HTMLElement>(null);
-  const [wordIdx, setWordIdx] = useState(0);
+  const wsvgRef = useRef<HTMLElement>(null);
+  const [activeWord, setActiveWord] = useState(HERO_MANTRA_SVGS[0]?.word ?? "emotion.");
 
-  // Cycle the curly script mantra word smoothly (disabled if user prefers reduced motion)
+  // Stroke-by-stroke SVG handwriting cycle (~1s initial delay, 5.4s period, 4.7s fade-out)
   useEffect(() => {
-    if (
+    const el = wsvgRef.current;
+    if (!el) return;
+
+    const reducedMotion =
       typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reducedMotion) {
+      el.classList.remove(styles.out);
+      el.innerHTML = HERO_MANTRA_SVGS[0]?.svg ?? "";
+      setActiveWord(HERO_MANTRA_SVGS[0]?.word ?? "emotion.");
       return;
     }
-    const timer = window.setInterval(() => {
-      setWordIdx((prev) => (prev + 1) % mantraWords.length);
-    }, 3200);
-    return () => window.clearInterval(timer);
+
+    let idx = 0;
+    let fadeTimer: number | undefined;
+    let intervalId: number | undefined;
+
+    const playWord = (wordIndex: number) => {
+      const item = HERO_MANTRA_SVGS[wordIndex % HERO_MANTRA_SVGS.length];
+      if (!item || !wsvgRef.current) return;
+      if (fadeTimer !== undefined) {
+        window.clearTimeout(fadeTimer);
+      }
+      wsvgRef.current.classList.remove(styles.out);
+      wsvgRef.current.innerHTML = item.svg;
+      setActiveWord(item.word);
+      fadeTimer = window.setTimeout(() => {
+        wsvgRef.current?.classList.add(styles.out);
+      }, 4700);
+    };
+
+    const startTimer = window.setTimeout(() => {
+      playWord(idx);
+      intervalId = window.setInterval(() => {
+        idx = (idx + 1) % HERO_MANTRA_SVGS.length;
+        playWord(idx);
+      }, 5400);
+    }, 1000);
+
+    return () => {
+      window.clearTimeout(startTimer);
+      if (fadeTimer !== undefined) {
+        window.clearTimeout(fadeTimer);
+      }
+      if (intervalId !== undefined) {
+        window.clearInterval(intervalId);
+      }
+    };
   }, []);
 
   // Track mouse for subtle ambient mint glow
@@ -41,8 +80,6 @@ export function Hero(_props: HeroProps) {
     heroRef.current.style.setProperty("--gx", `${x}px`);
     heroRef.current.style.setProperty("--gy", `${y}px`);
   };
-
-  const activeWord = mantraWords[wordIdx] || mantraWords[0];
 
   return (
     <section
@@ -73,9 +110,8 @@ export function Hero(_props: HeroProps) {
             <span className={styles.fixedLine}>Where elegance meets</span>
           </span>
           <span className={styles.curlyLineMask} aria-live="polite">
-            <span key={activeWord} className={styles.rotatingCurlyWord}>
-              {activeWord}
-            </span>
+            <span className={styles.srOnly}>{activeWord}</span>
+            <i ref={wsvgRef} className={styles.wsvg} aria-hidden="true" />
           </span>
         </h1>
 

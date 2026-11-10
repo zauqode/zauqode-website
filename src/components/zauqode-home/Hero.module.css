@@ -117,57 +117,62 @@
 .curlyLineMask {
   display: block;
   overflow: visible;
-  padding: 0.02em 0.1em 0.12em;
-  margin-bottom: -0.1em;
-  min-height: 1.42em;
+  font-size: clamp(48px, 7.8vw, 108px);
+  line-height: 1.05;
+  padding: 0.2em 0.1em 0.12em;
+  margin-top: 0.18em;
+  margin-bottom: -0.04em;
+  min-height: 0.95em;
 }
 
-.rotatingCurlyWord {
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.wsvg {
   display: inline-block;
   font-family: 'Sacramento', cursive;
-  font-size: clamp(48px, 7.8vw, 108px);
+  font-style: normal;
+  font-size: 1em;
   line-height: 1.05;
   color: var(--teal, #00756e);
   font-weight: 400;
-  padding: 0.08em 0.24em 0.24em;
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 48%, transparent 54%);
-  mask-image: linear-gradient(to right, #000 0%, #000 48%, transparent 54%);
-  -webkit-mask-size: 240% 100%;
-  mask-size: 240% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: 100% 0;
-  mask-position: 100% 0;
-  animation: handwritingReveal 3.2s cubic-bezier(0.37, 0, 0.2, 1) forwards;
+  transition: opacity 0.5s ease;
 }
 
-@keyframes handwritingReveal {
-  0% {
-    opacity: 0.15;
-    transform: translateY(2px);
-    -webkit-mask-position: 100% 0;
-    mask-position: 100% 0;
+.wsvg.out {
+  opacity: 0;
+}
+
+.wsvg svg {
+  display: inline-block;
+  height: calc(397 / 300 * 1em);
+  width: auto;
+  vertical-align: calc(-170 / 300 * 1em);
+  margin: -0.4em 0 -0.3em;
+  overflow: visible;
+}
+
+.wsvg path {
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 1;
+  animation: wd var(--t) cubic-bezier(0.45, 0.05, 0.55, 0.95) var(--d) both;
+}
+
+@keyframes wd {
+  from {
+    stroke-dashoffset: 1;
   }
-  8% {
-    opacity: 1;
-  }
-  44% {
-    opacity: 1;
-    transform: translateY(0);
-    -webkit-mask-position: 0% 0;
-    mask-position: 0% 0;
-  }
-  86% {
-    opacity: 1;
-    transform: translateY(0);
-    -webkit-mask-position: 0% 0;
-    mask-position: 0% 0;
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-4px);
-    -webkit-mask-position: 0% 0;
-    mask-position: 0% 0;
+  to {
+    stroke-dashoffset: 0;
   }
 }
 
@@ -326,7 +331,7 @@
     letter-spacing: 0.01em;
   }
 
-  .rotatingCurlyWord {
+  .curlyLineMask {
     font-size: clamp(44px, 12vw, 64px);
   }
 
@@ -369,7 +374,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .fixedLine,
-  .rotatingCurlyWord,
   .rotatingSvg,
   .cursorGlow,
   .mantraCopy {
@@ -377,10 +381,14 @@
     transition: none !important;
     transform: none !important;
   }
-  .rotatingCurlyWord {
-    -webkit-mask-image: none !important;
-    mask-image: none !important;
+  .wsvg,
+  .wsvg.out {
+    transition: none !important;
     opacity: 1 !important;
+  }
+  .wsvg path {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
   }
   .fixedLine {
     opacity: 1 !important;
