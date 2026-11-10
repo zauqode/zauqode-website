@@ -35,7 +35,7 @@ export function Hero() {
 
       {/* 2. Top Corner Labels inside frame (top 122px) */}
       <div className={styles.topLabelLeft}>Invitation Designer</div>
-      <div className={styles.topLabelRight}>Occasion Websites</div>
+      <div className={styles.topLabelRight}>Occasion Designer</div>
 
       {/* 3. Headline: Antic Didone + Sacramento */}
       <div className={styles.headlineWrap}>

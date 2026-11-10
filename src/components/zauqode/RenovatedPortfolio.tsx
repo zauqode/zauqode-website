@@ -568,7 +568,7 @@ export function RenovatedPortfolio() {
                   Where emotion meets <span className="font-script text-4xl sm:text-5xl text-[#b8893c] font-normal">artistry</span>.
                 </h2>
                 <p className="text-[#0d3b38]/85 text-base sm:text-lg leading-relaxed font-light max-w-xl">
-                  I craft bespoke wedding invitations and celebration websites by deeply connecting with your feelings, so your guests experience genuine warmth from their very first glance.
+                  I am a bespoke invitation and occasion designer. I design celebration portals and heirloom stationery by deeply connecting with your feelings, so your guests experience genuine warmth from their very first glance.
                 </p>
 
                 {/* Three Script Words: Listen ✦ Feel ✦ Create */}
@@ -604,7 +604,7 @@ export function RenovatedPortfolio() {
 
               {/* Main Two Core Services */}
               <div className="space-y-4">
-                {/* Core 01: Occasion & Wedding Websites */}
+                {/* Core 01: Bespoke Invitations (Major Design Offering) */}
                 <div
                   onClick={() => (window.location.hash = "#contact")}
                   className="service-row-card p-6 sm:p-8 rounded-2xl border border-[#d4a55a]/40 bg-[#f9fbf8] flex items-center justify-between gap-4 cursor-pointer"
@@ -614,9 +614,9 @@ export function RenovatedPortfolio() {
                   <div className="flex items-center gap-5 sm:gap-6">
                     <span className="font-heading text-2xl text-[#b8893c]">01</span>
                     <div>
-                      <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">Occasion &amp; Wedding Websites</h3>
+                      <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">Bespoke Invitations</h3>
                       <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light mt-0.5">
-                        Interactive celebration portals, live RSVP concierges, and memorable digital guest keepsakes.
+                        Heirloom stationery, custom typography suites, and digital cards designed with personal emotion.
                       </p>
                     </div>
                   </div>
@@ -625,7 +625,7 @@ export function RenovatedPortfolio() {
                   </span>
                 </div>
 
-                {/* Core 02: Bespoke Invitations */}
+                {/* Core 02: Occasion & Wedding Websites */}
                 <div
                   onClick={() => (window.location.hash = "#contact")}
                   className="service-row-card p-6 sm:p-8 rounded-2xl border border-[#d4a55a]/40 bg-[#f9fbf8] flex items-center justify-between gap-4 cursor-pointer"
@@ -635,9 +635,9 @@ export function RenovatedPortfolio() {
                   <div className="flex items-center gap-5 sm:gap-6">
                     <span className="font-heading text-2xl text-[#b8893c]">02</span>
                     <div>
-                      <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">Bespoke Invitations</h3>
+                      <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">Occasion &amp; Wedding Websites</h3>
                       <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light mt-0.5">
-                        Heirloom stationery, custom typography suites, and digital cards designed with personal emotion.
+                        Interactive celebration portals, live RSVP concierges, and memorable digital guest keepsakes.
                       </p>
                     </div>
                   </div>

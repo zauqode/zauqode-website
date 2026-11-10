@@ -38,16 +38,18 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  title: "Zauqode | Design & Development Studio",
+  title: "Zauqode | Designer",
   description:
-    "Zauqode is a design & development studio thoughtfully connected with emotions. I craft premium, modern websites and bespoke invitations that satisfy your needs with genuine feeling.",
+    "Zauqode is a bespoke design studio by an invitation & occasion designer, thoughtfully connecting with emotions. I craft premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.",
   keywords: [
-    "design and development studio",
+    "designer",
+    "invitation designer",
+    "occasion designer",
     "bespoke invitations",
-    "wedding websites",
-    "occasion portals",
-    "premium web design",
-    "modern websites",
+    "wedding invitations",
+    "occasion websites",
+    "premium design",
+    "modern invitations",
     "Zauqode",
   ],
   authors: [{ name: "Zauqode" }],
@@ -55,16 +57,16 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://www.zauqode.com/",
     siteName: "Zauqode",
-    title: "Zauqode | Design & Development Studio",
+    title: "Zauqode | Designer",
     description:
-      "A design & development studio thoughtfully connected with emotions. Crafting premium, modern websites and bespoke invitations that satisfy your needs with genuine feeling.",
+      "A bespoke design studio by an invitation & occasion designer, thoughtfully connecting with emotions. Crafting premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.",
     images: [{ url: "https://www.zauqode.com/zauqode-logo.png" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Zauqode | Design & Development Studio",
+    title: "Zauqode | Designer",
     description:
-      "A design & development studio thoughtfully connected with emotions. Crafting premium, modern websites and bespoke invitations that satisfy your needs with genuine feeling.",
+      "A bespoke design studio by an invitation & occasion designer, thoughtfully connecting with emotions. Crafting premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.",
     images: ["https://www.zauqode.com/zauqode-logo.png"],
   },
 };

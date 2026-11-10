@@ -79,11 +79,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#F7F5EF" },
       { name: "format-detection", content: "telephone=no" },
-      { title: "Zauqode | Design & Development Studio" },
+      { title: "Zauqode | Designer" },
       {
         name: "description",
         content:
-          "Zauqode is a design & development studio thoughtfully connected with emotions. I craft premium, modern websites and bespoke invitations that satisfy your needs with genuine feeling.",
+          "Zauqode is a bespoke design studio by an invitation & occasion designer, thoughtfully connecting with emotions. I craft premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.",
       },
       { name: "author", content: "Zauqode" },
       { property: "og:site_name", content: "Zauqode" },
@@ -122,7 +122,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
-        <title>Zauqode | Design &amp; Development Studio</title>
+        <title>Zauqode | Designer</title>
         <HeadContent />
       </head>
       <body>

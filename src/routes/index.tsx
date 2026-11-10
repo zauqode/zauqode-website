@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { RenovatedPortfolio } from "@/components/zauqode/RenovatedPortfolio";
 
-const title = "Zauqode | Design & Development Studio";
+const title = "Zauqode | Designer";
 const description =
-  "Zauqode is a design & development studio thoughtfully connected with emotions. I craft premium, modern websites and bespoke invitations that satisfy your needs with genuine feeling.";
+  "Zauqode is a bespoke design studio by an invitation & occasion designer, thoughtfully connecting with emotions. I craft premium, modern invitations and occasion websites that satisfy your needs with genuine feeling.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
       { name: "viewport", content: "width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" },
       { title },
       { name: "description", content: description },
-      { name: "keywords", content: "design and development studio, bespoke invitations, wedding websites, occasion portals, premium web design, modern websites, Zauqode" },
+      { name: "keywords", content: "designer, invitation designer, occasion designer, bespoke invitations, wedding invitations, occasion websites, premium design, modern invitations, Zauqode" },
       { name: "author", content: "Zauqode" },
       { property: "og:site_name", content: "Zauqode" },
       { property: "og:title", content: title },
