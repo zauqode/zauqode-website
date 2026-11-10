@@ -246,7 +246,7 @@ export function ContactFooter() {
                     required
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    placeholder="Tell us about your date, vision, or timeline..."
+                    placeholder="Tell me about your date, vision, or timeline..."
                     className="w-full bg-white border border-[#0E4847]/15 rounded-xl px-4 py-2.5 text-sm text-[#0E4847] focus:outline-none focus:border-[#0E8F91] resize-none"
                   />
                 </div>

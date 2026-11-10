@@ -4,7 +4,7 @@ import { RenovatedPortfolio } from "@/components/zauqode/RenovatedPortfolio";
 
 const title = "Zauqode | Design & Development Studio";
 const description =
-  "Zauqode is a design & development studio thoughtfully connected with emotions. We craft premium, modern websites and bespoke invitations that satisfy your needs with genuine feeling.";
+  "Zauqode is a design & development studio thoughtfully connected with emotions. I craft premium, modern websites and bespoke invitations that satisfy your needs with genuine feeling.";
 
 export const Route = createFileRoute("/")({
   head: () => ({

@@ -111,7 +111,7 @@ export function Pricing() {
           transition={{ delay: 0.2 }}
           className="text-sm sm:text-base text-[#3D6060] max-w-xl mx-auto mt-4 leading-relaxed"
         >
-          Fixed pricing with clear milestones and no hidden fees. Choose your ideal celebration format or contact us for a tailored quote.
+          Fixed pricing with clear milestones and no hidden fees. Choose your ideal celebration format or contact me for a tailored quote.
         </motion.p>
       </div>
 
@@ -220,7 +220,7 @@ export function Pricing() {
               Looking for a Business or Creator Portfolio Website?
             </h4>
             <p className="text-xs sm:text-sm text-[#3D6060] mt-1">
-              We apply the exact same couture design aesthetic to corporate platforms, architectural showcases, and personal brands.
+              I apply the exact same couture design aesthetic to corporate platforms, architectural showcases, and personal brands.
             </p>
           </div>
         </div>

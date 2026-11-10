@@ -83,7 +83,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Zauqode is a design & development studio thoughtfully connected with emotions. We craft premium, modern websites and bespoke invitations that satisfy your needs with genuine feeling.",
+          "Zauqode is a design & development studio thoughtfully connected with emotions. I craft premium, modern websites and bespoke invitations that satisfy your needs with genuine feeling.",
       },
       { name: "author", content: "Zauqode" },
       { property: "og:site_name", content: "Zauqode" },

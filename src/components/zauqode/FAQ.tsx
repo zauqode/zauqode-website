@@ -11,7 +11,7 @@ const faqs = [
   {
     id: 2,
     q: "Can we include our favorite song or background music?",
-    a: "Yes! You can choose any instrumental piece (violin, piano, harp, shehnai), a favorite romantic song, or even a personalized voice greeting. We integrate a subtle audio controller so guests can effortlessly play or mute the soundtrack.",
+    a: "Yes! You can choose any instrumental piece (violin, piano, harp, shehnai), a favorite romantic song, or even a personalized voice greeting. I integrate a subtle audio controller so guests can effortlessly play or mute the soundtrack.",
   },
   {
     id: 3,
@@ -21,17 +21,17 @@ const faqs = [
   {
     id: 4,
     q: "Can we feature multiple events like Haldi, Sangeet, and Reception?",
-    a: "Absolutely. Our celebration portals elegantly structure multi-day itineraries with separate timings, dress code recommendations, and dedicated 1-tap Google Maps navigation pins for each venue so guests never get lost.",
+    a: "Absolutely. My celebration portals elegantly structure multi-day itineraries with separate timings, dress code recommendations, and dedicated 1-tap Google Maps navigation pins for each venue so guests never get lost.",
   },
   {
     id: 5,
     q: "Can you provide matching printable cards for elder relatives?",
-    a: "Yes. In our Haute Couture Suite, we provide matching 300 DPI print-ready files (Save the Date, Formal Wedding Card, Reception Itinerary) formatted for physical foil stamping and local luxury printing.",
+    a: "Yes. In my Haute Couture Suite, I provide matching 300 DPI print-ready files (Save the Date, Formal Wedding Card, Reception Itinerary) formatted for physical foil stamping and local luxury printing.",
   },
   {
     id: 6,
     q: "How fast can we receive our invitation for an upcoming date?",
-    a: "Standard delivery is 5–7 business days, with initial design concepts delivered within 48–72 hours. If your celebration date is very close, we offer expedited rush turnaround options.",
+    a: "Standard delivery is 5–7 business days, with initial design concepts delivered within 48–72 hours. If your celebration date is very close, I offer expedited rush turnaround options.",
   },
 ];
 

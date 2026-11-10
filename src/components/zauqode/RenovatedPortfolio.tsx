@@ -173,7 +173,7 @@ export function RenovatedPortfolio() {
       thumb: "/works/invite-akash-yazhini.jpg",
       mobileImg: "/works/invite-akash-yazhini.jpg",
       canIframe: false,
-      story: "The couple wished for an opulent royal heritage tribute to their lineage. We crafted a four-ceremony folio with emerald foil borders, sacred kolam motifs, and dedicated ceremony cards.",
+      story: "The couple wished for an opulent royal heritage tribute to their lineage. I crafted a four-ceremony folio with emerald foil borders, sacred kolam motifs, and dedicated ceremony cards.",
       occasion: "Four-Ceremony Royal Wedding",
       style: "Deep Forest & Heritage Gold Folio",
       included: ["4 Ceremony Folios", "Custom Monogram", "Wax Seal Motif", "WhatsApp Suite"],
@@ -620,7 +620,7 @@ export function RenovatedPortfolio() {
                   Services &amp; Offerings
                 </div>
                 <h2 className="font-heading text-3xl sm:text-4xl text-[#00756e]">
-                  What We Create
+                  What I Create
                 </h2>
               </div>
 
@@ -728,7 +728,7 @@ export function RenovatedPortfolio() {
                     </div>
                     <h4 className="font-heading text-xl text-[#005a55]">Share Your Story</h4>
                     <p className="text-xs text-[#0d3b38]/75 font-light leading-relaxed">
-                      Tell us about your celebration, wedding dates, venue, and aesthetic inspirations.
+                      Tell me about your celebration, wedding dates, venue, and aesthetic inspirations.
                     </p>
                   </div>
 
@@ -738,7 +738,7 @@ export function RenovatedPortfolio() {
                     </div>
                     <h4 className="font-heading text-xl text-[#005a55]">Artisan Design</h4>
                     <p className="text-xs text-[#0d3b38]/75 font-light leading-relaxed">
-                      We craft your bespoke stationery suites, custom typography, and interactive live previews.
+                      I craft your bespoke stationery suites, custom typography, and interactive live previews.
                     </p>
                   </div>
 
@@ -936,7 +936,7 @@ export function RenovatedPortfolio() {
             <div className="flex flex-col items-center justify-center p-6 bg-[#eef8f3] border border-[#d4a55a]/40 rounded-2xl text-center space-y-3">
               <span className="font-ui text-xs tracking-wider uppercase text-[#005a55] font-medium">Prefer an instant reply?</span>
               <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light max-w-md">
-                Chat directly with our designer on WhatsApp for quick estimates and instant design advice.
+                Chat directly with me on WhatsApp for quick estimates and instant design advice.
               </p>
               <a
                 href="https://wa.me/918946077234?text=Hi%20Zauqode%2C%20I'd%20love%20to%20discuss%20an%20invitation%20%2F%20website%20for%20my%20upcoming%20celebration."
@@ -1038,7 +1038,7 @@ export function RenovatedPortfolio() {
                 </button>
 
                 <p className="text-center text-xs text-[#0d3b38]/65 font-light pt-1">
-                  ✦ We thoughtfully reply within 24 hours.
+                  ✦ I thoughtfully reply within 24 hours.
                 </p>
               </form>
             ) : (
@@ -1049,7 +1049,7 @@ export function RenovatedPortfolio() {
                   I look forward to discussing your celebration and bringing your feelings to life.
                 </p>
                 <p className="text-xs text-[#005a55] font-medium pt-2">
-                  ✦ We thoughtfully reply within 24 hours.
+                  ✦ I thoughtfully reply within 24 hours.
                 </p>
               </div>
             )}
@@ -1356,7 +1356,7 @@ export function RenovatedPortfolio() {
                     Book a similar design
                   </a>
                   <p className="text-[11px] text-center text-[#cdeee3]/60 font-body">
-                    Direct consultation with our principal designer via WhatsApp
+                    Direct consultation with me via WhatsApp
                   </p>
                 </div>
               </div>

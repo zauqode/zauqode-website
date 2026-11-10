@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 const principles = [
   {
     title: "Typography as Architecture",
-    text: "We treat letterforms, scale, and negative space as the foundational pillars of visual emotion and clarity.",
+    text: "I treat letterforms, scale, and negative space as the foundational pillars of visual emotion and clarity.",
   },
   {
     title: "Quiet Digital Luxury",
@@ -48,7 +48,7 @@ export function AboutMe() {
           </p>
 
           <p className="text-sm sm:text-base text-[#0E4847]/80 font-sans leading-relaxed font-light">
-            Whether articulating a once-in-a-lifetime wedding weekend or elevating an architectural practice, we prioritize restraint, editorial proportion, and human connection over algorithmic trends.
+            Whether articulating a once-in-a-lifetime wedding weekend or elevating an architectural practice, I prioritize restraint, editorial proportion, and human connection over algorithmic trends.
           </p>
 
           <div className="pt-4">

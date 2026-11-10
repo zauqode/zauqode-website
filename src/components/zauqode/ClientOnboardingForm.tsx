@@ -526,7 +526,7 @@ export function ClientOnboardingForm() {
                             <strong className="text-[#0D2626]">Content & Assets:</strong> The client is responsible for providing all necessary brand copy, logos, and images in a timely manner.
                           </li>
                           <li>
-                            <strong className="text-[#0D2626]">Domain & Hosting:</strong> Domain registration and hosting accounts are owned directly by the client (we provide complete setup assistance).
+                            <strong className="text-[#0D2626]">Domain & Hosting:</strong> Domain registration and hosting accounts are owned directly by the client (I provide complete setup assistance).
                           </li>
                           <li className="text-red-700 font-medium">
                             <strong className="text-red-800">Strict No-Refund Policy:</strong> No refunds will be provided once the project is delivered and approved.
@@ -604,7 +604,7 @@ export function ClientOnboardingForm() {
                 </div>
                 <h3 className="text-lg font-bold text-[#0D2626]">Details Submitted!</h3>
                 <p className="text-xs text-gray-600 leading-relaxed">
-                  Thank you, <span className="font-semibold text-[#0D4747]">{formData.businessName}</span>. Your project brief has been recorded and WhatsApp has been opened to connect with our studio.
+                  Thank you, <span className="font-semibold text-[#0D4747]">{formData.businessName}</span>. Your project brief has been recorded and WhatsApp has been opened to connect with me directly.
                 </p>
                 <button
                   type="button"

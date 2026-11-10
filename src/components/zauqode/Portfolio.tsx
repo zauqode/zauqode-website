@@ -43,7 +43,7 @@ const projects: Project[] = [
     image: zaraMockup,
     liveUrl: "https://zara-invitation-website.vercel.app/",
     overview:
-      "The client requested a sophisticated digital invitation space that would honor traditional celebration milestones while offering guests a contemporary, fluid mobile experience. We crafted an editorial layout enriched with curated typography, romantic background audio, and instant RSVP sync.",
+      "The client requested a sophisticated digital invitation space that would honor traditional celebration milestones while offering guests a contemporary, fluid mobile experience. I crafted an editorial layout enriched with curated typography, romantic background audio, and instant RSVP sync.",
   },
   {
     id: "botanique-suite",
@@ -83,7 +83,7 @@ const projects: Project[] = [
     image: thriveMockup,
     liveUrl: "https://thriveproperties.vercel.app/",
     overview:
-      "Thrive required an editorial identity that separated their architectural offerings from generic broker platforms. We focused on spatial rhythm, restrained type, and frictionless contact routes.",
+      "Thrive required an editorial identity that separated their architectural offerings from generic broker platforms. I focused on spatial rhythm, restrained type, and frictionless contact routes.",
   },
   {
     id: "studio-portfolio",

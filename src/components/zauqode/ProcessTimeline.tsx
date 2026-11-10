@@ -12,7 +12,7 @@ const steps = [
   {
     num: "02",
     name: "Couture Design",
-    desc: "We handcraft editorial typography, gold foil accents, and interactive unsealing motion tailored to your aesthetic.",
+    desc: "I handcraft editorial typography, gold foil accents, and interactive unsealing motion tailored to your aesthetic.",
     icon: Palette,
   },
   {
@@ -24,7 +24,7 @@ const steps = [
   {
     num: "04",
     name: "RSVP Sync & Polish",
-    desc: "We fine-tune any adjustments and connect the live RSVP tracking directly to your private Google Sheet.",
+    desc: "I fine-tune any adjustments and connect the live RSVP tracking directly to your private Google Sheet.",
     icon: SlidersHorizontal,
   },
   {
