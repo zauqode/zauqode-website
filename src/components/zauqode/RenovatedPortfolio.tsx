@@ -131,7 +131,7 @@ export function RenovatedPortfolio() {
       thumb: "/works/bala-shahin.jpg",
       url: "https://bala-weds-shahin.vercel.app/",
       mobileImg: "/works/mobile-bala-shahin.png",
-      canIframe: false,
+      canIframe: true,
     },
     {
       id: "03",
@@ -277,7 +277,7 @@ export function RenovatedPortfolio() {
       thumb: "/works/santhosh-harini.jpg",
       url: "https://santhosh-weds-harini.vercel.app/",
       mobileImg: "/works/mobile-santhosh-harini.png",
-      canIframe: false,
+      canIframe: true,
     },
     {
       id: "15",
@@ -288,7 +288,7 @@ export function RenovatedPortfolio() {
       thumb: "/works/sanjay-ramya.jpg",
       url: "https://sanjay-weds-ramya.vercel.app/",
       mobileImg: "/works/mobile-sanjay-ramya.png",
-      canIframe: false,
+      canIframe: true,
     },
     {
       id: "16",
