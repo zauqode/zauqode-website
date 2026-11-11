@@ -170,21 +170,21 @@ export function Hero(_props: HeroProps) {
             />
           </defs>
           <text
-            fill="var(--teal, #00756e)"
-            fontFamily="'Poiret One', cursive, sans-serif"
-            fontSize="9.4px"
-            letterSpacing="2.2px"
-            textTransform="uppercase"
+            fill="var(--deep, #005a55)"
+            fontFamily="'Manrope', 'Jost', sans-serif"
+            fontWeight="600"
+            fontSize="9px"
+            letterSpacing="2.1px"
           >
             <textPath href="#badgeCirclePath" startOffset="0%">
-              Design · Code · Elevate · Design · Code · Elevate ·
+              DESIGN · CODE · ELEVATE · DESIGN · CODE · ELEVATE ·
             </textPath>
           </text>
           <text
             x="56"
             y="62"
             textAnchor="middle"
-            fill="var(--gold, #d4a55a)"
+            fill="var(--gold-dark, #785212)"
             fontSize="18px"
             fontFamily="serif"
           >

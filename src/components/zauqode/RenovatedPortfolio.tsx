@@ -398,13 +398,13 @@ export function RenovatedPortfolio() {
           --mist: #eef8f3;
           --bg-page: #f9fbf8;
           --gold: #d4a55a;
-          --gold-dark: #b8893c;
+          --gold-dark: #785212;
           --text-ink: #0d3b38;
           --cream: #f3e3c0;
 
           --font-heading: 'Antic Didone', Georgia, serif;
           --font-script: 'Sacramento', cursive;
-          --font-ui: 'Poiret One', cursive, sans-serif;
+          --font-ui: 'Manrope', 'Jost', sans-serif;
           --font-brand: 'Alice', Georgia, serif;
           --font-body: 'Jost', sans-serif;
         }
@@ -417,12 +417,12 @@ export function RenovatedPortfolio() {
           background-attachment: fixed;
           color: var(--text-ink);
           font-family: var(--font-body);
-          font-weight: 300;
+          font-weight: 400;
         }
 
         .font-heading { font-family: var(--font-heading); }
         .font-script { font-family: var(--font-script); }
-        .font-ui { font-family: var(--font-ui); }
+        .font-ui { font-family: var(--font-ui); font-weight: 600; }
         .font-brand { font-family: var(--font-brand); }
 
         /* Pill Button */
@@ -430,14 +430,16 @@ export function RenovatedPortfolio() {
           display: inline-flex;
           align-items: center;
           gap: 12px;
-          padding: 13px 32px;
+          min-height: 46px;
+          padding: 12px 32px;
           border-radius: 9999px;
-          border: 1px solid var(--teal);
+          border: 1.25px solid var(--teal);
           background: transparent;
-          color: var(--teal);
+          color: var(--teal-deep);
           font-family: var(--font-ui);
-          font-size: 14px;
-          letter-spacing: 0.22em;
+          font-weight: 600;
+          font-size: 13px;
+          letter-spacing: 0.18em;
           text-transform: uppercase;
           position: relative;
           overflow: hidden;
@@ -621,15 +623,18 @@ export function RenovatedPortfolio() {
           }
         }
 
-        /* Navigation Links: Poiret One 17px, letter-spacing .12em, deep teal */
+        /* Navigation Links: Crisp Manrope 15px, letter-spacing .14em, deep teal */
         .nav-progress-link {
-          font-family: 'Poiret One', cursive, sans-serif;
-          font-size: 17px;
+          font-family: 'Manrope', 'Jost', sans-serif;
+          font-weight: 500;
+          font-size: 15px;
           letter-spacing: 0.12em;
           text-decoration: none;
           position: relative;
-          padding: 6px 0 8px;
-          display: inline-block;
+          min-height: 44px;
+          padding: 6px 2px 8px;
+          display: inline-flex;
+          align-items: center;
           color: var(--deep, #005a55);
           transition: color 0.3s ease;
           text-transform: none;
@@ -664,22 +669,22 @@ export function RenovatedPortfolio() {
         }`}
       >
         <div className="font-script text-5xl sm:text-6xl text-[#f3e3c0]">Zauqode</div>
-        <div className="font-ui text-xs uppercase tracking-[0.35em] text-[#d4a55a] mt-2">
+        <div className="font-ui font-semibold text-xs uppercase tracking-[0.3em] text-[#ecd08b] mt-2">
           Design · Code · Elevate
         </div>
       </div>
 
       {/* Top Fixed Glass Blur Nav */}
-      <header className="fixed top-0 inset-x-0 z-50 px-6 sm:px-10 py-4 sm:py-5 site-nav-glass">
+      <header className="fixed top-0 inset-x-0 z-50 px-6 sm:px-10 py-3 sm:py-4 site-nav-glass">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <a
             href="#home"
-            className="transition-opacity hover:opacity-85"
+            className="min-h-[44px] inline-flex items-center transition-opacity hover:opacity-85"
             style={{
               fontFamily: "'Croissant One', cursive, serif",
               fontSize: "17px",
               letterSpacing: "0.3em",
-              color: "var(--teal, #00756e)",
+              color: "var(--teal-deep, #005a55)",
               textTransform: "uppercase",
             }}
             onMouseEnter={handleMouseEnter}
@@ -723,8 +728,7 @@ export function RenovatedPortfolio() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden text-xs uppercase px-4 py-1.5 rounded-full border border-[#d4a55a] text-[#00756e]"
-            style={{ fontFamily: "'Poiret One', cursive, sans-serif", letterSpacing: "0.25em" }}
+            className="md:hidden min-h-[44px] inline-flex items-center justify-center font-ui font-semibold text-xs uppercase px-5 py-2 rounded-full border border-[#b8893c] text-[#005a55] tracking-[0.2em]"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? "Close" : "Menu"}
@@ -735,13 +739,13 @@ export function RenovatedPortfolio() {
       {/* Mobile Menu Full-Screen Overlay (<820px) */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 bg-[#f9fbf8] z-[99999] p-7 flex flex-col justify-between">
-          <div className="flex justify-between items-center pb-5 border-b border-[#d4a55a]/25">
+          <div className="flex justify-between items-center pb-5 border-b border-[#d4a55a]/35">
             <span
               style={{
                 fontFamily: "'Croissant One', cursive, serif",
                 fontSize: "17px",
                 letterSpacing: "0.3em",
-                color: "var(--teal, #00756e)",
+                color: "var(--teal-deep, #005a55)",
                 textTransform: "uppercase",
               }}
             >
@@ -750,14 +754,14 @@ export function RenovatedPortfolio() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-xl text-[#005a55] px-2 py-1"
+              className="w-11 h-11 inline-flex items-center justify-center rounded-full border border-[#d4a55a]/60 text-xl text-[#005a55]"
               aria-label="Close Menu"
             >
               ✕
             </button>
           </div>
 
-          <div className="space-y-3 py-auto my-auto">
+          <div className="space-y-2 py-auto my-auto">
             {[
               { id: "home", label: "Home" },
               { id: "about", label: "About" },
@@ -776,10 +780,10 @@ export function RenovatedPortfolio() {
                     window.history.pushState(null, "", `#${item.id}`);
                   }
                 }}
-                className="block py-1.5 text-[#005a55] hover:text-[#00756e] transition-colors"
+                className="flex items-center min-h-[48px] py-2 text-[#005a55] hover:text-[#00756e] transition-colors"
                 style={{
                   fontFamily: "'Antic Didone', serif",
-                  fontSize: "20px",
+                  fontSize: "22px",
                   lineHeight: "1.4",
                   letterSpacing: "0.05em",
                 }}
@@ -789,7 +793,7 @@ export function RenovatedPortfolio() {
             ))}
           </div>
 
-          <div className="font-script text-xl text-[#b8893c] pt-5 border-t border-[#d4a55a]/25">
+          <div className="font-script text-2xl text-[#785212] pt-5 border-t border-[#d4a55a]/35">
             Design . Code . Elevate
           </div>
         </div>
@@ -821,27 +825,27 @@ export function RenovatedPortfolio() {
               <div className="md:col-span-4 flex justify-center">
                 <div className="w-44 h-60 border-[1.5px] border-[#d4a55a] rounded-t-full rounded-b-3xl bg-[#eef8f3] shadow-[inset_0_0_0_7px_#f9fbf8] flex flex-col items-center justify-center p-4">
                   <img src={zauqodeLogo} alt="Zauqode Emblem" className="w-24 h-24 sm:w-28 sm:h-28 object-contain drop-shadow-md mt-1" />
-                  <span className="text-[#d4a55a] text-sm mt-2">✦</span>
+                  <span className="text-[#785212] text-sm mt-2">✦</span>
                 </div>
               </div>
 
               <div className="md:col-span-8 space-y-5 text-center md:text-left">
-                <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
+                <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
                   About Zauqode
                 </div>
                 <h2 className="font-heading text-3xl sm:text-4xl text-[#005a55] leading-snug">
-                  Where emotion meets <span className="font-script text-4xl sm:text-5xl text-[#b8893c] font-normal">artistry</span>.
+                  Where emotion meets <span className="font-script text-4xl sm:text-5xl text-[#785212] font-normal">artistry</span>.
                 </h2>
-                <p className="text-[#0d3b38]/85 text-base sm:text-lg leading-relaxed font-light max-w-xl">
+                <p className="text-[#0d3b38]/90 text-base sm:text-lg leading-relaxed font-normal max-w-xl">
                   I am a bespoke invitation and occasion designer. I design celebration portals and heirloom stationery by deeply connecting with your feelings, so your guests experience genuine warmth from their very first glance.
                 </p>
 
                 {/* Three Script Words: Listen ✦ Feel ✦ Create */}
                 <div className="flex items-center justify-center md:justify-start gap-4 font-script text-2xl sm:text-3xl text-[#00756e] py-1">
                   <span>Listen</span>
-                  <span className="text-[#d4a55a] text-xs">✦</span>
+                  <span className="text-[#785212] text-xs">✦</span>
                   <span>Feel</span>
-                  <span className="text-[#d4a55a] text-xs">✦</span>
+                  <span className="text-[#785212] text-xs">✦</span>
                   <span>Create</span>
                 </div>
               </div>
@@ -859,7 +863,7 @@ export function RenovatedPortfolio() {
           <section id="services" className="bg-white py-20 px-6 scroll-mt-20">
             <div className="max-w-4xl mx-auto space-y-12">
               <div className="text-center space-y-2">
-                <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
+                <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
                   Services &amp; Offerings
                 </div>
                 <h2 className="font-heading text-3xl sm:text-4xl text-[#00756e] leading-snug">
@@ -877,10 +881,10 @@ export function RenovatedPortfolio() {
                   onMouseLeave={handleMouseLeave}
                 >
                   <div className="flex items-center gap-5 sm:gap-6">
-                    <span className="font-heading text-2xl text-[#b8893c]">01</span>
+                    <span className="font-heading text-2xl text-[#785212]">01</span>
                     <div>
                       <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">Bespoke Invitation Design</h3>
-                      <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light mt-0.5">
+                      <p className="text-sm text-[#0d3b38]/85 font-normal mt-1 leading-relaxed">
                         Heirloom stationery, custom typography suites, and digital cards designed with personal emotion.
                       </p>
                     </div>
@@ -898,10 +902,10 @@ export function RenovatedPortfolio() {
                   onMouseLeave={handleMouseLeave}
                 >
                   <div className="flex items-center gap-5 sm:gap-6">
-                    <span className="font-heading text-2xl text-[#b8893c]">02</span>
+                    <span className="font-heading text-2xl text-[#785212]">02</span>
                     <div>
                       <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">Occasion &amp; Wedding Websites</h3>
-                      <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light mt-0.5">
+                      <p className="text-sm text-[#0d3b38]/85 font-normal mt-1 leading-relaxed">
                         Interactive celebration portals, live RSVP concierges, and memorable digital guest keepsakes.
                       </p>
                     </div>
@@ -914,20 +918,20 @@ export function RenovatedPortfolio() {
 
               {/* Also Offered Section (Smaller Compact Cards) */}
               <div className="space-y-3 pt-2">
-                <div className="font-ui text-[11px] tracking-[0.2em] uppercase text-[#b8893c] text-center sm:text-left">
+                <div className="font-ui font-semibold text-xs tracking-[0.2em] uppercase text-[#785212] text-center sm:text-left">
                   Also Offered
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Smaller Item: Video Invitations */}
                   <div
                     onClick={() => (window.location.hash = "#contact")}
-                    className="p-5 rounded-xl border border-[#d4a55a]/25 bg-[#f9fbf8] hover:border-[#00756e] transition-all cursor-pointer space-y-1"
+                    className="p-5 rounded-xl border border-[#d4a55a]/25 bg-[#f9fbf8] hover:border-[#00756e] transition-all cursor-pointer space-y-1.5"
                   >
                     <div className="flex items-center justify-between">
                       <h4 className="font-heading text-lg text-[#005a55]">Video Invitations</h4>
                       <span className="text-sm text-[#00756e]"><ArrowIcon direction="up-right" /></span>
                     </div>
-                    <p className="text-xs text-[#0d3b38]/70 font-light">
+                    <p className="text-[13.5px] sm:text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
                       Cinematic motion reveals and audio-synced vertical stories for WhatsApp &amp; Instagram.
                     </p>
                   </div>
@@ -935,13 +939,13 @@ export function RenovatedPortfolio() {
                   {/* Smaller Item: Business Websites */}
                   <div
                     onClick={() => (window.location.hash = "#contact")}
-                    className="p-5 rounded-xl border border-[#d4a55a]/25 bg-[#f9fbf8] hover:border-[#00756e] transition-all cursor-pointer space-y-1"
+                    className="p-5 rounded-xl border border-[#d4a55a]/25 bg-[#f9fbf8] hover:border-[#00756e] transition-all cursor-pointer space-y-1.5"
                   >
                     <div className="flex items-center justify-between">
                       <h4 className="font-heading text-lg text-[#005a55]">Business Websites</h4>
                       <span className="text-sm text-[#00756e]"><ArrowIcon direction="up-right" /></span>
                     </div>
-                    <p className="text-xs text-[#0d3b38]/70 font-light">
+                    <p className="text-[13.5px] sm:text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
                       Tailored digital flagships and modern portfolios engineered for your brand.
                     </p>
                   </div>
@@ -955,7 +959,7 @@ export function RenovatedPortfolio() {
             <div className="max-w-6xl mx-auto space-y-12 border-t border-[#d4a55a]/20 pt-16">
               {/* Header */}
               <div className="text-center space-y-2">
-                <div className="font-ui text-xs tracking-[0.3em] uppercase text-[#b8893c]">
+                <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.25em] uppercase text-[#785212]">
                   Process
                 </div>
                 <h2 className="font-heading text-3xl sm:text-4xl text-[#005a55]">
@@ -971,13 +975,13 @@ export function RenovatedPortfolio() {
                     {/* Gold accent line */}
                     <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
                     <div className="flex items-center justify-between mb-3">
-                      <span className="font-heading text-2xl text-[#b8893c] font-semibold">01</span>
-                      <span className="text-[#d4a55a] text-xs">✦</span>
+                      <span className="font-heading text-2xl text-[#785212] font-semibold">01</span>
+                      <span className="text-[#785212] text-xs">✦</span>
                     </div>
                     <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
                       Share your story
                     </h3>
-                    <p className="font-body text-xs sm:text-[13px] text-[#0d3b38]/80 font-light leading-relaxed">
+                    <p className="font-body text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
                       Tell me your wishes, your style and your date. I listen first.
                     </p>
                   </div>
@@ -989,13 +993,13 @@ export function RenovatedPortfolio() {
                     {/* Gold accent line */}
                     <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
                     <div className="flex items-center justify-between mb-3">
-                      <span className="font-heading text-2xl text-[#b8893c] font-semibold">02</span>
-                      <span className="text-[#d4a55a] text-xs">✦</span>
+                      <span className="font-heading text-2xl text-[#785212] font-semibold">02</span>
+                      <span className="text-[#785212] text-xs">✦</span>
                     </div>
                     <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
                       I design
                     </h3>
-                    <p className="font-body text-xs sm:text-[13px] text-[#0d3b38]/80 font-light leading-relaxed">
+                    <p className="font-body text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
                       Your feelings become a custom invitation, made with detail and care.
                     </p>
                   </div>
@@ -1007,13 +1011,13 @@ export function RenovatedPortfolio() {
                     {/* Gold accent line */}
                     <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
                     <div className="flex items-center justify-between mb-3">
-                      <span className="font-heading text-2xl text-[#b8893c] font-semibold">03</span>
-                      <span className="text-[#d4a55a] text-xs">✦</span>
+                      <span className="font-heading text-2xl text-[#785212] font-semibold">03</span>
+                      <span className="text-[#785212] text-xs">✦</span>
                     </div>
                     <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
                       Printing, arranged for you
                     </h3>
-                    <p className="font-body text-xs sm:text-[13px] text-[#0d3b38]/80 font-light leading-relaxed">
+                    <p className="font-body text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
                       Printing depends on my work schedule. When it is full, my trusted premium printing partners handle it with the same quality. I arrange everything, so you only enjoy the design.
                     </p>
                   </div>
@@ -1025,13 +1029,13 @@ export function RenovatedPortfolio() {
                     {/* Gold accent line */}
                     <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
                     <div className="flex items-center justify-between mb-3">
-                      <span className="font-heading text-2xl text-[#b8893c] font-semibold">04</span>
-                      <span className="text-[#d4a55a] text-xs">✦</span>
+                      <span className="font-heading text-2xl text-[#785212] font-semibold">04</span>
+                      <span className="text-[#785212] text-xs">✦</span>
                     </div>
                     <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
                       Delivered with love
                     </h3>
-                    <p className="font-body text-xs sm:text-[13px] text-[#0d3b38]/80 font-light leading-relaxed">
+                    <p className="font-body text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
                       Every detail is checked, and your invitation reaches you ready to share.
                     </p>
                   </div>
@@ -1042,7 +1046,7 @@ export function RenovatedPortfolio() {
               <div className="pt-6 space-y-3">
                 <div className="flex items-center justify-center gap-4 max-w-xs mx-auto">
                   <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#d4a55a] to-transparent" />
-                  <span className="text-[#d4a55a] text-xs">✦</span>
+                  <span className="text-[#785212] text-xs">✦</span>
                   <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#d4a55a] to-transparent" />
                 </div>
                 <div className="font-script text-2xl sm:text-3xl text-[#00756e] text-center">
@@ -1063,13 +1067,13 @@ export function RenovatedPortfolio() {
           <section id="why-zauqode" className="bg-[#f9fbf8] py-16 sm:py-22 px-6 scroll-mt-20">
             <div className="max-w-5xl mx-auto space-y-12">
               <div className="text-center space-y-2.5 max-w-2xl mx-auto">
-                <div className="font-ui text-xs tracking-[0.28em] uppercase text-[#b8893c]">
+                <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.24em] uppercase text-[#785212]">
                   The Zauqode Difference
                 </div>
                 <h2 className="font-heading text-3xl sm:text-4xl text-[#005a55]">
                   Why <span className="font-script text-4xl sm:text-5xl text-[#00756e] font-normal">Zauqode</span>?
                 </h2>
-                <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light leading-relaxed pt-1">
+                <p className="text-sm sm:text-base text-[#0d3b38]/85 font-normal leading-relaxed pt-1">
                   Every commission is crafted personally from initial concept to final delivery—for discerning clients who value genuine artistry over templates.
                 </p>
               </div>
@@ -1078,16 +1082,16 @@ export function RenovatedPortfolio() {
                 {whyPillars.map((pillar) => (
                   <div
                     key={pillar.num}
-                    className="group p-6 sm:p-7 rounded-2xl bg-white/80 border border-[#d4a55a]/25 border-l-2 border-l-[#d4a55a] hover:bg-white hover:border-[#d4a55a]/60 hover:border-l-[#00756e] hover:shadow-[0_12px_28px_-8px_rgba(0,90,85,0.08)] transition-all duration-300 space-y-2.5"
+                    className="group p-6 sm:p-7 rounded-2xl bg-white/85 border border-[#d4a55a]/30 border-l-2 border-l-[#d4a55a] hover:bg-white hover:border-[#d4a55a]/70 hover:border-l-[#00756e] hover:shadow-[0_12px_28px_-8px_rgba(0,90,85,0.08)] transition-all duration-300 space-y-2.5"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-ui text-xs tracking-[0.2em] text-[#b8893c]">{pillar.num}</span>
-                      <span className="text-[#d4a55a] text-xs opacity-70 group-hover:opacity-100 transition-opacity">✦</span>
+                      <span className="font-ui font-semibold text-xs tracking-[0.2em] text-[#785212]">{pillar.num}</span>
+                      <span className="text-[#785212] text-xs opacity-85 group-hover:opacity-100 transition-opacity">✦</span>
                     </div>
                     <h3 className="font-heading text-xl sm:text-2xl text-[#005a55] leading-snug">
                       {pillar.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-[#0d3b38]/75 font-light leading-relaxed">
+                    <p className="text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
                       {pillar.description}
                     </p>
                   </div>
@@ -1107,7 +1111,7 @@ export function RenovatedPortfolio() {
           <section className="bg-[#eef8f3] py-16 sm:py-24 px-4 sm:px-6">
             <div className="max-w-5xl mx-auto space-y-10 sm:space-y-12">
               <div className="text-center space-y-2 sm:space-y-3">
-                <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
+                <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
                   Selected Portfolio
                 </div>
                 <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#00756e] leading-snug">
@@ -1150,15 +1154,15 @@ export function RenovatedPortfolio() {
                       <div className="absolute inset-0 bg-gradient-to-b from-[#002d2a]/90 via-[#003430]/65 to-[#002320]/95 z-0 transition-opacity duration-300 group-hover:opacity-90" />
                     )}
                     <div className="card-inner-gold" />
-                    <div className="relative z-10 flex justify-between items-center text-[10px] sm:text-xs font-ui tracking-wider sm:tracking-widest uppercase opacity-85">
-                      <span className={item.thumb ? "text-[#f3e3c0]" : ""}>{item.label}</span>
-                      <span className="text-[#d4a55a]">✦</span>
+                    <div className="relative z-10 flex justify-between items-center text-[11px] sm:text-xs font-ui font-semibold tracking-wider sm:tracking-widest uppercase">
+                      <span className={item.thumb ? "text-[#fff3d6]" : ""}>{item.label}</span>
+                      <span className="text-[#edd08b]">✦</span>
                     </div>
 
                     <div className="relative z-10 text-center my-auto">
                       <div className={`font-script text-2xl sm:text-3xl lg:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
-                      <div className={`font-heading text-[11px] sm:text-sm mt-1 leading-snug ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>{item.sub}</div>
-                      <div className="inline-flex items-center justify-center mt-2 sm:mt-3 px-3 sm:px-4 py-0.5 sm:py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[9px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                      <div className={`font-heading text-xs sm:text-sm mt-1 leading-snug ${item.thumb ? "text-[#fff3d6]" : "opacity-90"}`}>{item.sub}</div>
+                      <div className="inline-flex items-center justify-center mt-2.5 sm:mt-3 px-3 sm:px-4 py-1 rounded-full border border-[#d4a55a] bg-[#002d2a]/60 text-[#fff3d6] font-ui font-semibold text-[10.5px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
                         Preview
                       </div>
                     </div>
@@ -1167,7 +1171,7 @@ export function RenovatedPortfolio() {
                 <div className="shrink-0 w-1 sm:hidden" aria-hidden="true" />
               </div>
 
-              <div className="sm:hidden text-center font-ui text-[10px] tracking-[0.25em] uppercase text-[#b8893c]/80 -mt-4">
+              <div className="sm:hidden text-center font-ui font-semibold text-[11px] tracking-[0.2em] uppercase text-[#785212] -mt-4">
                 Swipe to explore <ArrowIcon direction="right" className="ml-1" />
               </div>
 
@@ -1186,7 +1190,7 @@ export function RenovatedPortfolio() {
               {/* Client Words / Testimonials */}
               <div className="pt-12 border-t border-[#d4a55a]/25 space-y-8">
                 <div className="text-center space-y-2">
-                  <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
+                  <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
                     Client Words
                   </div>
                   <h3 className="font-heading text-2xl sm:text-3xl text-[#00756e] leading-snug">
@@ -1210,8 +1214,8 @@ export function RenovatedPortfolio() {
                             className="w-[250px] sm:w-[285px] shrink-0 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm flex flex-col justify-between gap-3 relative"
                           >
                             <div>
-                              <span className="font-heading text-2xl sm:text-3xl text-[#d4a55a] leading-none block">“</span>
-                              <p className="font-body text-xs sm:text-[13px] text-[#0d3b38]/85 font-light leading-relaxed -mt-1.5">
+                              <span className="font-heading text-2xl sm:text-3xl text-[#785212] leading-none block">“</span>
+                              <p className="font-body text-[13px] sm:text-sm text-[#0d3b38]/90 font-normal leading-relaxed -mt-1.5">
                                 {t.quote}
                               </p>
                             </div>
@@ -1219,7 +1223,7 @@ export function RenovatedPortfolio() {
                               <span className="font-script text-[22px] sm:text-2xl text-[#005a55] leading-snug font-normal">
                                 {t.name}
                               </span>
-                              <span className="font-ui text-[9px] sm:text-[10px] text-[#b8893c] uppercase tracking-wider leading-tight">
+                              <span className="font-ui font-semibold text-[10.5px] sm:text-[11px] text-[#785212] uppercase tracking-wider leading-tight">
                                 {t.project}
                               </span>
                             </div>
@@ -1245,7 +1249,7 @@ export function RenovatedPortfolio() {
             <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
               <div className="md:col-span-5 space-y-2 text-center md:text-left">
                 <div className="font-script text-5xl sm:text-6xl text-[#f3e3c0]">Let's Create</div>
-                <div className="font-ui text-lg sm:text-xl tracking-[0.28em] uppercase text-[#f3e3c0]/85">
+                <div className="font-ui font-semibold text-lg sm:text-xl tracking-[0.24em] uppercase text-[#f3e3c0]">
                   something beautiful.
                 </div>
               </div>
@@ -1279,7 +1283,7 @@ export function RenovatedPortfolio() {
           {/* 6. Contact Section (On Home Page) */}
           <section id="contact" className="py-20 px-6 max-w-2xl mx-auto space-y-8 scroll-mt-20">
             <div className="text-center space-y-2">
-              <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
+              <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
                 Start a Conversation
               </div>
               <h2 className="font-heading text-3xl sm:text-4xl text-[#00756e] leading-snug">
@@ -1290,7 +1294,7 @@ export function RenovatedPortfolio() {
             {!formSubmitted ? (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1">
+                  <label className="block font-ui font-semibold text-xs tracking-wider uppercase text-[#0d3b38] mb-1.5">
                     Your Name
                   </label>
                   <input
@@ -1299,13 +1303,13 @@ export function RenovatedPortfolio() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="e.g. Sofia Reyan"
-                    className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e]"
+                    className="w-full min-h-[46px] bg-white border border-[#d4a55a]/50 rounded-xl px-4 py-3 text-sm font-normal text-[#0d3b38] placeholder:text-[#4a6b68] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]/35 focus:border-[#00756e]"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1">
+                    <label className="block font-ui font-semibold text-xs tracking-wider uppercase text-[#0d3b38] mb-1.5">
                       Event Date
                     </label>
                     <input
@@ -1313,12 +1317,12 @@ export function RenovatedPortfolio() {
                       value={form.eventDate}
                       onChange={(e) => setForm({ ...form, eventDate: e.target.value })}
                       placeholder="e.g. Dec 2026 / Winter"
-                      className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e]"
+                      className="w-full min-h-[46px] bg-white border border-[#d4a55a]/50 rounded-xl px-4 py-3 text-sm font-normal text-[#0d3b38] placeholder:text-[#4a6b68] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]/35 focus:border-[#00756e]"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1">
+                    <label className="block font-ui font-semibold text-xs tracking-wider uppercase text-[#0d3b38] mb-1.5">
                       City / Venue
                     </label>
                     <input
@@ -1326,20 +1330,20 @@ export function RenovatedPortfolio() {
                       value={form.city}
                       onChange={(e) => setForm({ ...form, city: e.target.value })}
                       placeholder="e.g. Chennai, Bangalore"
-                      className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e]"
+                      className="w-full min-h-[46px] bg-white border border-[#d4a55a]/50 rounded-xl px-4 py-3 text-sm font-normal text-[#0d3b38] placeholder:text-[#4a6b68] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]/35 focus:border-[#00756e]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1">
+                  <label className="block font-ui font-semibold text-xs tracking-wider uppercase text-[#0d3b38] mb-1.5">
                     I need
                   </label>
                   <select
                     required
                     value={form.service}
                     onChange={(e) => setForm({ ...form, service: e.target.value })}
-                    className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e]"
+                    className="w-full min-h-[46px] bg-white border border-[#d4a55a]/50 rounded-xl px-4 py-3 text-sm font-normal text-[#0d3b38] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]/35 focus:border-[#00756e]"
                   >
                     <option value="" disabled hidden>Select an offering...</option>
                     <option value="Occasion & Wedding Website">Occasion &amp; Wedding Website</option>
@@ -1351,7 +1355,7 @@ export function RenovatedPortfolio() {
                 </div>
 
                 <div>
-                  <label className="block font-ui text-xs tracking-wider uppercase text-[#0d3b38] mb-1">
+                  <label className="block font-ui font-semibold text-xs tracking-wider uppercase text-[#0d3b38] mb-1.5">
                     Tell me about your vision
                   </label>
                   <textarea
@@ -1360,7 +1364,7 @@ export function RenovatedPortfolio() {
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     placeholder="Tell me about your celebration, aesthetic ideas, and timeline..."
-                    className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#0d3b38] focus:outline-none focus:border-[#00756e] resize-none"
+                    className="w-full bg-white border border-[#d4a55a]/50 rounded-xl px-4 py-3 text-sm font-normal text-[#0d3b38] placeholder:text-[#4a6b68] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]/35 focus:border-[#00756e] resize-none"
                   />
                 </div>
 
@@ -1369,18 +1373,18 @@ export function RenovatedPortfolio() {
                   <span className="arrow-move"><ArrowIcon direction="right" /></span>
                 </button>
 
-                <p className="text-center text-xs text-[#0d3b38]/65 font-light pt-1">
+                <p className="text-center text-[13px] text-[#0d3b38]/85 font-normal pt-1">
                   ✦ I thoughtfully reply within 24 hours.
                 </p>
               </form>
             ) : (
               <div className="text-center p-10 bg-white rounded-3xl border border-[#d4a55a] space-y-3">
                 <h3 className="font-heading text-3xl text-[#00756e]">Thank you.</h3>
-                <p className="font-script text-2xl text-[#b8893c]">Your message has been received.</p>
-                <p className="text-sm text-[#0d3b38]/80 font-light">
+                <p className="font-script text-2xl text-[#785212]">Your message has been received.</p>
+                <p className="text-sm text-[#0d3b38]/85 font-normal">
                   I look forward to discussing your celebration and bringing your feelings to life.
                 </p>
-                <p className="text-xs text-[#005a55] font-medium pt-2">
+                <p className="text-[13px] text-[#005a55] font-medium pt-2">
                   ✦ I thoughtfully reply within 24 hours.
                 </p>
               </div>
@@ -1408,7 +1412,7 @@ export function RenovatedPortfolio() {
         return (
           <section className="pt-24 sm:pt-32 pb-16 px-3 sm:px-6 max-w-5xl mx-auto space-y-6 sm:space-y-10 w-full">
             <div className="text-center space-y-2 sm:space-y-3">
-              <div className="font-ui text-xs tracking-[0.25em] uppercase text-[#b8893c]">
+              <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
                 Portfolio Catalogue
               </div>
               <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#00756e] leading-snug">
@@ -1418,7 +1422,7 @@ export function RenovatedPortfolio() {
 
             {/* Catalogue Filter Bar */}
             <div className="space-y-3">
-              <div className="flex flex-wrap justify-center items-center gap-1.5 sm:gap-2.5 max-w-full px-1">
+              <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-2.5 max-w-full px-1">
                 {[
                   { id: "all", label: "All" },
                   { id: "websites", label: "Occasion Websites" },
@@ -1431,21 +1435,21 @@ export function RenovatedPortfolio() {
                     key={f.id}
                     type="button"
                     onClick={() => setActiveFilter(f.id)}
-                    className={`font-ui text-[10px] sm:text-xs tracking-wider sm:tracking-widest uppercase px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border transition-all inline-flex items-center gap-1.5 ${
+                    className={`min-h-[44px] font-ui font-semibold text-[11px] sm:text-xs tracking-wider sm:tracking-widest uppercase px-4 py-2 rounded-full border transition-all inline-flex items-center gap-1.5 ${
                       activeFilter === f.id
-                        ? "bg-[#00756e] text-[#f3e3c0] border-[#00756e] shadow-sm"
-                        : "border-[#d4a55a]/40 text-[#0d3b38] hover:border-[#00756e] bg-white/60"
+                        ? "bg-[#005a55] text-white border-[#005a55] shadow-sm"
+                        : "border-[#b8893c]/60 text-[#0d3b38] hover:border-[#005a55] bg-white/80"
                     }`}
                   >
                     <span>{f.label}</span>
-                    <span className="opacity-65 text-[9px] sm:text-[10px]">
+                    <span className="opacity-85 text-[10px] sm:text-[11px]">
                       ({categoryCounts[f.id] ?? 0})
                     </span>
                   </button>
                 ))}
               </div>
 
-              <div className="text-center font-ui text-[10px] tracking-[0.22em] uppercase text-[#b8893c]/85">
+              <div className="text-center font-ui font-semibold text-[11px] tracking-[0.2em] uppercase text-[#785212]">
                 Showing {filteredWorks.length} {filteredWorks.length === 1 ? "creation" : "creations"}
               </div>
             </div>
@@ -1485,19 +1489,19 @@ export function RenovatedPortfolio() {
                     <div className="absolute inset-0 bg-gradient-to-b from-[#002d2a]/90 via-[#003430]/65 to-[#002320]/95 z-0 transition-opacity duration-300 group-hover:opacity-90" />
                   )}
                   <div className="card-inner-gold" />
-                  <div className="relative z-10 flex justify-between items-center gap-1 text-[8.5px] sm:text-xs font-ui tracking-wider sm:tracking-widest uppercase opacity-85">
-                    <span className={`truncate ${item.thumb ? "text-[#f3e3c0]" : ""}`}>{item.label}</span>
-                    <span className="text-[#d4a55a] shrink-0">✦</span>
+                  <div className="relative z-10 flex justify-between items-center gap-1 text-[10.5px] sm:text-xs font-ui font-semibold tracking-wider sm:tracking-widest uppercase">
+                    <span className={`truncate ${item.thumb ? "text-[#fff3d6]" : ""}`}>{item.label}</span>
+                    <span className="text-[#edd08b] shrink-0">✦</span>
                   </div>
 
                   <div className="relative z-10 text-center my-auto px-1">
-                    <div className={`font-script text-[20px] sm:text-3xl lg:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>
+                    <div className={`font-script text-[21px] sm:text-3xl lg:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>
                       {item.name}
                     </div>
-                    <div className={`font-heading text-[10px] sm:text-sm mt-1 leading-snug line-clamp-2 ${item.thumb ? "text-[#f3e3c0]" : "opacity-80"}`}>
+                    <div className={`font-heading text-xs sm:text-sm mt-1 leading-snug line-clamp-2 ${item.thumb ? "text-[#fff3d6]" : "opacity-90"}`}>
                       {item.sub}
                     </div>
-                    <div className="inline-flex items-center justify-center mt-2 sm:mt-3 px-2.5 sm:px-4 py-0.5 sm:py-1 rounded-full border border-[#d4a55a] bg-[#d4a55a]/20 text-[#f3e3c0] font-ui text-[8.5px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
+                    <div className="inline-flex items-center justify-center mt-2.5 sm:mt-3 px-3 sm:px-4 py-1 rounded-full border border-[#d4a55a] bg-[#002d2a]/60 text-[#fff3d6] font-ui font-semibold text-[10.5px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
                       Preview
                     </div>
                   </div>
@@ -1527,31 +1531,31 @@ export function RenovatedPortfolio() {
         >
           ZAUQODE
         </div>
-        <div className="font-script text-2xl text-[#d4a55a]">Design . Code . Elevate</div>
+        <div className="font-script text-2xl sm:text-3xl text-[#edd08b]">Design . Code . Elevate</div>
 
         {/* Direct Contact Channels in Footer */}
-        <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12 py-4 border-y border-[#d4a55a]/25 max-w-xl mx-auto w-full">
-          <div className="flex flex-col items-center gap-1">
-            <span className="font-ui text-[11px] uppercase tracking-wider text-[#d4a55a]">Email</span>
-            <a href="mailto:zauqode@gmail.com" className="font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors">
+        <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-12 py-4 border-y border-[#d4a55a]/25 max-w-xl mx-auto w-full">
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="font-ui font-semibold text-xs uppercase tracking-wider text-[#ecd08b]">Email</span>
+            <a href="mailto:zauqode@gmail.com" className="inline-flex items-center min-h-[44px] px-2 font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors">
               zauqode@gmail.com
             </a>
           </div>
-          <div className="flex flex-col items-center gap-1">
-            <span className="font-ui text-[11px] uppercase tracking-wider text-[#d4a55a]">Instagram</span>
-            <a href="https://instagram.com/zauqode" target="_blank" rel="noreferrer" className="font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors">
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="font-ui font-semibold text-xs uppercase tracking-wider text-[#ecd08b]">Instagram</span>
+            <a href="https://instagram.com/zauqode" target="_blank" rel="noreferrer" className="inline-flex items-center min-h-[44px] px-2 font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors">
               @zauqode
             </a>
           </div>
-          <div className="flex flex-col items-center gap-1">
-            <span className="font-ui text-[11px] uppercase tracking-wider text-[#d4a55a]">WhatsApp</span>
-            <a href="https://wa.me/918946077234" target="_blank" rel="noreferrer" className="font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors">
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="font-ui font-semibold text-xs uppercase tracking-wider text-[#ecd08b]">WhatsApp</span>
+            <a href="https://wa.me/918946077234" target="_blank" rel="noreferrer" className="inline-flex items-center min-h-[44px] px-2 font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors">
               +91 89460 77234
             </a>
           </div>
         </div>
 
-        <div className="font-ui text-xs tracking-wider text-[#f3e3c0]/55 pt-2">
+        <div className="font-ui font-medium text-xs tracking-wider text-[#f3e3c0]/90 pt-2">
           © 2026 Zauqode. All rights reserved. Handcrafted with care.
         </div>
       </footer>
@@ -1587,7 +1591,7 @@ export function RenovatedPortfolio() {
                       prev !== null ? (prev - 1 + invitationWorks.length) % invitationWorks.length : null
                     )
                   }
-                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#d4a55a]/40 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer text-sm"
+                  className="w-11 h-11 rounded-full border border-[#d4a55a]/40 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#ecd08b] flex items-center justify-center transition-all cursor-pointer text-sm"
                   aria-label="Previous Invitation"
                   title="Previous"
                 >
@@ -1600,7 +1604,7 @@ export function RenovatedPortfolio() {
                       prev !== null ? (prev + 1) % invitationWorks.length : null
                     )
                   }
-                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#d4a55a]/40 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer text-sm"
+                  className="w-11 h-11 rounded-full border border-[#d4a55a]/40 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#ecd08b] flex items-center justify-center transition-all cursor-pointer text-sm"
                   aria-label="Next Invitation"
                   title="Next"
                 >
@@ -1609,7 +1613,7 @@ export function RenovatedPortfolio() {
                 <button
                   type="button"
                   onClick={() => setActiveInvitationIndex(null)}
-                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#d4a55a]/40 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer text-sm ml-2"
+                  className="w-11 h-11 rounded-full border border-[#d4a55a]/40 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#ecd08b] flex items-center justify-center transition-all cursor-pointer text-sm ml-1"
                   aria-label="Close"
                   title="Close (Esc)"
                 >
@@ -1707,7 +1711,7 @@ export function RenovatedPortfolio() {
                   >
                     Book a similar design
                   </a>
-                  <p className="text-[11px] text-center text-[#cdeee3]/60 font-body">
+                  <p className="text-xs text-center text-[#cdeee3]/90 font-body">
                     Direct consultation with me via WhatsApp
                   </p>
                 </div>
@@ -1736,7 +1740,7 @@ export function RenovatedPortfolio() {
                     href={activeMockup.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#d4a55a]/70 bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#f3e3c0] font-ui text-[10px] tracking-[0.16em] uppercase transition-all"
+                    className="inline-flex items-center gap-1.5 min-h-[44px] px-3.5 py-2 rounded-full border border-[#d4a55a]/75 bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#f3e3c0] font-ui font-semibold text-[11px] tracking-[0.14em] uppercase transition-all"
                   >
                     <span>Open Live</span>
                     <ArrowIcon direction="up-right" />
@@ -1745,7 +1749,7 @@ export function RenovatedPortfolio() {
                 <button
                   type="button"
                   onClick={() => setActiveMockup(null)}
-                  className="w-8 h-8 shrink-0 rounded-full border border-[#d4a55a] bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#d4a55a] flex items-center justify-center transition-all cursor-pointer text-xs"
+                  className="w-11 h-11 shrink-0 rounded-full border border-[#d4a55a] bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#ecd08b] flex items-center justify-center transition-all cursor-pointer text-sm"
                   aria-label="Close"
                 >
                   ✕

@@ -55,11 +55,12 @@
   flex-wrap: wrap;
   gap: 6px 12px;
   text-align: center;
-  font-family: 'Poiret One', cursive, sans-serif;
+  font-family: 'Manrope', 'Jost', sans-serif;
+  font-weight: 600;
   font-size: 12px;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--gold-dark, #b8893c);
+  color: var(--gold-dark, #785212);
   pointer-events: none;
   z-index: 15;
 }
@@ -183,10 +184,10 @@
   margin: 18px 0 0;
   max-width: 580px;
   font-family: 'Jost', sans-serif;
-  font-weight: 300;
-  font-size: clamp(14px, 1.15vw, 16.5px);
+  font-weight: 400;
+  font-size: clamp(14.5px, 1.15vw, 17px);
   line-height: 1.65;
-  color: rgba(13, 59, 56, 0.84);
+  color: rgba(13, 59, 56, 0.88);
 }
 
 /* Centered Action Buttons */
@@ -219,18 +220,19 @@
   padding: 4px 8px;
   background: transparent;
   border: none;
-  font-family: 'Poiret One', cursive, sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.16em;
+  font-family: 'Manrope', 'Jost', sans-serif;
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--deep, #005a55);
   cursor: default;
 }
 
 .craftDot {
-  font-size: 9px;
-  color: var(--gold, #d4a55a);
-  opacity: 0.85;
+  font-size: 10px;
+  color: var(--gold-dark, #785212);
+  opacity: 1;
 }
 
 /* Bottom-Left Studio Credo */
@@ -241,18 +243,19 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: 'Poiret One', cursive, sans-serif;
+  font-family: 'Manrope', 'Jost', sans-serif;
+  font-weight: 600;
   font-size: 11px;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gold-dark, #b8893c);
+  color: var(--gold-dark, #785212);
   pointer-events: none;
   z-index: 15;
 }
 
 .standardStar {
   font-size: 10px;
-  color: var(--gold, #d4a55a);
+  color: var(--gold-dark, #785212);
 }
 
 /* Right Frame Edge Vertical Signature */
@@ -262,11 +265,12 @@
   top: 50%;
   transform: translateY(-50%);
   writing-mode: vertical-rl;
-  font-family: 'Poiret One', cursive, sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.38em;
+  font-family: 'Manrope', 'Jost', sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: var(--teal, #00756e);
+  color: var(--deep, #005a55);
   pointer-events: none;
   z-index: 15;
   white-space: nowrap;
@@ -319,8 +323,8 @@
     top: 96px;
     left: calc(2.5vw + 14px);
     right: calc(2.5vw + 14px);
-    font-size: 10px;
-    letter-spacing: 0.16em;
+    font-size: 11px;
+    letter-spacing: 0.14em;
     gap: 4px 8px;
   }
 
@@ -339,8 +343,8 @@
 
   .mantraCopy {
     margin-top: 16px;
-    font-size: 13.5px;
-    line-height: 1.6;
+    font-size: 14px;
+    line-height: 1.65;
   }
 
   .buttonGroup {
@@ -354,7 +358,7 @@
   }
 
   .craftChip {
-    font-size: 10.5px;
+    font-size: 11px;
     letter-spacing: 0.12em;
     padding: 4px 6px;
   }
@@ -362,8 +366,8 @@
   .studioStandard {
     left: calc(2.5vw + 14px);
     bottom: 32px;
-    font-size: 9.5px;
-    letter-spacing: 0.15em;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
   }
 
   .badgeContainer {
