@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import zauqodeLogo from "../../assets/Logos/zauqode-logo.png";
 import { Hero } from "@/components/zauqode-home/Hero";
 import { ArrowIcon } from "@/components/zauqode-home/ArrowIcon";
 
@@ -821,33 +820,24 @@ export function RenovatedPortfolio() {
 
           {/* 2. About Me Section (Mist Band) */}
           <section id="about" className="bg-[#eef8f3] py-20 px-6 scroll-mt-20">
-            <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
-              <div className="md:col-span-4 flex justify-center">
-                <div className="w-44 h-60 border-[1.5px] border-[#d4a55a] rounded-t-full rounded-b-3xl bg-[#eef8f3] shadow-[inset_0_0_0_7px_#f9fbf8] flex flex-col items-center justify-center p-4">
-                  <img src={zauqodeLogo} alt="Zauqode Emblem" className="w-24 h-24 sm:w-28 sm:h-28 object-contain drop-shadow-md mt-1" />
-                  <span className="text-[#785212] text-sm mt-2">✦</span>
-                </div>
+            <div className="max-w-3xl mx-auto text-center space-y-5">
+              <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
+                About Zauqode
               </div>
+              <h2 className="font-heading text-3xl sm:text-4xl text-[#005a55] leading-snug">
+                Where emotion meets <span className="font-script text-4xl sm:text-5xl text-[#785212] font-normal">artistry</span>.
+              </h2>
+              <p className="text-[#0d3b38]/90 text-base sm:text-lg leading-relaxed font-normal max-w-2xl mx-auto">
+                I am a bespoke invitation and occasion designer. I design celebration portals and heirloom stationery by deeply connecting with your feelings, so your guests experience genuine warmth from their very first glance.
+              </p>
 
-              <div className="md:col-span-8 space-y-5 text-center md:text-left">
-                <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
-                  About Zauqode
-                </div>
-                <h2 className="font-heading text-3xl sm:text-4xl text-[#005a55] leading-snug">
-                  Where emotion meets <span className="font-script text-4xl sm:text-5xl text-[#785212] font-normal">artistry</span>.
-                </h2>
-                <p className="text-[#0d3b38]/90 text-base sm:text-lg leading-relaxed font-normal max-w-xl">
-                  I am a bespoke invitation and occasion designer. I design celebration portals and heirloom stationery by deeply connecting with your feelings, so your guests experience genuine warmth from their very first glance.
-                </p>
-
-                {/* Three Script Words: Listen ✦ Feel ✦ Create */}
-                <div className="flex items-center justify-center md:justify-start gap-4 font-script text-2xl sm:text-3xl text-[#00756e] py-1">
-                  <span>Listen</span>
-                  <span className="text-[#785212] text-xs">✦</span>
-                  <span>Feel</span>
-                  <span className="text-[#785212] text-xs">✦</span>
-                  <span>Create</span>
-                </div>
+              {/* Three Script Words: Listen ✦ Feel ✦ Create */}
+              <div className="flex items-center justify-center gap-4 font-script text-2xl sm:text-3xl text-[#00756e] py-1">
+                <span>Listen</span>
+                <span className="text-[#785212] text-xs">✦</span>
+                <span>Feel</span>
+                <span className="text-[#785212] text-xs">✦</span>
+                <span>Create</span>
               </div>
             </div>
           </section>
