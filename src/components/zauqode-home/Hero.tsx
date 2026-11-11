@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./Hero.module.css";
 import { Button } from "./Button";
 import { HERO_MANTRA_SVGS } from "./heroMantraSvgs";
+import heroLogoVideo from "../../assets/hero-logo-video.webm";
+import heroLogoAnimWebp from "../../assets/hero-logo-anim.webp";
+import heroLogoPoster from "../../assets/hero-logo-poster.png";
 
 export interface HeroProps {
   onSelectCategory?: (category: string) => void;
@@ -11,12 +14,53 @@ const studioTags = ["Bespoke", "Elegant", "Heartfelt"];
 
 /**
  * Hero Component
- * Luxury studio banner with fixed editorial line and rotating stroke-animated Sacramento SVGs.
+ * Luxury studio banner with signature animated Zauqode emblem crest, fixed editorial line,
+ * and rotating stroke-animated Sacramento SVGs.
  */
 export function Hero(_props: HeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const wsvgRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [activeWord, setActiveWord] = useState(HERO_MANTRA_SVGS[0]?.word ?? "emotion.");
+  const [emblemMode, setEmblemMode] = useState<"poster" | "video" | "webp">("poster");
+  const [replayTick, setReplayTick] = useState(0);
+
+  // Choose transparent VP9 WebM on Chromium/Firefox or Animated WebP on Apple WebKit / iOS
+  useEffect(() => {
+    const reducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) {
+      setEmblemMode("poster");
+      return;
+    }
+
+    const ua = navigator.userAgent;
+    const isAppleEngine =
+      (/AppleWebKit/i.test(ua) && !/Chrome|Chromium|Edg|OPR|Firefox|CriOS|FxiOS/i.test(ua)) ||
+      /iPhone|iPad|iPod/i.test(ua);
+
+    if (isAppleEngine) {
+      setEmblemMode("webp");
+      return;
+    }
+
+    const probe = document.createElement("video");
+    if (probe.canPlayType('video/webm; codecs="vp9"')) {
+      setEmblemMode("video");
+    } else {
+      setEmblemMode("webp");
+    }
+  }, []);
+
+  const handleReplayEmblem = () => {
+    if (emblemMode === "video" && videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    } else if (emblemMode === "webp") {
+      setReplayTick((n) => n + 1);
+    }
+  };
 
   // Stroke-by-stroke SVG handwriting cycle (~1s initial delay, 5.4s period, 4.7s fade-out)
   useEffect(() => {
@@ -104,6 +148,41 @@ export function Hero(_props: HeroProps) {
 
       {/* Centered Banner Content */}
       <div className={styles.bannerCenter}>
+        {/* Animated Zauqode Atelier Crest */}
+        <button
+          type="button"
+          onClick={handleReplayEmblem}
+          className={styles.emblemCrest}
+          aria-label="Zauqode animated monogram emblem"
+          title="Replay Zauqode signature animation"
+        >
+          {emblemMode === "video" ? (
+            <video
+              ref={videoRef}
+              src={heroLogoVideo}
+              poster={heroLogoPoster}
+              autoPlay
+              muted
+              playsInline
+              preload="auto"
+              className={styles.emblemMedia}
+            />
+          ) : emblemMode === "webp" ? (
+            <img
+              key={replayTick}
+              src={replayTick > 0 ? `${heroLogoAnimWebp}?r=${replayTick}` : heroLogoAnimWebp}
+              alt="Zauqode signature monogram"
+              className={styles.emblemMedia}
+            />
+          ) : (
+            <img
+              src={heroLogoPoster}
+              alt="Zauqode signature monogram"
+              className={styles.emblemMedia}
+            />
+          )}
+        </button>
+
         {/* 2-Line Banner Headline: Line 1 Fixed + Line 2 Changing Curly Mantra */}
         <h1 className={styles.headline}>
           <span className={styles.fixedLineMask}>
@@ -173,10 +252,10 @@ export function Hero(_props: HeroProps) {
             fill="var(--deep, #005a55)"
             fontFamily="'Manrope', 'Jost', sans-serif"
             fontWeight="600"
-            fontSize="9px"
-            letterSpacing="2.1px"
+            fontSize="7.6px"
+            letterSpacing="0.95px"
           >
-            <textPath href="#badgeCirclePath" startOffset="0%">
+            <textPath href="#badgeCirclePath" startOffset="0%" textLength="250">
               DESIGN · CODE · ELEVATE · DESIGN · CODE · ELEVATE ·
             </textPath>
           </text>
