@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./Hero.module.css";
 import { Button } from "./Button";
 import { HERO_MANTRA_SVGS } from "./heroMantraSvgs";
-import heroLogoVideo from "../../assets/hero-logo-video.webm";
-import heroLogoAnimWebp from "../../assets/hero-logo-anim.webp";
 import heroLogoPoster from "../../assets/hero-logo-poster.png";
+import heroLogoAnimWebp from "../../assets/hero-logo-anim.webp";
+import logoVideo from "../../assets/logo-video.webm";
 
 export interface HeroProps {
   onSelectCategory?: (category: string) => void;
@@ -23,7 +23,6 @@ export function Hero(_props: HeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [activeWord, setActiveWord] = useState(HERO_MANTRA_SVGS[0]?.word ?? "emotion.");
   const [emblemMode, setEmblemMode] = useState<"poster" | "video" | "webp">("poster");
-  const [replayTick, setReplayTick] = useState(0);
 
   // Choose transparent VP9 WebM on Chromium/Firefox or Animated WebP on Apple WebKit / iOS
   useEffect(() => {
@@ -53,14 +52,16 @@ export function Hero(_props: HeroProps) {
     }
   }, []);
 
-  const handleReplayEmblem = () => {
-    if (emblemMode === "video" && videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
-    } else if (emblemMode === "webp") {
-      setReplayTick((n) => n + 1);
-    }
-  };
+  // Ensure audio stays muted across React hydration and loop playback runs cleanly
+  useEffect(() => {
+    if (emblemMode !== "video" || !videoRef.current) return;
+    const el = videoRef.current;
+    el.defaultMuted = true;
+    el.muted = true;
+    el.volume = 0;
+    el.loop = true;
+    el.play().catch(() => {});
+  }, [emblemMode]);
 
   // Stroke-by-stroke SVG handwriting cycle (~1s initial delay, 5.4s period, 4.7s fade-out)
   useEffect(() => {
@@ -190,42 +191,43 @@ export function Hero(_props: HeroProps) {
           </div>
         </div>
 
-        {/* Right Side: Animated Zauqode Atelier Crest Showcase */}
+        {/* Right Side: Looping Muted Zauqode Atelier Crest Showcase */}
         <div className={styles.heroVisual}>
           <div className={styles.emblemAura} aria-hidden="true" />
-          <button
-            type="button"
-            onClick={handleReplayEmblem}
+          <div
             className={styles.emblemCrest}
+            role="img"
             aria-label="Zauqode animated monogram emblem"
-            title="Replay Zauqode signature animation"
           >
             {emblemMode === "video" ? (
               <video
                 ref={videoRef}
-                src={heroLogoVideo}
+                src={logoVideo}
                 poster={heroLogoPoster}
                 autoPlay
+                loop
                 muted
                 playsInline
                 preload="auto"
+                aria-hidden="true"
                 className={styles.emblemMedia}
               />
             ) : emblemMode === "webp" ? (
               <img
-                key={replayTick}
-                src={replayTick > 0 ? `${heroLogoAnimWebp}?r=${replayTick}` : heroLogoAnimWebp}
-                alt="Zauqode signature monogram"
+                src={heroLogoAnimWebp}
+                alt=""
+                aria-hidden="true"
                 className={styles.emblemMedia}
               />
             ) : (
               <img
                 src={heroLogoPoster}
-                alt="Zauqode signature monogram"
+                alt=""
+                aria-hidden="true"
                 className={styles.emblemMedia}
               />
             )}
-          </button>
+          </div>
         </div>
       </div>
 
