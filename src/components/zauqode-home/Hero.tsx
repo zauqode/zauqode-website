@@ -146,84 +146,86 @@ export function Hero(_props: HeroProps) {
         <span>Bespoke Design Studio</span>
       </div>
 
-      {/* Centered Banner Content */}
-      <div className={styles.bannerCenter}>
-        {/* Animated Zauqode Atelier Crest */}
-        <button
-          type="button"
-          onClick={handleReplayEmblem}
-          className={styles.emblemCrest}
-          aria-label="Zauqode animated monogram emblem"
-          title="Replay Zauqode signature animation"
-        >
-          {emblemMode === "video" ? (
-            <video
-              ref={videoRef}
-              src={heroLogoVideo}
-              poster={heroLogoPoster}
-              autoPlay
-              muted
-              playsInline
-              preload="auto"
-              className={styles.emblemMedia}
-            />
-          ) : emblemMode === "webp" ? (
-            <img
-              key={replayTick}
-              src={replayTick > 0 ? `${heroLogoAnimWebp}?r=${replayTick}` : heroLogoAnimWebp}
-              alt="Zauqode signature monogram"
-              className={styles.emblemMedia}
-            />
-          ) : (
-            <img
-              src={heroLogoPoster}
-              alt="Zauqode signature monogram"
-              className={styles.emblemMedia}
-            />
-          )}
-        </button>
+      {/* Split Hero Content: Left Editorial Copy / Right Monogram Crest */}
+      <div className={styles.heroSplit}>
+        {/* Left Side: Mantra Headline, Sub-line, Actions & Ethos */}
+        <div className={styles.heroCopy}>
+          <h1 className={styles.headline}>
+            <span className={styles.fixedLineMask}>
+              <span className={styles.fixedLine}>Where elegance meets</span>
+            </span>
+            <span className={styles.curlyLineMask} aria-live="polite">
+              <span className={styles.srOnly}>{activeWord}</span>
+              <i ref={wsvgRef} className={styles.wsvg} aria-hidden="true" />
+            </span>
+          </h1>
 
-        {/* 2-Line Banner Headline: Line 1 Fixed + Line 2 Changing Curly Mantra */}
-        <h1 className={styles.headline}>
-          <span className={styles.fixedLineMask}>
-            <span className={styles.fixedLine}>Where elegance meets</span>
-          </span>
-          <span className={styles.curlyLineMask} aria-live="polite">
-            <span className={styles.srOnly}>{activeWord}</span>
-            <i ref={wsvgRef} className={styles.wsvg} aria-hidden="true" />
-          </span>
-        </h1>
+          <p className={styles.mantraCopy}>
+            Bespoke design and digital experiences, crafted with artistry, care and feeling.
+          </p>
 
-        {/* Concise Mantra Sub-line */}
-        <p className={styles.mantraCopy}>
-          Bespoke design and digital experiences, crafted with artistry, care and feeling.
-        </p>
+          <div className={styles.buttonGroup}>
+            <Button href="#works" arrow="→">
+              View Works
+            </Button>
+            <Button
+              href="https://wa.me/918946077234"
+              target="_blank"
+              rel="noopener noreferrer"
+              arrow="↗"
+            >
+              Chat on WhatsApp
+            </Button>
+          </div>
 
-        {/* Centered Compact Action Pills */}
-        <div className={styles.buttonGroup}>
-          <Button href="#works" arrow="→">
-            View Works
-          </Button>
-          <Button
-            href="https://wa.me/918946077234"
-            target="_blank"
-            rel="noopener noreferrer"
-            arrow="↗"
-          >
-            Chat on WhatsApp
-          </Button>
+          <div className={styles.craftStrip} aria-label="Studio attributes">
+            {studioTags.map((tag) => (
+              <span key={tag} className={styles.craftChip}>
+                <span className={styles.craftDot} aria-hidden="true">
+                  ✦
+                </span>
+                <span>{tag}</span>
+              </span>
+            ))}
+          </div>
         </div>
 
-        {/* Studio Ethos Tag Row */}
-        <div className={styles.craftStrip} aria-label="Studio attributes">
-          {studioTags.map((tag) => (
-            <span key={tag} className={styles.craftChip}>
-              <span className={styles.craftDot} aria-hidden="true">
-                ✦
-              </span>
-              <span>{tag}</span>
-            </span>
-          ))}
+        {/* Right Side: Animated Zauqode Atelier Crest Showcase */}
+        <div className={styles.heroVisual}>
+          <div className={styles.emblemAura} aria-hidden="true" />
+          <button
+            type="button"
+            onClick={handleReplayEmblem}
+            className={styles.emblemCrest}
+            aria-label="Zauqode animated monogram emblem"
+            title="Replay Zauqode signature animation"
+          >
+            {emblemMode === "video" ? (
+              <video
+                ref={videoRef}
+                src={heroLogoVideo}
+                poster={heroLogoPoster}
+                autoPlay
+                muted
+                playsInline
+                preload="auto"
+                className={styles.emblemMedia}
+              />
+            ) : emblemMode === "webp" ? (
+              <img
+                key={replayTick}
+                src={replayTick > 0 ? `${heroLogoAnimWebp}?r=${replayTick}` : heroLogoAnimWebp}
+                alt="Zauqode signature monogram"
+                className={styles.emblemMedia}
+              />
+            ) : (
+              <img
+                src={heroLogoPoster}
+                alt="Zauqode signature monogram"
+                className={styles.emblemMedia}
+              />
+            )}
+          </button>
         </div>
       </div>
 
