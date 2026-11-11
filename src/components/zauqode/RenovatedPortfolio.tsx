@@ -65,6 +65,7 @@ export function RenovatedPortfolio() {
   const [activeMockup, setActiveMockup] = useState<ActiveMockupState | null>(null);
   const [activeInvitationIndex, setActiveInvitationIndex] = useState<number | null>(null);
   const [marqueeVisible, setMarqueeVisible] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const marqueeRef = useRef<HTMLDivElement>(null);
   const currentRouteRef = useRef(currentRoute);
@@ -77,6 +78,25 @@ export function RenovatedPortfolio() {
     service: "",
     message: "",
   });
+
+  // Track scrolled state passively for frosted glassmorphism navbar
+  useEffect(() => {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const scrolled = window.scrollY > 16;
+      setIsScrolled((prev) => (prev !== scrolled ? scrolled : prev));
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(update);
+      }
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Close modals on Escape key & arrow keys navigation
   useEffect(() => {
@@ -208,7 +228,11 @@ export function RenovatedPortfolio() {
       </div>
 
       {/* Top Fixed Navigation Bar */}
-      <header className="fixed top-0 inset-x-0 z-50 px-5 sm:px-10 py-3 sm:py-4 site-nav-glass">
+      <header
+        className={`fixed top-0 inset-x-0 z-50 px-5 sm:px-10 py-3 sm:py-4 site-nav-glass${
+          isScrolled ? " is-scrolled backdrop-blur-xl backdrop-saturate-150" : ""
+        }`}
+      >
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <a
             href="#home"
