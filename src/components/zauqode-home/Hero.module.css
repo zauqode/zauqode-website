@@ -296,29 +296,6 @@
   opacity: 1;
 }
 
-/* Bottom-Left Studio Credo */
-.studioStandard {
-  position: absolute;
-  left: calc(3vw + 24px);
-  bottom: 42px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'Manrope', 'Jost', sans-serif;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gold-dark, #785212);
-  pointer-events: none;
-  z-index: 15;
-}
-
-.standardStar {
-  font-size: 10px;
-  color: var(--gold-dark, #785212);
-}
-
 /* Right Frame Edge Vertical Signature */
 .verticalText {
   position: absolute;
@@ -429,13 +406,6 @@
     font-size: 11px;
     letter-spacing: 0.12em;
     padding: 4px 6px;
-  }
-
-  .studioStandard {
-    left: calc(2.5vw + 14px);
-    bottom: 32px;
-    font-size: 10.5px;
-    letter-spacing: 0.14em;
   }
 
   .badgeContainer {

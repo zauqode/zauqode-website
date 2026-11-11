@@ -227,13 +227,6 @@ export function Hero(_props: HeroProps) {
         </div>
       </div>
 
-      {/* Bottom-Left Studio Standard Credo */}
-      <div className={styles.studioStandard}>
-        <span>Zero Templates</span>
-        <span className={styles.standardStar}>✦</span>
-        <span>Crafted to Endure</span>
-      </div>
-
       {/* Right Frame Vertical Signature */}
       <div className={styles.verticalText} aria-hidden="true">
         Design . Code . Elevate
