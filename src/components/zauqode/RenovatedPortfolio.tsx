@@ -1734,27 +1734,14 @@ export function RenovatedPortfolio() {
             {/* Modal Top Bar */}
             <div className="flex items-center justify-between gap-2 w-full max-w-[325px] sm:max-w-[365px] px-1.5 text-[#f3e3c0]">
               <span className="font-heading text-sm sm:text-base tracking-wide truncate">{activeMockup.title}</span>
-              <div className="flex items-center gap-2 shrink-0">
-                {activeMockup.url && (
-                  <a
-                    href={activeMockup.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 min-h-[44px] px-3.5 py-2 rounded-full border border-[#d4a55a]/75 bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#f3e3c0] font-ui font-semibold text-[11px] tracking-[0.14em] uppercase transition-all"
-                  >
-                    <span>Open Live</span>
-                    <ArrowIcon direction="up-right" />
-                  </a>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setActiveMockup(null)}
-                  className="w-11 h-11 shrink-0 rounded-full border border-[#d4a55a] bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#ecd08b] flex items-center justify-center transition-all cursor-pointer text-sm"
-                  aria-label="Close"
-                >
-                  ✕
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setActiveMockup(null)}
+                className="w-11 h-11 shrink-0 rounded-full border border-[#d4a55a] bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#ecd08b] flex items-center justify-center transition-all cursor-pointer text-sm"
+                aria-label="Close"
+              >
+                ✕
+              </button>
             </div>
 
             {/* Android Flagship Frame */}
@@ -1799,20 +1786,6 @@ export function RenovatedPortfolio() {
                       allow="fullscreen"
                       title={activeMockup.title}
                     />
-                  ) : activeMockup.url ? (
-                    <a
-                      href={activeMockup.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block cursor-pointer"
-                      aria-label={`Open ${activeMockup.title} live website`}
-                    >
-                      <img
-                        src={activeMockup.mobileImg}
-                        alt={activeMockup.title}
-                        className="w-full h-auto block"
-                      />
-                    </a>
                   ) : (
                     <img
                       src={activeMockup.mobileImg}
