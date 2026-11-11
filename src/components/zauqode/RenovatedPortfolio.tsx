@@ -1,8 +1,60 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Hero } from "@/components/zauqode-home/Hero";
 import { ArrowIcon } from "@/components/zauqode-home/ArrowIcon";
+import { PortfolioCard } from "./PortfolioCard";
+import {
+  HOME_SELECTED_WORKS,
+  INVITATION_WORKS,
+  TESTIMONIALS,
+  WHY_PILLARS,
+  type ActiveMockupState,
+  type WorkItem,
+} from "./portfolioData";
+import "./RenovatedPortfolio.css";
+
+const WorksCatalogueView = lazy(() =>
+  import("./WorksCatalogueView").then((m) => ({ default: m.WorksCatalogueView }))
+);
+const InvitationShowcaseModal = lazy(() =>
+  import("./InvitationShowcaseModal").then((m) => ({ default: m.InvitationShowcaseModal }))
+);
+const MobileMockupModal = lazy(() =>
+  import("./MobileMockupModal").then((m) => ({ default: m.MobileMockupModal }))
+);
+
+const NAV_ITEMS = [
+  { id: "home", label: "Home" },
+  { id: "about", label: "About" },
+  { id: "services", label: "Services" },
+  { id: "works", label: "Works" },
+  { id: "contact", label: "Contact" },
+] as const;
+
+const PROCESS_STEPS = [
+  {
+    num: "01",
+    title: "Share your story",
+    description: "Tell me your wishes, your style and your date. I listen first.",
+  },
+  {
+    num: "02",
+    title: "I design",
+    description: "Your feelings become a custom invitation, made with detail and care.",
+  },
+  {
+    num: "03",
+    title: "Printing, arranged for you",
+    description:
+      "Printing depends on my work schedule. When it is full, my trusted premium printing partners handle it with the same quality. I arrange everything, so you only enjoy the design.",
+  },
+  {
+    num: "04",
+    title: "Delivered with love",
+    description: "Every detail is checked, and your invitation reaches you ready to share.",
+  },
+] as const;
 
 export function RenovatedPortfolio() {
   const [currentRoute, setCurrentRoute] = useState("home");
@@ -10,17 +62,14 @@ export function RenovatedPortfolio() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [activeMockup, setActiveMockup] = useState<{
-    url?: string;
-    title: string;
-    mobileImg?: string;
-    videoUrl?: string;
-    canIframe?: boolean;
-  } | null>(null);
-
+  const [activeMockup, setActiveMockup] = useState<ActiveMockupState | null>(null);
   const [activeInvitationIndex, setActiveInvitationIndex] = useState<number | null>(null);
+  const [marqueeVisible, setMarqueeVisible] = useState(true);
 
-  // Form State
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const currentRouteRef = useRef(currentRoute);
+  currentRouteRef.current = currentRoute;
+
   const [form, setForm] = useState({
     name: "",
     eventDate: "",
@@ -28,7 +77,6 @@ export function RenovatedPortfolio() {
     service: "",
     message: "",
   });
-
 
   // Close modals on Escape key & arrow keys navigation
   useEffect(() => {
@@ -38,40 +86,46 @@ export function RenovatedPortfolio() {
         setActiveInvitationIndex(null);
         setMobileMenuOpen(false);
       } else if (e.key === "ArrowLeft") {
-        setActiveInvitationIndex((prev) => (prev !== null ? (prev - 1 + 5) % 5 : null));
+        setActiveInvitationIndex((prev) =>
+          prev !== null ? (prev - 1 + INVITATION_WORKS.length) % INVITATION_WORKS.length : null
+        );
       } else if (e.key === "ArrowRight") {
-        setActiveInvitationIndex((prev) => (prev !== null ? (prev + 1) % 5 : null));
+        setActiveInvitationIndex((prev) =>
+          prev !== null ? (prev + 1) % INVITATION_WORKS.length : null
+        );
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Hash Routing
+  // Hash Routing without re-registering listener on state flips
   useEffect(() => {
+    let switchTimer: number | undefined;
+    let closeTimer: number | undefined;
+
     const handleHash = () => {
       const hash = window.location.hash.replace("#", "").toLowerCase();
       if (hash === "about" || hash === "services" || hash === "contact") {
         setCurrentRoute("home");
         setMobileMenuOpen(false);
-        setTimeout(() => {
-          const el = document.getElementById(hash);
-          if (el) el.scrollIntoView({ behavior: "smooth" });
+        window.setTimeout(() => {
+          document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" });
         }, 60);
         return;
       }
 
       const validRoutes = ["home", "about", "services", "works", "contact"];
       const target = validRoutes.includes(hash) ? hash : "home";
+      const allowCurtain = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
 
-      // Trigger curtain transition if route changes
-      if (target !== currentRoute && window.matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+      if (target !== currentRouteRef.current && allowCurtain) {
         setCurtainActive(true);
-        setTimeout(() => {
+        switchTimer = window.setTimeout(() => {
           setCurrentRoute(target);
           window.scrollTo(0, 0);
-          setTimeout(() => setCurtainActive(false), 350);
-        }, 320);
+          closeTimer = window.setTimeout(() => setCurtainActive(false), 320);
+        }, 280);
       } else {
         setCurrentRoute(target);
         window.scrollTo(0, 0);
@@ -81,25 +135,50 @@ export function RenovatedPortfolio() {
 
     window.addEventListener("hashchange", handleHash);
     handleHash();
-    return () => window.removeEventListener("hashchange", handleHash);
+    return () => {
+      window.removeEventListener("hashchange", handleHash);
+      if (switchTimer !== undefined) window.clearTimeout(switchTimer);
+      if (closeTimer !== undefined) window.clearTimeout(closeTimer);
+    };
+  }, []);
+
+  // Pause testimonial marquee when scrolled off-screen to preserve mobile FPS & battery
+  useEffect(() => {
+    const el = marqueeRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry) {
+          setMarqueeVisible(entry.isIntersecting);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
   }, [currentRoute]);
 
-  const handleMouseEnter = () => {};
-  const handleMouseLeave = () => {};
-
-  // 3D Card Tilt Effect (disabled on mobile touch devices)
-  const handleCardMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    if (typeof window !== "undefined" && window.innerWidth < 768) return;
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    card.style.transform = `rotateX(${-y * 14}deg) rotateY(${x * 14}deg) translateZ(8px)`;
-  };
-
-  const handleCardMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    e.currentTarget.style.transform = "rotateX(0deg) rotateY(0deg) translateZ(0)";
-  };
+  const handleSelectWork = useCallback((item: WorkItem) => {
+    if (item.category === "invitations" || item.category === "stalls") {
+      const idx = INVITATION_WORKS.findIndex((inv) => inv.id === item.id);
+      setActiveInvitationIndex(idx !== -1 ? idx : 0);
+    } else if (item.videoUrl) {
+      setActiveMockup({
+        title: `${item.name} — Video Invitation`,
+        videoUrl: item.videoUrl,
+      });
+    } else if (item.url) {
+      setActiveMockup({
+        url: item.url,
+        title: item.name,
+        mobileImg: item.mobileImg || "",
+        canIframe: !!item.canIframe,
+      });
+    } else {
+      window.location.hash = "#contact";
+    }
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,565 +186,20 @@ export function RenovatedPortfolio() {
     const waMsg = encodeURIComponent(
       `*New Inquiry via zauqode.com*\n\n*Name:* ${form.name}\n*Event Date:* ${form.eventDate || "Not specified"}\n*City:* ${form.city || "Not specified"}\n*Need:* ${form.service}\n*Message:* ${form.message}`
     );
-    window.open(`https://wa.me/918946077234?text=${waMsg}`, "_blank");
+    window.open(`https://wa.me/918946077234?text=${waMsg}`, "_blank", "noopener,noreferrer");
   };
 
-  const works = [
-    {
-      id: "01",
-      name: "Sonali & Pallav",
-      sub: "Occasion Website & RSVP Concierge",
-      category: "websites",
-      label: "Wedding Website",
-      thumb: "/works/pallav-sonali.jpg",
-      url: "https://pallav-weds-sonali.vercel.app/",
-      mobileImg: "/works/mobile-pallav-sonali.png",
-      canIframe: true,
-    },
-    {
-      id: "02",
-      name: "Bala & Shahin",
-      sub: "Grand Celebration & Itinerary Portal",
-      category: "websites",
-      label: "Wedding Celebration",
-      thumb: "/works/bala-shahin.jpg",
-      url: "https://bala-weds-shahin.vercel.app/",
-      mobileImg: "/works/mobile-bala-shahin.png",
-      canIframe: true,
-    },
-    {
-      id: "03",
-      name: "Aravinda & Salini",
-      sub: "Sacred Temple Wedding Portal",
-      category: "websites",
-      label: "Sacred Wedding",
-      thumb: "/works/aravinda-salini.jpg",
-      url: "https://aravinda-weds-salini.vercel.app/",
-      mobileImg: "/works/mobile-aravinda-salini.png",
-      canIframe: true,
-    },
-    {
-      id: "04",
-      name: "Akash & Megha",
-      sub: "Celebration Portal & Digital Invitation",
-      category: "websites",
-      label: "Wedding Portal",
-      thumb: "/works/akash-megha.jpg",
-      url: "https://akash-weds-megha.vercel.app/",
-      mobileImg: "/works/mobile-akash-megha.png",
-      canIframe: true,
-    },
-    {
-      id: "05",
-      name: "Giridhar & Renee",
-      sub: "A Sacred Wedding Celebration & Portal",
-      category: "websites",
-      label: "Wedding Celebration",
-      thumb: "/works/giridhar-renee.jpg",
-      url: "https://giridhar-weds-renee.vercel.app/",
-      mobileImg: "/works/mobile-giridhar-renee.jpg",
-      canIframe: true,
-    },
-    {
-      id: "06",
-      name: "Akash & Yazhini",
-      sub: "Four-Ceremony Royal Folio Suite",
-      category: "invitations",
-      label: "Heirloom Suite",
-      thumb: "/works/invite-akash-yazhini.jpg",
-      mobileImg: "/works/invite-akash-yazhini.jpg",
-      canIframe: false,
-      story: "The couple wished for an opulent royal heritage tribute to their lineage. I crafted a four-ceremony folio with emerald foil borders, sacred kolam motifs, and dedicated ceremony cards.",
-      occasion: "Four-Ceremony Royal Wedding",
-      style: "Deep Forest & Heritage Gold Folio",
-      included: ["4 Ceremony Folios", "Custom Monogram", "Wax Seal Motif", "WhatsApp Suite"],
-    },
-    {
-      id: "07",
-      name: "Karthik & Divya",
-      sub: "Emerald Lotus & Translucent Vellum Suite",
-      category: "invitations",
-      label: "Vellum & Lotus",
-      thumb: "/works/invite-karthik-divya.jpg",
-      mobileImg: "/works/invite-karthik-divya.jpg",
-      canIframe: false,
-      story: "A modern botanical dream requested with ethereal serenity. Hand-painted emerald lotus blossoms paired with translucent vellum overlays and delicate gold serif typography.",
-      occasion: "Traditional Temple Wedding",
-      style: "Emerald Lotus & Translucent Vellum",
-      included: ["Translucent Vellum Overlay", "Hand-Painted Lotus Card", "Keepsake RSVP", "Digital Envelope"],
-    },
-    {
-      id: "08",
-      name: "Mohammed & Shakila",
-      sub: "Imperial Burgundy & Gold Arch Suite",
-      category: "invitations",
-      label: "Royal Nikkah",
-      thumb: "/works/invite-nikkah.jpg",
-      mobileImg: "/works/invite-nikkah.jpg",
-      canIframe: false,
-      story: "Designed for a grand imperial celebration. Incorporates majestic Islamic arch silhouettes, intricate damask borders, and rich imperial burgundy hues with gilded calligraphy.",
-      occasion: "Royal Nikkah Celebration",
-      style: "Imperial Burgundy & Gilded Arch",
-      included: ["Gilded Arch Main Folio", "Reception Card", "Bespoke Calligraphy", "Mobile Preview Suite"],
-    },
-    {
-      id: "09",
-      name: "Malligai Manam",
-      sub: "மல்லிகை மணம் சூடிக்கொள் — Jasmine Stall Board",
-      category: "stalls",
-      label: "Wedding Stall Board",
-      thumb: "/works/invite-jasmine.jpg",
-      mobileImg: "/works/invite-jasmine.jpg",
-      canIframe: false,
-      story: "Custom wedding event stall board crafted for a fresh jasmine flower counter. Designed with auspicious emerald-teal tones, hand-drawn kolam motifs, and poetic Tamil calligraphy.",
-      occasion: "Wedding Event Flower Stall",
-      style: "Emerald Teal, Temple Gold & Tamil Script",
-      included: ["Custom Event Stall Signage", "Tamil Calligraphy Artwork", "Large-Format Print Ready", "Traditional Kolam Borders"],
-    },
-    {
-      id: "10",
-      name: "Kaadhalum Valaiyalum",
-      sub: "காதலும் கை வளையலும் — Bangle Stall Board",
-      category: "stalls",
-      label: "Wedding Stall Board",
-      thumb: "/works/invite-valaiyal.jpg",
-      mobileImg: "/works/invite-valaiyal.jpg",
-      canIframe: false,
-      story: "Bespoke event stall board crafted for a traditional wedding bangle counter. Combines nostalgic Tamil lyrical charm with illustrated bangle stand artwork, temple bells, and festive borders.",
-      occasion: "Wedding Event Bangle Stall",
-      style: "Warm Ivory, Crimson & Festive Gold",
-      included: ["Event Counter Display Board", "Custom Bangle Illustration", "Large-Format Print Ready", "Themed Event Coordination"],
-    },
-    {
-      id: "11",
-      name: "Dr. Vamsi & Ritika",
-      sub: "Traditional Musical & Vedic Motion Suite",
-      category: "videos",
-      label: "Video Invitation",
-      thumb: "/works/vamsi-ritika.jpg",
-      videoUrl: "/works/vamsi-ritika-video.mp4",
-      canIframe: false,
-    },
-    {
-      id: "12",
-      name: "Zara Invitations",
-      sub: "Artisan Stationery & Bespoke Showcase",
-      category: "business",
-      label: "Business Website",
-      thumb: "/works/zara-mockup.png",
-      url: "https://zara-invitation-website.vercel.app/",
-      mobileImg: "/works/zara-mockup.png",
-      canIframe: true,
-    },
-    {
-      id: "13",
-      name: "Thrive Properties",
-      sub: "Premium Real Estate & Property Discovery",
-      category: "business",
-      label: "Business Website",
-      thumb: "/works/thrive-mockup.jpg",
-      url: "https://thriveproperties.vercel.app/",
-      mobileImg: "/works/thrive-mockup.jpg",
-      canIframe: true,
-    },
-    {
-      id: "14",
-      name: "Santhosh & Harini",
-      sub: "Wedding Ceremony & Courtyard Reception Portal",
-      category: "websites",
-      label: "Wedding Website",
-      thumb: "/works/santhosh-harini.jpg",
-      url: "https://santhosh-weds-harini.vercel.app/",
-      mobileImg: "/works/mobile-santhosh-harini.png",
-      canIframe: true,
-    },
-    {
-      id: "15",
-      name: "Sanjay & Ramya",
-      sub: "London Savoy Celebration & Wedding Portal",
-      category: "websites",
-      label: "Wedding Website",
-      thumb: "/works/sanjay-ramya.jpg",
-      url: "https://sanjay-weds-ramya.vercel.app/",
-      mobileImg: "/works/mobile-sanjay-ramya.png",
-      canIframe: true,
-    },
-    {
-      id: "16",
-      name: "Valaikaappu & Baby Shower",
-      sub: "South Indian Valaikaappu Celebration Website",
-      category: "websites",
-      label: "Occasion Website",
-      thumb: "/works/baby-shower.jpg",
-      url: "https://baby-shower-theta-one.vercel.app/",
-      mobileImg: "/works/mobile-baby-shower.png",
-      canIframe: true,
-    },
-    {
-      id: "17",
-      name: "Dr. Ananya & Siddharth",
-      sub: "Sacred South Indian Hindu Wedding Portal",
-      category: "websites",
-      label: "Sacred Wedding",
-      thumb: "/works/ananya-siddharth.jpg",
-      url: "https://ananya-siddharth-zauqode.vercel.app/",
-      mobileImg: "/works/mobile-ananya-siddharth.png",
-      canIframe: true,
-    },
-    {
-      id: "18",
-      name: "Amina & Yusuf",
-      sub: "Nikah & Royal Ballroom Wedding Invitation",
-      category: "websites",
-      label: "Nikah Website",
-      thumb: "/works/amina-yusuf.jpg",
-      url: "https://amina-and-yusuf.vercel.app/",
-      mobileImg: "/works/mobile-amina-yusuf.png",
-      canIframe: true,
-    },
-  ];
-
-  // Curated 4 items for Home Page Selected Works: 1 Wedding Website, 1 Invitation, 1 Video, 1 Business Website
-  const homeSelectedWorks = [
-    works.find((w) => w.id === "01")!,
-    works.find((w) => w.id === "06")!,
-    works.find((w) => w.id === "11")!,
-    works.find((w) => w.id === "12")!,
-  ].filter(Boolean);
-
-  const invitationWorks = works.filter((w) => w.category === "invitations" || w.category === "stalls");
-  const activeInv = activeInvitationIndex !== null ? invitationWorks[activeInvitationIndex] : null;
-
-  const testimonials = [
-    {
-      name: "Sonali & Major Pallav",
-      project: "Occasion Portal & Folio",
-      quote: "“Absolutely loved how our invitation turned out! You were so understanding, patient, and creative throughout the process. Highly recommended! ❤️”",
-    },
-    {
-      name: "Aravind & Salini",
-      project: "Sacred Temple Portal",
-      quote: "“What a dreamy invitation! Impressed by the creativity and attention to detail. Truly the best invitation I’ve seen! ✨”",
-    },
-    {
-      name: "Bala & Shahin",
-      project: "Digital Wedding Invitation",
-      quote: "“Such a unique and elegant digital invitation! It’s not just an invitation; it’s a beautiful expression of thoughtfulness and style. Absolutely loved it! ❤️”",
-    },
-    {
-      name: "Giridhar & Renee",
-      project: "Celebration & RSVP Suite",
-      quote: "“You understood exactly what we envisioned. Your amazing taste, creativity, and editing made our special occasion even more memorable! 💗”",
-    },
-  ];
-
-  const whyPillars = [
-    {
-      num: "01",
-      title: "Thoughtful, not templated.",
-      description:
-        "No mass-produced framework skins. Every layout, serif pairing, and detail is specifically conceived around your celebration or brand’s unique character.",
-    },
-    {
-      num: "02",
-      title: "Beautiful, and engineered to perform.",
-      description:
-        "Editorial visual aesthetics backed by clean custom code, effortless loading, and crisp mobile responsiveness for guests and visitors everywhere.",
-    },
-    {
-      num: "03",
-      title: "Refined, without unnecessary clutter.",
-      description:
-        "Measured interactive motion and intentional white space that invite quiet admiration—elevating delight without overwhelming the moment.",
-    },
-    {
-      num: "04",
-      title: "Direct 1-on-1 creative partnership.",
-      description:
-        "From your very first message to live launch and print coordination, you collaborate directly with me so every nuance feels deeply personal.",
-    },
-  ];
+  const activeInv =
+    activeInvitationIndex !== null ? INVITATION_WORKS[activeInvitationIndex] ?? null : null;
 
   return (
-    <div className="renovated-app min-h-screen relative overflow-x-hidden">
-      {/* Inline styles for fonts and effects */}
-      <style>{`
-        :root {
-          --teal: #00756e;
-          --teal-deep: #005a55;
-          --mint: #cdeee3;
-          --mist: #eef8f3;
-          --bg-page: #f9fbf8;
-          --gold: #d4a55a;
-          --gold-dark: #785212;
-          --text-ink: #0d3b38;
-          --cream: #f3e3c0;
-
-          --font-heading: 'Antic Didone', Georgia, serif;
-          --font-script: 'Sacramento', cursive;
-          --font-ui: 'Manrope', 'Jost', sans-serif;
-          --font-brand: 'Alice', Georgia, serif;
-          --font-body: 'Jost', sans-serif;
-        }
-
-        .renovated-app {
-          background-color: var(--bg-page);
-          background-image: 
-            radial-gradient(ellipse 550px 550px at 0% 0%, rgba(205, 238, 227, 0.45) 0%, transparent 70%),
-            radial-gradient(ellipse 650px 650px at 100% 100%, rgba(205, 238, 227, 0.35) 0%, transparent 70%);
-          background-attachment: fixed;
-          color: var(--text-ink);
-          font-family: var(--font-body);
-          font-weight: 400;
-        }
-
-        .font-heading { font-family: var(--font-heading); }
-        .font-script { font-family: var(--font-script); }
-        .font-ui { font-family: var(--font-ui); font-weight: 600; }
-        .font-brand { font-family: var(--font-brand); }
-
-        /* Pill Button */
-        .btn-pill-renovated {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          min-height: 46px;
-          padding: 12px 32px;
-          border-radius: 9999px;
-          border: 1.25px solid var(--teal);
-          background: transparent;
-          color: var(--teal-deep);
-          font-family: var(--font-ui);
-          font-weight: 600;
-          font-size: 13px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          position: relative;
-          overflow: hidden;
-          cursor: pointer;
-          transition: color 0.4s ease, border-color 0.4s ease, transform 0.2s ease;
-          z-index: 1;
-        }
-        .btn-pill-renovated::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: var(--teal);
-          transform: translateY(100%);
-          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          z-index: -1;
-        }
-        .btn-pill-renovated:hover::before { transform: translateY(0); }
-        .btn-pill-renovated:hover {
-          color: var(--cream);
-          border-color: var(--teal);
-          transform: translateY(-1px);
-        }
-        .btn-pill-renovated:hover .arrow-move { transform: translateX(4px); }
-        .arrow-move { transition: transform 0.35s ease; }
-
-        .btn-pill-light {
-          border-color: var(--cream);
-          color: var(--cream);
-        }
-        .btn-pill-light::before { background: var(--cream); }
-        .btn-pill-light:hover { color: var(--teal-deep); border-color: var(--cream); }
-
-        /* Work Cards */
-        .tilt-card-container {
-          aspect-ratio: 3 / 4;
-          border-radius: 24px;
-          position: relative;
-          overflow: hidden;
-          cursor: pointer;
-          transform-style: preserve-3d;
-          transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease;
-          box-shadow: 0 12px 32px -8px rgba(13, 59, 56, 0.08);
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          padding: 34px 28px;
-        }
-        .card-inner-gold {
-          position: absolute;
-          inset: 14px;
-          border: 1px solid rgba(212, 165, 90, 0.55);
-          border-radius: 16px;
-          pointer-events: none;
-          transition: inset 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
-          z-index: 2;
-        }
-        .tilt-card-container:hover .card-inner-gold {
-          inset: 8px;
-          border-color: var(--gold);
-        }
-        .tilt-card-container::after {
-          content: "";
-          position: absolute;
-          top: -50%;
-          left: -60%;
-          width: 50%;
-          height: 200%;
-          background: linear-gradient(60deg, rgba(255,255,255,0) 20%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 80%);
-          transform: rotate(25deg) translateX(-100%);
-          transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
-          pointer-events: none;
-          z-index: 3;
-        }
-        .tilt-card-container:hover::after {
-          transform: rotate(25deg) translateX(450%);
-        }
-
-        .card-teal { background: linear-gradient(135deg, #00756e 0%, #005a55 100%); color: var(--cream); }
-        .card-mint { background: linear-gradient(135deg, #cdeee3 0%, #eef8f3 100%); color: var(--teal-deep); }
-        .card-cream { background: linear-gradient(135deg, #f3e3c0 0%, #f9fbf8 100%); color: var(--text-ink); }
-        .card-white-mint { background: linear-gradient(135deg, #ffffff 0%, #cdeee3 100%); color: var(--teal-deep); }
-        .card-bright-teal { background: linear-gradient(135deg, #008f86 0%, #00756e 100%); color: var(--cream); }
-
-        .service-row-card {
-          transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease, border-color 0.3s ease;
-        }
-        .service-row-card:hover {
-          transform: translateX(8px);
-          background: #ffffff;
-          border-color: var(--gold);
-        }
-        .service-row-card:hover .service-arrow-rot {
-          transform: rotate(45deg);
-          color: var(--gold-dark);
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-
-        /* Seamless Infinite Testimonial Marquee */
-        @keyframes testimonialMarqueeScroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        .testimonial-marquee-wrap {
-          overflow: hidden;
-          width: 100%;
-          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-          mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-        }
-        .testimonial-marquee-track {
-          display: flex;
-          width: max-content;
-          animation: testimonialMarqueeScroll 30s linear infinite;
-          will-change: transform;
-        }
-        .testimonial-marquee-wrap:hover .testimonial-marquee-track,
-        .testimonial-marquee-wrap:active .testimonial-marquee-track {
-          animation-play-state: paused;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .testimonial-marquee-wrap {
-            overflow-x: auto;
-            -webkit-mask-image: none;
-            mask-image: none;
-          }
-          .testimonial-marquee-track {
-            animation: none;
-          }
-          .testimonial-duplicate-set {
-            display: none;
-          }
-        }
-
-        @media (max-width: 640px) {
-          .tilt-card-container {
-            aspect-ratio: 3 / 4;
-            min-height: 0;
-            padding: 18px 14px;
-            border-radius: 18px;
-            transform: none !important;
-          }
-          .tilt-card-container.catalogue-card {
-            padding: 13px 10px;
-            border-radius: 14px;
-          }
-          .card-inner-gold {
-            inset: 9px;
-            border-radius: 12px;
-          }
-          .catalogue-card .card-inner-gold {
-            inset: 6px;
-            border-radius: 10px;
-          }
-          .tilt-card-container:hover .card-inner-gold {
-            inset: 6px;
-          }
-        }
-
-        /* Header & Navigation: Fixed glass blur on desktop, no backdrop-filter on mobile */
-        .site-nav-glass {
-          background-color: rgba(249, 251, 248, 0.6);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-          border-bottom: 1px solid rgba(212, 165, 90, 0.25);
-        }
-        @media (max-width: 820px) {
-          .site-nav-glass {
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-            background-color: #f9fbf8 !important;
-          }
-        }
-
-        /* Navigation Links: Crisp Manrope 15px, letter-spacing .14em, deep teal */
-        .nav-progress-link {
-          font-family: 'Manrope', 'Jost', sans-serif;
-          font-weight: 500;
-          font-size: 15px;
-          letter-spacing: 0.12em;
-          text-decoration: none;
-          position: relative;
-          min-height: 44px;
-          padding: 6px 2px 8px;
-          display: inline-flex;
-          align-items: center;
-          color: var(--deep, #005a55);
-          transition: color 0.3s ease;
-          text-transform: none;
-          cursor: pointer;
-        }
-        .nav-progress-link:hover,
-        .nav-progress-link.active {
-          color: var(--teal, #00756e);
-        }
-        .nav-progress-bar {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 1px;
-          background-color: var(--gold, #d4a55a);
-          transform: scaleX(0);
-          transform-origin: left;
-          transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
-          pointer-events: none;
-        }
-        .nav-progress-link:hover .nav-progress-bar,
-        .nav-progress-link.active .nav-progress-bar {
-          transform: scaleX(1);
-        }
-      `}</style>
-
+    <div className="renovated-app min-h-[100dvh] relative overflow-x-hidden">
       {/* Teal Curtain Page Transition */}
       <div
-        className={`fixed inset-0 bg-[#005a55] z-[9999] flex flex-col items-center justify-center transition-transform duration-700 pointer-events-none ${
+        className={`fixed inset-0 bg-[#005a55] z-[9999] flex flex-col items-center justify-center transition-transform duration-500 pointer-events-none ${
           curtainActive ? "translate-y-0 !pointer-events-auto" : "-translate-y-full"
         }`}
+        aria-hidden={!curtainActive}
       >
         <div className="font-script text-5xl sm:text-6xl text-[#f3e3c0]">Zauqode</div>
         <div className="font-ui font-semibold text-xs uppercase tracking-[0.3em] text-[#ecd08b] mt-2">
@@ -673,8 +207,8 @@ export function RenovatedPortfolio() {
         </div>
       </div>
 
-      {/* Top Fixed Glass Blur Nav */}
-      <header className="fixed top-0 inset-x-0 z-50 px-6 sm:px-10 py-3 sm:py-4 site-nav-glass">
+      {/* Top Fixed Navigation Bar */}
+      <header className="fixed top-0 inset-x-0 z-50 px-5 sm:px-10 py-3 sm:py-4 site-nav-glass">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <a
             href="#home"
@@ -686,36 +220,29 @@ export function RenovatedPortfolio() {
               color: "var(--teal-deep, #005a55)",
               textTransform: "uppercase",
             }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
             aria-label="Zauqode Home"
           >
             Zauqode
           </a>
 
-          <nav className="hidden md:flex items-center gap-9">
-            {[
-              { id: "home", label: "Home" },
-              { id: "about", label: "About" },
-              { id: "services", label: "Services" },
-              { id: "works", label: "Works" },
-              { id: "contact", label: "Contact" },
-            ].map((item) => {
+          <nav className="hidden md:flex items-center gap-9" aria-label="Primary navigation">
+            {NAV_ITEMS.map((item) => {
               const isActive = currentRoute === item.id;
               return (
                 <a
                   key={item.id}
                   href={`#${item.id}`}
                   onClick={(e) => {
-                    if ((item.id === "about" || item.id === "services" || item.id === "contact") && currentRoute === "home") {
+                    if (
+                      (item.id === "about" || item.id === "services" || item.id === "contact") &&
+                      currentRoute === "home"
+                    ) {
                       e.preventDefault();
                       document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" });
                       window.history.pushState(null, "", `#${item.id}`);
                     }
                   }}
                   className={`nav-progress-link ${isActive ? "active" : ""}`}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
                 >
                   <span>{item.label}</span>
                   <span className="nav-progress-bar" />
@@ -729,13 +256,14 @@ export function RenovatedPortfolio() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden min-h-[44px] inline-flex items-center justify-center font-ui font-semibold text-xs uppercase px-5 py-2 rounded-full border border-[#b8893c] text-[#005a55] tracking-[0.2em]"
             aria-label="Toggle Navigation Menu"
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? "Close" : "Menu"}
           </button>
         </div>
       </header>
 
-      {/* Mobile Menu Full-Screen Overlay (<820px) */}
+      {/* Mobile Menu Full-Screen Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 bg-[#f9fbf8] z-[99999] p-7 flex flex-col justify-between">
           <div className="flex justify-between items-center pb-5 border-b border-[#d4a55a]/35">
@@ -760,20 +288,17 @@ export function RenovatedPortfolio() {
             </button>
           </div>
 
-          <div className="space-y-2 py-auto my-auto">
-            {[
-              { id: "home", label: "Home" },
-              { id: "about", label: "About" },
-              { id: "services", label: "Services" },
-              { id: "works", label: "Works" },
-              { id: "contact", label: "Contact" },
-            ].map((item) => (
+          <nav className="space-y-2 py-auto my-auto" aria-label="Mobile navigation">
+            {NAV_ITEMS.map((item) => (
               <a
                 key={item.id}
                 href={`#${item.id}`}
                 onClick={(e) => {
                   setMobileMenuOpen(false);
-                  if ((item.id === "about" || item.id === "services" || item.id === "contact") && currentRoute === "home") {
+                  if (
+                    (item.id === "about" || item.id === "services" || item.id === "contact") &&
+                    currentRoute === "home"
+                  ) {
                     e.preventDefault();
                     document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" });
                     window.history.pushState(null, "", `#${item.id}`);
@@ -790,7 +315,7 @@ export function RenovatedPortfolio() {
                 {item.label}
               </a>
             ))}
-          </div>
+          </nav>
 
           <div className="font-script text-2xl text-[#785212] pt-5 border-t border-[#d4a55a]/35">
             Design . Code . Elevate
@@ -813,30 +338,42 @@ export function RenovatedPortfolio() {
 
           {/* Wavy Divider to Mist Band */}
           <div className="w-full overflow-hidden leading-none block">
-            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block">
-              <path d="M0,25 C320,55 640,0 960,30 C1200,50 1360,15 1440,25 L1440,60 L0,60 Z" fill="#eef8f3" />
+            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block" aria-hidden="true">
+              <path
+                d="M0,25 C320,55 640,0 960,30 C1200,50 1360,15 1440,25 L1440,60 L0,60 Z"
+                fill="#eef8f3"
+              />
             </svg>
           </div>
 
-          {/* 2. About Me Section (Mist Band) */}
-          <section id="about" className="bg-[#eef8f3] py-20 px-6 scroll-mt-20">
+          {/* 2. About Me Section (Mist Band — Centered) */}
+          <section id="about" className="bg-[#eef8f3] py-16 sm:py-20 px-6 scroll-mt-20">
             <div className="max-w-3xl mx-auto text-center space-y-5">
               <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
                 About Zauqode
               </div>
               <h2 className="font-heading text-3xl sm:text-4xl text-[#005a55] leading-snug">
-                Where emotion meets <span className="font-script text-4xl sm:text-5xl text-[#785212] font-normal">artistry</span>.
+                Where emotion meets{" "}
+                <span className="font-script text-4xl sm:text-5xl text-[#785212] font-normal">
+                  artistry
+                </span>
+                .
               </h2>
               <p className="text-[#0d3b38]/90 text-base sm:text-lg leading-relaxed font-normal max-w-2xl mx-auto">
-                I am a bespoke invitation and occasion designer. I design celebration portals and heirloom stationery by deeply connecting with your feelings, so your guests experience genuine warmth from their very first glance.
+                I am a bespoke invitation and occasion designer. I design celebration portals and
+                heirloom stationery by deeply connecting with your feelings, so your guests experience
+                genuine warmth from their very first glance.
               </p>
 
-              {/* Three Script Words: Listen ✦ Feel ✦ Create */}
               <div className="flex items-center justify-center gap-4 font-script text-2xl sm:text-3xl text-[#00756e] py-1">
                 <span>Listen</span>
-                <span className="text-[#785212] text-xs">✦</span>
+                <span className="text-[#785212] text-xs" aria-hidden="true">
+                  ✦
+                </span>
                 <span>Feel</span>
-                <span className="text-[#785212] text-xs">✦</span>
+                <span className="text-[#785212] text-xs" aria-hidden="true">
+                  ✦
+                </span>
                 <span>Create</span>
               </div>
             </div>
@@ -844,13 +381,16 @@ export function RenovatedPortfolio() {
 
           {/* Wavy Divider to White Band */}
           <div className="w-full overflow-hidden leading-none block bg-[#eef8f3]">
-            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block">
-              <path d="M0,35 C380,5 720,55 1060,20 C1240,5 1380,45 1440,35 L1440,60 L0,60 Z" fill="#ffffff" />
+            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block" aria-hidden="true">
+              <path
+                d="M0,35 C380,5 720,55 1060,20 C1240,5 1380,45 1440,35 L1440,60 L0,60 Z"
+                fill="#ffffff"
+              />
             </svg>
           </div>
 
           {/* 3. Services Section (White Band) */}
-          <section id="services" className="bg-white py-20 px-6 scroll-mt-20">
+          <section id="services" className="bg-white py-16 sm:py-20 px-6 scroll-mt-20">
             <div className="max-w-4xl mx-auto space-y-12">
               <div className="text-center space-y-2">
                 <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
@@ -861,182 +401,158 @@ export function RenovatedPortfolio() {
                 </h2>
               </div>
 
-              {/* Main Two Core Services */}
               <div className="space-y-4">
-                {/* Core 01: Bespoke Invitations (Major Design Offering) */}
-                <div
-                  onClick={() => (window.location.hash = "#contact")}
+                <a
+                  href="#contact"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                    window.history.pushState(null, "", "#contact");
+                  }}
                   className="service-row-card p-6 sm:p-8 rounded-2xl border border-[#d4a55a]/40 bg-[#f9fbf8] flex items-center justify-between gap-4 cursor-pointer"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
                 >
-                  <div className="flex items-center gap-5 sm:gap-6">
+                  <div className="flex items-center gap-4 sm:gap-6">
                     <span className="font-heading text-2xl text-[#785212]">01</span>
                     <div>
-                      <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">Bespoke Invitation Design</h3>
+                      <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">
+                        Bespoke Invitation Design
+                      </h3>
                       <p className="text-sm text-[#0d3b38]/85 font-normal mt-1 leading-relaxed">
-                        Heirloom stationery, custom typography suites, and digital cards designed with personal emotion.
+                        Heirloom stationery, custom typography suites, and digital cards designed
+                        with personal emotion.
                       </p>
                     </div>
                   </div>
                   <span className="service-arrow-rot text-xl text-[#00756e] shrink-0 transition-transform duration-300">
                     <ArrowIcon direction="up-right" />
                   </span>
-                </div>
+                </a>
 
-                {/* Core 02: Occasion & Wedding Websites */}
-                <div
-                  onClick={() => (window.location.hash = "#contact")}
+                <a
+                  href="#contact"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                    window.history.pushState(null, "", "#contact");
+                  }}
                   className="service-row-card p-6 sm:p-8 rounded-2xl border border-[#d4a55a]/40 bg-[#f9fbf8] flex items-center justify-between gap-4 cursor-pointer"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
                 >
-                  <div className="flex items-center gap-5 sm:gap-6">
+                  <div className="flex items-center gap-4 sm:gap-6">
                     <span className="font-heading text-2xl text-[#785212]">02</span>
                     <div>
-                      <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">Occasion &amp; Wedding Websites</h3>
+                      <h3 className="font-heading text-xl sm:text-2xl text-[#005a55]">
+                        Occasion &amp; Wedding Websites
+                      </h3>
                       <p className="text-sm text-[#0d3b38]/85 font-normal mt-1 leading-relaxed">
-                        Interactive celebration portals, live RSVP concierges, and memorable digital guest keepsakes.
+                        Interactive celebration portals, live RSVP concierges, and memorable digital
+                        guest keepsakes.
                       </p>
                     </div>
                   </div>
                   <span className="service-arrow-rot text-xl text-[#00756e] shrink-0 transition-transform duration-300">
                     <ArrowIcon direction="up-right" />
                   </span>
-                </div>
+                </a>
               </div>
 
-              {/* Also Offered Section (Smaller Compact Cards) */}
               <div className="space-y-3 pt-2">
                 <div className="font-ui font-semibold text-xs tracking-[0.2em] uppercase text-[#785212] text-center sm:text-left">
                   Also Offered
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Smaller Item: Video Invitations */}
-                  <div
-                    onClick={() => (window.location.hash = "#contact")}
-                    className="p-5 rounded-xl border border-[#d4a55a]/25 bg-[#f9fbf8] hover:border-[#00756e] transition-all cursor-pointer space-y-1.5"
+                  <a
+                    href="#contact"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                      window.history.pushState(null, "", "#contact");
+                    }}
+                    className="p-5 rounded-xl border border-[#d4a55a]/25 bg-[#f9fbf8] hover:border-[#00756e] transition-colors cursor-pointer space-y-1.5 block"
                   >
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between gap-2">
                       <h4 className="font-heading text-lg text-[#005a55]">Video Invitations</h4>
-                      <span className="text-sm text-[#00756e]"><ArrowIcon direction="up-right" /></span>
+                      <span className="text-sm text-[#00756e] shrink-0">
+                        <ArrowIcon direction="up-right" />
+                      </span>
                     </div>
                     <p className="text-[13.5px] sm:text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
-                      Cinematic motion reveals and audio-synced vertical stories for WhatsApp &amp; Instagram.
+                      Cinematic motion reveals and audio-synced vertical stories for WhatsApp &amp;
+                      Instagram.
                     </p>
-                  </div>
+                  </a>
 
-                  {/* Smaller Item: Business Websites */}
-                  <div
-                    onClick={() => (window.location.hash = "#contact")}
-                    className="p-5 rounded-xl border border-[#d4a55a]/25 bg-[#f9fbf8] hover:border-[#00756e] transition-all cursor-pointer space-y-1.5"
+                  <a
+                    href="#contact"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                      window.history.pushState(null, "", "#contact");
+                    }}
+                    className="p-5 rounded-xl border border-[#d4a55a]/25 bg-[#f9fbf8] hover:border-[#00756e] transition-colors cursor-pointer space-y-1.5 block"
                   >
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between gap-2">
                       <h4 className="font-heading text-lg text-[#005a55]">Business Websites</h4>
-                      <span className="text-sm text-[#00756e]"><ArrowIcon direction="up-right" /></span>
+                      <span className="text-sm text-[#00756e] shrink-0">
+                        <ArrowIcon direction="up-right" />
+                      </span>
                     </div>
                     <p className="text-[13.5px] sm:text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
                       Tailored digital flagships and modern portfolios engineered for your brand.
                     </p>
-                  </div>
+                  </a>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* 3b. Process Section (Elite Hybrid combining Image 1 wordings & layout with Image 2 card UI) */}
-          <section id="process" className="bg-white pb-20 px-6 scroll-mt-20">
+          {/* 3b. Process Section */}
+          <section id="process" className="bg-white pb-16 sm:pb-20 px-6 scroll-mt-20">
             <div className="max-w-6xl mx-auto space-y-12 border-t border-[#d4a55a]/20 pt-16">
-              {/* Header */}
               <div className="text-center space-y-2">
                 <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.25em] uppercase text-[#785212]">
                   Process
                 </div>
                 <h2 className="font-heading text-3xl sm:text-4xl text-[#005a55]">
-                  How I create <span className="font-script text-4xl sm:text-5xl text-[#00756e] font-normal lowercase">your invitation</span>
+                  How I create{" "}
+                  <span className="font-script text-4xl sm:text-5xl text-[#00756e] font-normal lowercase">
+                    your invitation
+                  </span>
                 </h2>
               </div>
 
-              {/* 4 Process Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {/* 01: Share your story */}
-                <div className="p-7 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/35 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(0,117,110,0.04)] hover:shadow-[0_12px_28px_-6px_rgba(212,165,90,0.22)] hover:border-[#d4a55a] hover:-translate-y-1.5 transition-all duration-300 relative group">
-                  <div>
-                    {/* Gold accent line */}
-                    <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-heading text-2xl text-[#785212] font-semibold">01</span>
-                      <span className="text-[#785212] text-xs">✦</span>
+                {PROCESS_STEPS.map((step) => (
+                  <div
+                    key={step.num}
+                    className="p-7 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/35 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(0,117,110,0.04)] hover:shadow-[0_12px_28px_-6px_rgba(212,165,90,0.22)] hover:border-[#d4a55a] hover:-translate-y-1 transition-all duration-300 relative"
+                  >
+                    <div>
+                      <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="font-heading text-2xl text-[#785212] font-semibold">
+                          {step.num}
+                        </span>
+                        <span className="text-[#785212] text-xs" aria-hidden="true">
+                          ✦
+                        </span>
+                      </div>
+                      <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
+                        {step.title}
+                      </h3>
+                      <p className="font-body text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
+                        {step.description}
+                      </p>
                     </div>
-                    <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
-                      Share your story
-                    </h3>
-                    <p className="font-body text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
-                      Tell me your wishes, your style and your date. I listen first.
-                    </p>
                   </div>
-                </div>
-
-                {/* 02: I design */}
-                <div className="p-7 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/35 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(0,117,110,0.04)] hover:shadow-[0_12px_28px_-6px_rgba(212,165,90,0.22)] hover:border-[#d4a55a] hover:-translate-y-1.5 transition-all duration-300 relative group">
-                  <div>
-                    {/* Gold accent line */}
-                    <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-heading text-2xl text-[#785212] font-semibold">02</span>
-                      <span className="text-[#785212] text-xs">✦</span>
-                    </div>
-                    <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
-                      I design
-                    </h3>
-                    <p className="font-body text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
-                      Your feelings become a custom invitation, made with detail and care.
-                    </p>
-                  </div>
-                </div>
-
-                {/* 03: Printing, arranged for you */}
-                <div className="p-7 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/35 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(0,117,110,0.04)] hover:shadow-[0_12px_28px_-6px_rgba(212,165,90,0.22)] hover:border-[#d4a55a] hover:-translate-y-1.5 transition-all duration-300 relative group">
-                  <div>
-                    {/* Gold accent line */}
-                    <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-heading text-2xl text-[#785212] font-semibold">03</span>
-                      <span className="text-[#785212] text-xs">✦</span>
-                    </div>
-                    <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
-                      Printing, arranged for you
-                    </h3>
-                    <p className="font-body text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
-                      Printing depends on my work schedule. When it is full, my trusted premium printing partners handle it with the same quality. I arrange everything, so you only enjoy the design.
-                    </p>
-                  </div>
-                </div>
-
-                {/* 04: Delivered with love */}
-                <div className="p-7 rounded-2xl bg-[#f9fbf8] border border-[#d4a55a]/35 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(0,117,110,0.04)] hover:shadow-[0_12px_28px_-6px_rgba(212,165,90,0.22)] hover:border-[#d4a55a] hover:-translate-y-1.5 transition-all duration-300 relative group">
-                  <div>
-                    {/* Gold accent line */}
-                    <div className="w-full h-[1.5px] bg-gradient-to-r from-[#d4a55a] via-[#f3e3c0] to-transparent mb-5" />
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-heading text-2xl text-[#785212] font-semibold">04</span>
-                      <span className="text-[#785212] text-xs">✦</span>
-                    </div>
-                    <h3 className="font-heading text-xl sm:text-[22px] text-[#005a55] mb-2 leading-snug">
-                      Delivered with love
-                    </h3>
-                    <p className="font-body text-sm text-[#0d3b38]/85 font-normal leading-relaxed">
-                      Every detail is checked, and your invitation reaches you ready to share.
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
 
-              {/* Bottom Script Tagline from Image 1 */}
               <div className="pt-6 space-y-3">
                 <div className="flex items-center justify-center gap-4 max-w-xs mx-auto">
                   <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#d4a55a] to-transparent" />
-                  <span className="text-[#785212] text-xs">✦</span>
+                  <span className="text-[#785212] text-xs" aria-hidden="true">
+                    ✦
+                  </span>
                   <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#d4a55a] to-transparent" />
                 </div>
                 <div className="font-script text-2xl sm:text-3xl text-[#00756e] text-center">
@@ -1048,12 +564,15 @@ export function RenovatedPortfolio() {
 
           {/* Wavy Divider from White to Ivory (#f9fbf8) */}
           <div className="w-full overflow-hidden leading-none block bg-white">
-            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block">
-              <path d="M0,25 C340,55 700,5 1060,35 C1240,50 1380,15 1440,25 L1440,60 L0,60 Z" fill="#f9fbf8" />
+            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block" aria-hidden="true">
+              <path
+                d="M0,25 C340,55 700,5 1060,35 C1240,50 1380,15 1440,25 L1440,60 L0,60 Z"
+                fill="#f9fbf8"
+              />
             </svg>
           </div>
 
-          {/* 3c. Why Zauqode / The Zauqode Difference (Ivory Band) */}
+          {/* 3c. Why Zauqode Section (Ivory Band) */}
           <section id="why-zauqode" className="bg-[#f9fbf8] py-16 sm:py-22 px-6 scroll-mt-20">
             <div className="max-w-5xl mx-auto space-y-12">
               <div className="text-center space-y-2.5 max-w-2xl mx-auto">
@@ -1061,22 +580,34 @@ export function RenovatedPortfolio() {
                   The Zauqode Difference
                 </div>
                 <h2 className="font-heading text-3xl sm:text-4xl text-[#005a55]">
-                  Why <span className="font-script text-4xl sm:text-5xl text-[#00756e] font-normal">Zauqode</span>?
+                  Why{" "}
+                  <span className="font-script text-4xl sm:text-5xl text-[#00756e] font-normal">
+                    Zauqode
+                  </span>
+                  ?
                 </h2>
                 <p className="text-sm sm:text-base text-[#0d3b38]/85 font-normal leading-relaxed pt-1">
-                  Every commission is crafted personally from initial concept to final delivery—for discerning clients who value genuine artistry over templates.
+                  Every commission is crafted personally from initial concept to final delivery—for
+                  discerning clients who value genuine artistry over templates.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-                {whyPillars.map((pillar) => (
+                {WHY_PILLARS.map((pillar) => (
                   <div
                     key={pillar.num}
                     className="group p-6 sm:p-7 rounded-2xl bg-white/85 border border-[#d4a55a]/30 border-l-2 border-l-[#d4a55a] hover:bg-white hover:border-[#d4a55a]/70 hover:border-l-[#00756e] hover:shadow-[0_12px_28px_-8px_rgba(0,90,85,0.08)] transition-all duration-300 space-y-2.5"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-ui font-semibold text-xs tracking-[0.2em] text-[#785212]">{pillar.num}</span>
-                      <span className="text-[#785212] text-xs opacity-85 group-hover:opacity-100 transition-opacity">✦</span>
+                      <span className="font-ui font-semibold text-xs tracking-[0.2em] text-[#785212]">
+                        {pillar.num}
+                      </span>
+                      <span
+                        className="text-[#785212] text-xs opacity-85 group-hover:opacity-100 transition-opacity"
+                        aria-hidden="true"
+                      >
+                        ✦
+                      </span>
                     </div>
                     <h3 className="font-heading text-xl sm:text-2xl text-[#005a55] leading-snug">
                       {pillar.title}
@@ -1092,8 +623,11 @@ export function RenovatedPortfolio() {
 
           {/* Wavy Divider from Ivory (#f9fbf8) to Mist Band */}
           <div className="w-full overflow-hidden leading-none block bg-[#f9fbf8]">
-            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block">
-              <path d="M0,20 C360,50 720,0 1080,35 C1260,50 1380,20 1440,25 L1440,60 L0,60 Z" fill="#eef8f3" />
+            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block" aria-hidden="true">
+              <path
+                d="M0,20 C360,50 720,0 1080,35 C1260,50 1380,20 1440,25 L1440,60 L0,60 Z"
+                fill="#eef8f3"
+              />
             </svg>
           </div>
 
@@ -1105,58 +639,23 @@ export function RenovatedPortfolio() {
                   Selected Portfolio
                 </div>
                 <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#00756e] leading-snug">
-                  Meaningful stories, <span className="font-script text-3xl sm:text-4xl md:text-5xl font-normal">thoughtfully shaped</span>.
+                  Meaningful stories,{" "}
+                  <span className="font-script text-3xl sm:text-4xl md:text-5xl font-normal">
+                    thoughtfully shaped
+                  </span>
+                  .
                 </h2>
               </div>
 
-              {/* 4 Curated Cards: horizontal scroll on mobile, 2x2 / 4-col grid on tablet/desktop */}
+              {/* 4 Curated Cards */}
               <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 -mx-4 px-4 scroll-pl-4 no-scrollbar sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 w-auto sm:w-full">
-                {homeSelectedWorks.map((item) => (
-                  <article
+                {HOME_SELECTED_WORKS.map((item) => (
+                  <PortfolioCard
                     key={item.id}
-                    onClick={() => {
-                      if (item.category === "invitations" || item.category === "stalls") {
-                        const idx = invitationWorks.findIndex((inv) => inv.id === item.id);
-                        setActiveInvitationIndex(idx !== -1 ? idx : 0);
-                      } else if (item.videoUrl) {
-                        setActiveMockup({
-                          title: item.name + " — Video Invitation",
-                          videoUrl: item.videoUrl,
-                        });
-                      } else if (item.url) {
-                        setActiveMockup({
-                          url: item.url,
-                          title: item.name,
-                          mobileImg: item.mobileImg || "",
-                          canIframe: !!item.canIframe,
-                        });
-                      } else {
-                        window.location.hash = "#contact";
-                      }
-                    }}
-                    className={`w-[215px] shrink-0 snap-start sm:w-auto tilt-card-container ${item.theme || ""} relative overflow-hidden group cursor-pointer`}
-                    style={item.thumb ? { backgroundImage: `url(${item.thumb})`, backgroundSize: "cover", backgroundPosition: "center" } : {}}
-                    onMouseMove={handleCardMouseMove}
-                    onMouseLeave={handleCardMouseLeave}
-                    onMouseEnter={handleMouseEnter}
-                  >
-                    {item.thumb && (
-                      <div className="absolute inset-0 bg-gradient-to-b from-[#002d2a]/90 via-[#003430]/65 to-[#002320]/95 z-0 transition-opacity duration-300 group-hover:opacity-90" />
-                    )}
-                    <div className="card-inner-gold" />
-                    <div className="relative z-10 flex justify-between items-center text-[11px] sm:text-xs font-ui font-semibold tracking-wider sm:tracking-widest uppercase">
-                      <span className={item.thumb ? "text-[#fff3d6]" : ""}>{item.label}</span>
-                      <span className="text-[#edd08b]">✦</span>
-                    </div>
-
-                    <div className="relative z-10 text-center my-auto">
-                      <div className={`font-script text-2xl sm:text-3xl lg:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>{item.name}</div>
-                      <div className={`font-heading text-xs sm:text-sm mt-1 leading-snug ${item.thumb ? "text-[#fff3d6]" : "opacity-90"}`}>{item.sub}</div>
-                      <div className="inline-flex items-center justify-center mt-2.5 sm:mt-3 px-3 sm:px-4 py-1 rounded-full border border-[#d4a55a] bg-[#002d2a]/60 text-[#fff3d6] font-ui font-semibold text-[10.5px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
-                        Preview
-                      </div>
-                    </div>
-                  </article>
+                    item={item}
+                    variant="home"
+                    onSelect={handleSelectWork}
+                  />
                 ))}
                 <div className="shrink-0 w-1 sm:hidden" aria-hidden="true" />
               </div>
@@ -1166,29 +665,33 @@ export function RenovatedPortfolio() {
               </div>
 
               <div className="text-center pt-4">
-                <a
-                  href="#works"
-                  className="btn-pill-renovated"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
+                <a href="#works" className="btn-pill-renovated">
                   <span>All works</span>
-                  <span className="arrow-move"><ArrowIcon direction="right" /></span>
+                  <span className="arrow-move">
+                    <ArrowIcon direction="right" />
+                  </span>
                 </a>
               </div>
 
               {/* Client Words / Testimonials */}
-              <div className="pt-12 border-t border-[#d4a55a]/25 space-y-8">
+              <div ref={marqueeRef} className="pt-12 border-t border-[#d4a55a]/25 space-y-8">
                 <div className="text-center space-y-2">
                   <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
                     Client Words
                   </div>
                   <h3 className="font-heading text-2xl sm:text-3xl text-[#00756e] leading-snug">
-                    Cherished <span className="font-script text-3xl sm:text-4xl font-normal">Celebrations</span>
+                    Cherished{" "}
+                    <span className="font-script text-3xl sm:text-4xl font-normal">
+                      Celebrations
+                    </span>
                   </h3>
                 </div>
 
-                <div className="testimonial-marquee-wrap -mx-4 sm:mx-0 w-auto sm:w-full py-1">
+                <div
+                  className={`testimonial-marquee-wrap -mx-4 sm:mx-0 w-auto sm:w-full py-1${
+                    marqueeVisible ? "" : " testimonial-marquee-paused"
+                  }`}
+                >
                   <div className="testimonial-marquee-track">
                     {[0, 1].map((setIdx) => (
                       <div
@@ -1198,13 +701,18 @@ export function RenovatedPortfolio() {
                         }`}
                         aria-hidden={setIdx === 1}
                       >
-                        {testimonials.map((t, idx) => (
+                        {TESTIMONIALS.map((t, idx) => (
                           <div
                             key={`${setIdx}-${idx}`}
                             className="w-[250px] sm:w-[285px] shrink-0 p-4 sm:p-5 rounded-2xl bg-white border border-[#d4a55a]/35 shadow-sm flex flex-col justify-between gap-3 relative"
                           >
                             <div>
-                              <span className="font-heading text-2xl sm:text-3xl text-[#785212] leading-none block">“</span>
+                              <span
+                                className="font-heading text-2xl sm:text-3xl text-[#785212] leading-none block"
+                                aria-hidden="true"
+                              >
+                                “
+                              </span>
                               <p className="font-body text-[13px] sm:text-sm text-[#0d3b38]/90 font-normal leading-relaxed -mt-1.5">
                                 {t.quote}
                               </p>
@@ -1229,13 +737,16 @@ export function RenovatedPortfolio() {
 
           {/* Wavy Divider to Deep Teal Section */}
           <div className="w-full overflow-hidden leading-none block bg-[#eef8f3]">
-            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block">
-              <path d="M0,30 C360,0 720,60 1080,25 C1240,10 1380,45 1440,30 L1440,60 L0,60 Z" fill="#005a55" />
+            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block" aria-hidden="true">
+              <path
+                d="M0,30 C360,0 720,60 1080,25 C1240,10 1380,45 1440,30 L1440,60 L0,60 Z"
+                fill="#005a55"
+              />
             </svg>
           </div>
 
-          {/* 5. Teal Wavy Section */}
-          <section className="bg-[#005a55] text-white py-24 px-6">
+          {/* 5. Teal Wavy CTA Section */}
+          <section className="bg-[#005a55] text-white py-20 sm:py-24 px-6">
             <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
               <div className="md:col-span-5 space-y-2 text-center md:text-left">
                 <div className="font-script text-5xl sm:text-6xl text-[#f3e3c0]">Let's Create</div>
@@ -1252,12 +763,17 @@ export function RenovatedPortfolio() {
                 </p>
                 <a
                   href="#contact"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                    window.history.pushState(null, "", "#contact");
+                  }}
                   className="btn-pill-renovated btn-pill-light"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
                 >
                   <span>Say hello</span>
-                  <span className="arrow-move"><ArrowIcon direction="right" /></span>
+                  <span className="arrow-move">
+                    <ArrowIcon direction="right" />
+                  </span>
                 </a>
               </div>
             </div>
@@ -1265,19 +781,29 @@ export function RenovatedPortfolio() {
 
           {/* Wavy Divider to Contact Section */}
           <div className="w-full overflow-hidden leading-none block bg-transparent -mt-[2px] relative z-[2]">
-            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 block" shapeRendering="geometricPrecision">
-              <path d="M-2,-5 L1442,-5 L1442,30 C1360,20 1200,55 960,35 C640,5 320,55 -2,25 Z" fill="#005a55" />
+            <svg
+              viewBox="0 0 1440 60"
+              preserveAspectRatio="none"
+              className="w-full h-12 block"
+              shapeRendering="geometricPrecision"
+              aria-hidden="true"
+            >
+              <path
+                d="M-2,-5 L1442,-5 L1442,30 C1360,20 1200,55 960,35 C640,5 320,55 -2,25 Z"
+                fill="#005a55"
+              />
             </svg>
           </div>
 
-          {/* 6. Contact Section (On Home Page) */}
-          <section id="contact" className="py-20 px-6 max-w-2xl mx-auto space-y-8 scroll-mt-20">
+          {/* 6. Contact Section */}
+          <section id="contact" className="py-16 sm:py-20 px-6 max-w-2xl mx-auto space-y-8 scroll-mt-20">
             <div className="text-center space-y-2">
               <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
                 Start a Conversation
               </div>
               <h2 className="font-heading text-3xl sm:text-4xl text-[#00756e] leading-snug">
-                Let’s talk about your <span className="font-script text-4xl sm:text-5xl font-normal">celebration</span>.
+                Let’s talk about your{" "}
+                <span className="font-script text-4xl sm:text-5xl font-normal">celebration</span>.
               </h2>
             </div>
 
@@ -1335,10 +861,14 @@ export function RenovatedPortfolio() {
                     onChange={(e) => setForm({ ...form, service: e.target.value })}
                     className="w-full min-h-[46px] bg-white border border-[#d4a55a]/50 rounded-xl px-4 py-3 text-sm font-normal text-[#0d3b38] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]/35 focus:border-[#00756e]"
                   >
-                    <option value="" disabled hidden>Select an offering...</option>
+                    <option value="" disabled hidden>
+                      Select an offering...
+                    </option>
                     <option value="Occasion & Wedding Website">Occasion &amp; Wedding Website</option>
                     <option value="Bespoke Invitation Suite">Bespoke Invitation Suite</option>
-                    <option value="Full Heirloom Bundle (Web + Invite + Video)">Full Heirloom Bundle (Web + Invite + Video)</option>
+                    <option value="Full Heirloom Bundle (Web + Invite + Video)">
+                      Full Heirloom Bundle (Web + Invite + Video)
+                    </option>
                     <option value="Video Invitation">Video Invitation</option>
                     <option value="Business Website">Business Website</option>
                   </select>
@@ -1360,7 +890,9 @@ export function RenovatedPortfolio() {
 
                 <button type="submit" className="btn-pill-renovated w-full justify-center">
                   <span>Send message</span>
-                  <span className="arrow-move"><ArrowIcon direction="right" /></span>
+                  <span className="arrow-move">
+                    <ArrowIcon direction="right" />
+                  </span>
                 </button>
 
                 <p className="text-center text-[13px] text-[#0d3b38]/85 font-normal pt-1">
@@ -1384,132 +916,46 @@ export function RenovatedPortfolio() {
       )}
 
       {/* =====================================================================
-          VIEW: WORKS (#works — Portfolio Catalogue)
+          VIEW: WORKS (#works — Lazy-Loaded Portfolio Catalogue)
           ===================================================================== */}
-      {currentRoute === "works" && (() => {
-        const filteredWorks = works.filter(
-          (w) => activeFilter === "all" || w.category === activeFilter
-        );
-        const categoryCounts: Record<string, number> = {
-          all: works.length,
-          websites: works.filter((w) => w.category === "websites").length,
-          invitations: works.filter((w) => w.category === "invitations").length,
-          stalls: works.filter((w) => w.category === "stalls").length,
-          videos: works.filter((w) => w.category === "videos").length,
-          business: works.filter((w) => w.category === "business").length,
-        };
-
-        return (
-          <section className="pt-24 sm:pt-32 pb-16 px-3 sm:px-6 max-w-5xl mx-auto space-y-6 sm:space-y-10 w-full">
-            <div className="text-center space-y-2 sm:space-y-3">
-              <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
-                Portfolio Catalogue
-              </div>
-              <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#00756e] leading-snug">
-                A collection of meaningful creations.
-              </h1>
-            </div>
-
-            {/* Catalogue Filter Bar */}
-            <div className="space-y-3">
-              <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-2.5 max-w-full px-1">
-                {[
-                  { id: "all", label: "All" },
-                  { id: "websites", label: "Occasion Websites" },
-                  { id: "invitations", label: "Invitations" },
-                  { id: "stalls", label: "Stall Boards" },
-                  { id: "videos", label: "Video Invites" },
-                  { id: "business", label: "Business Websites" },
-                ].map((f) => (
-                  <button
-                    key={f.id}
-                    type="button"
-                    onClick={() => setActiveFilter(f.id)}
-                    className={`min-h-[44px] font-ui font-semibold text-[11px] sm:text-xs tracking-wider sm:tracking-widest uppercase px-4 py-2 rounded-full border transition-all inline-flex items-center gap-1.5 ${
-                      activeFilter === f.id
-                        ? "bg-[#005a55] text-white border-[#005a55] shadow-sm"
-                        : "border-[#b8893c]/60 text-[#0d3b38] hover:border-[#005a55] bg-white/80"
-                    }`}
-                  >
-                    <span>{f.label}</span>
-                    <span className="opacity-85 text-[10px] sm:text-[11px]">
-                      ({categoryCounts[f.id] ?? 0})
-                    </span>
-                  </button>
-                ))}
-              </div>
-
-              <div className="text-center font-ui font-semibold text-[11px] tracking-[0.2em] uppercase text-[#785212]">
-                Showing {filteredWorks.length} {filteredWorks.length === 1 ? "creation" : "creations"}
-              </div>
-            </div>
-
-            {/* 2-Column Mobile / 3-Column Desktop Catalogue Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8 w-full">
-              {filteredWorks.map((item) => (
-                <article
-                  key={item.id}
-                  onClick={() => {
-                    if (item.category === "invitations" || item.category === "stalls") {
-                      const idx = invitationWorks.findIndex((inv) => inv.id === item.id);
-                      setActiveInvitationIndex(idx !== -1 ? idx : 0);
-                    } else if (item.videoUrl) {
-                      setActiveMockup({
-                        title: item.name + " — Video Invitation",
-                        videoUrl: item.videoUrl,
-                      });
-                    } else if (item.url) {
-                      setActiveMockup({
-                        url: item.url,
-                        title: item.name,
-                        mobileImg: item.mobileImg || "",
-                        canIframe: !!item.canIframe,
-                      });
-                    } else {
-                      window.location.hash = "#contact";
-                    }
-                  }}
-                  className={`tilt-card-container catalogue-card ${item.theme || ""} relative overflow-hidden group cursor-pointer`}
-                  style={item.thumb ? { backgroundImage: `url(${item.thumb})`, backgroundSize: "cover", backgroundPosition: "center" } : {}}
-                  onMouseMove={handleCardMouseMove}
-                  onMouseLeave={handleCardMouseLeave}
-                  onMouseEnter={handleMouseEnter}
-                >
-                  {item.thumb && (
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#002d2a]/90 via-[#003430]/65 to-[#002320]/95 z-0 transition-opacity duration-300 group-hover:opacity-90" />
-                  )}
-                  <div className="card-inner-gold" />
-                  <div className="relative z-10 flex justify-between items-center gap-1 text-[10.5px] sm:text-xs font-ui font-semibold tracking-wider sm:tracking-widest uppercase">
-                    <span className={`truncate ${item.thumb ? "text-[#fff3d6]" : ""}`}>{item.label}</span>
-                    <span className="text-[#edd08b] shrink-0">✦</span>
-                  </div>
-
-                  <div className="relative z-10 text-center my-auto px-1">
-                    <div className={`font-script text-[21px] sm:text-3xl lg:text-4xl leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}>
-                      {item.name}
-                    </div>
-                    <div className={`font-heading text-xs sm:text-sm mt-1 leading-snug line-clamp-2 ${item.thumb ? "text-[#fff3d6]" : "opacity-90"}`}>
-                      {item.sub}
-                    </div>
-                    <div className="inline-flex items-center justify-center mt-2.5 sm:mt-3 px-3 sm:px-4 py-1 rounded-full border border-[#d4a55a] bg-[#002d2a]/60 text-[#fff3d6] font-ui font-semibold text-[10.5px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
-                      Preview
-                    </div>
-                  </div>
-                </article>
+      {currentRoute === "works" && (
+        <Suspense
+          fallback={
+            <div className="pt-32 pb-24 px-6 max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
+              {[0, 1, 2, 3, 4, 5].map((n) => (
+                <div
+                  key={n}
+                  className="aspect-[3/4] rounded-2xl bg-[#eef8f3] border border-[#d4a55a]/25 animate-pulse"
+                />
               ))}
             </div>
-          </section>
-        );
-      })()}
+          }
+        >
+          <WorksCatalogueView
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            onSelectWork={handleSelectWork}
+          />
+        </Suspense>
+      )}
 
       {/* Wavy Divider into Deep Teal Footer */}
       <div className="w-full overflow-hidden leading-none block bg-transparent -mb-[2px] relative z-[2]">
-        <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 sm:h-14 block" shapeRendering="geometricPrecision">
-          <path d="M-2,20 C360,50 720,5 1080,40 C1260,55 1380,25 1442,30 L1442,65 L-2,65 Z" fill="#005a55" />
+        <svg
+          viewBox="0 0 1440 60"
+          preserveAspectRatio="none"
+          className="w-full h-12 sm:h-14 block"
+          shapeRendering="geometricPrecision"
+          aria-hidden="true"
+        >
+          <path
+            d="M-2,20 C360,50 720,5 1080,40 C1260,55 1380,25 1442,30 L1442,65 L-2,65 Z"
+            fill="#005a55"
+          />
         </svg>
       </div>
 
-      {/* 6. Deep Teal Footer */}
+      {/* Deep Teal Footer */}
       <footer className="bg-[#005a55] text-[#f3e3c0] py-16 px-6 text-center space-y-6">
         <div
           className="text-xl sm:text-2xl text-[#f3e3c0]"
@@ -1523,23 +969,41 @@ export function RenovatedPortfolio() {
         </div>
         <div className="font-script text-2xl sm:text-3xl text-[#edd08b]">Design . Code . Elevate</div>
 
-        {/* Direct Contact Channels in Footer */}
         <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-12 py-4 border-y border-[#d4a55a]/25 max-w-xl mx-auto w-full">
           <div className="flex flex-col items-center gap-0.5">
-            <span className="font-ui font-semibold text-xs uppercase tracking-wider text-[#ecd08b]">Email</span>
-            <a href="mailto:zauqode@gmail.com" className="inline-flex items-center min-h-[44px] px-2 font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors">
+            <span className="font-ui font-semibold text-xs uppercase tracking-wider text-[#ecd08b]">
+              Email
+            </span>
+            <a
+              href="mailto:zauqode@gmail.com"
+              className="inline-flex items-center min-h-[44px] px-2 font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors"
+            >
               zauqode@gmail.com
             </a>
           </div>
           <div className="flex flex-col items-center gap-0.5">
-            <span className="font-ui font-semibold text-xs uppercase tracking-wider text-[#ecd08b]">Instagram</span>
-            <a href="https://instagram.com/zauqode" target="_blank" rel="noreferrer" className="inline-flex items-center min-h-[44px] px-2 font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors">
+            <span className="font-ui font-semibold text-xs uppercase tracking-wider text-[#ecd08b]">
+              Instagram
+            </span>
+            <a
+              href="https://instagram.com/zauqode"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center min-h-[44px] px-2 font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors"
+            >
               @zauqode
             </a>
           </div>
           <div className="flex flex-col items-center gap-0.5">
-            <span className="font-ui font-semibold text-xs uppercase tracking-wider text-[#ecd08b]">WhatsApp</span>
-            <a href="https://wa.me/918946077234" target="_blank" rel="noreferrer" className="inline-flex items-center min-h-[44px] px-2 font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors">
+            <span className="font-ui font-semibold text-xs uppercase tracking-wider text-[#ecd08b]">
+              WhatsApp
+            </span>
+            <a
+              href="https://wa.me/918946077234"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center min-h-[44px] px-2 font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors"
+            >
               +91 89460 77234
             </a>
           </div>
@@ -1550,249 +1014,38 @@ export function RenovatedPortfolio() {
         </div>
       </footer>
 
-      {/* Elite Full-Screen Invitation Modal */}
-      {activeInv && (
-        <div
-          className="fixed inset-0 z-[99999] bg-[#021816]/85 backdrop-blur-md flex items-center justify-center p-2.5 sm:p-6 lg:p-8 animate-fade-in"
-          onClick={() => setActiveInvitationIndex(null)}
-        >
-          <div
-            className="relative w-full max-w-5xl max-h-[92dvh] bg-gradient-to-br from-[#041c19] via-[#021816] to-[#01100f] border border-[#d4a55a]/40 rounded-2xl sm:rounded-3xl shadow-[0_25px_80px_rgba(0,0,0,0.85),0_0_50px_rgba(205,238,227,0.15)] overflow-hidden flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Top Header Bar */}
-            <div className="flex items-center justify-between gap-2 px-4 sm:px-8 py-3 border-b border-[#d4a55a]/20 bg-[#011412]/80 shrink-0">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-3 min-w-0">
-                <span className="font-ui font-semibold text-[11px] sm:text-xs tracking-[0.14em] sm:tracking-[0.24em] uppercase text-[#ecd08b] truncate">
-                  {activeInv.category === "stalls" ? "Wedding Event Stall Board" : "Bespoke Invitation Suite"}
-                </span>
-                <span className="hidden sm:inline font-ui text-xs text-[#cdeee3]/50" aria-hidden="true">•</span>
-                <span className="font-ui font-medium text-[11px] sm:text-xs tracking-[0.16em] text-[#cdeee3]/90 whitespace-nowrap tabular-nums">
-                  {String(activeInvitationIndex! + 1).padStart(2, "0")} / {String(invitationWorks.length).padStart(2, "0")}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                {/* Previous & Next Navigation Arrows */}
-                <button
-                  type="button"
-                  onClick={() =>
-                    setActiveInvitationIndex((prev) =>
-                      prev !== null ? (prev - 1 + invitationWorks.length) % invitationWorks.length : null
-                    )
-                  }
-                  className="w-11 h-11 shrink-0 rounded-full border border-[#d4a55a]/45 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#ecd08b] flex items-center justify-center transition-all cursor-pointer text-sm"
-                  aria-label="Previous Invitation"
-                  title="Previous"
-                >
-                  <ArrowIcon direction="left" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setActiveInvitationIndex((prev) =>
-                      prev !== null ? (prev + 1) % invitationWorks.length : null
-                    )
-                  }
-                  className="w-11 h-11 shrink-0 rounded-full border border-[#d4a55a]/45 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#ecd08b] flex items-center justify-center transition-all cursor-pointer text-sm"
-                  aria-label="Next Invitation"
-                  title="Next"
-                >
-                  <ArrowIcon direction="right" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveInvitationIndex(null)}
-                  className="w-11 h-11 shrink-0 rounded-full border border-[#d4a55a]/45 bg-white/5 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#ecd08b] flex items-center justify-center transition-all cursor-pointer text-sm sm:ml-1"
-                  aria-label="Close"
-                  title="Close (Esc)"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-
-            {/* Main 2-Column Content (Scrolls on mobile without squishing artwork; splits cleanly on desktop) */}
-            <div className="flex flex-col md:flex-row flex-1 min-h-0 overflow-y-auto md:overflow-hidden overscroll-contain">
-              {/* Left Side: Full Invitation Artwork */}
-              <div className="w-full md:w-[52%] lg:w-[55%] shrink-0 p-4 sm:p-6 lg:p-8 flex items-center justify-center bg-[#010f0e]/60 relative group">
-                <div className="relative w-full flex items-center justify-center">
-                  <img
-                    src={activeInv.thumb || activeInv.mobileImg}
-                    alt={activeInv.name}
-                    className="max-h-[44dvh] sm:max-h-[54vh] md:max-h-[70vh] w-auto max-w-full object-contain rounded-xl sm:rounded-2xl shadow-[0_15px_45px_rgba(0,0,0,0.6)] border border-[#d4a55a]/30 transition-transform duration-700 ease-out md:group-hover:scale-[1.03] select-none"
-                  />
-                </div>
-              </div>
-
-              {/* Right Side: 3-Part Description */}
-              <div className="w-full md:w-[48%] lg:w-[45%] shrink-0 md:shrink md:overflow-y-auto p-5 sm:p-8 flex flex-col justify-between border-t md:border-t-0 md:border-l border-[#d4a55a]/20 bg-[#031816]/75 space-y-5 sm:space-y-6">
-                <div className="space-y-4 sm:space-y-5">
-                  {/* Part 1: Couple or occasion name in the script font */}
-                  <div className="space-y-1.5 border-b border-[#d4a55a]/20 pb-3.5 sm:pb-4">
-                    <span className="block font-ui font-semibold text-[11px] uppercase tracking-[0.18em] sm:tracking-[0.22em] text-[#ecd08b]">
-                      {activeInv.sub}
-                    </span>
-                    <h3 className="font-script text-3xl sm:text-4xl lg:text-5xl text-[#f3e3c0] leading-tight">
-                      {activeInv.name}
-                    </h3>
-                  </div>
-
-                  {/* Part 2: Story in the Jost font */}
-                  <div className="space-y-1.5">
-                    <span className="block font-ui font-semibold text-[11px] uppercase tracking-[0.18em] text-[#ecd08b]">
-                      Design Story
-                    </span>
-                    <p className="font-body text-sm sm:text-base text-[#f3e3c0]/95 font-normal leading-relaxed border-l-2 border-[#d4a55a]/65 pl-3.5 italic">
-                      "{activeInv.story}"
-                    </p>
-                  </div>
-
-                  {/* Part 3: Small details (Occasion, Style, Included) */}
-                  <div className="space-y-3.5 pt-1">
-                    <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-2.5 text-left">
-                      <div className="p-3 rounded-xl bg-white/[0.03] border border-[#d4a55a]/25">
-                        <span className="block font-ui font-semibold text-[10.5px] uppercase tracking-wider text-[#ecd08b]">
-                          Occasion
-                        </span>
-                        <span className="font-body text-xs sm:text-sm text-[#f3e3c0] font-normal">
-                          {activeInv.occasion || "Celebration"}
-                        </span>
-                      </div>
-                      <div className="p-3 rounded-xl bg-white/[0.03] border border-[#d4a55a]/25">
-                        <span className="block font-ui font-semibold text-[10.5px] uppercase tracking-wider text-[#ecd08b]">
-                          Style &amp; Palette
-                        </span>
-                        <span className="font-body text-xs sm:text-sm text-[#f3e3c0] font-normal">
-                          {activeInv.style || "Bespoke Stationery"}
-                        </span>
-                      </div>
-                    </div>
-
-                    {activeInv.included && activeInv.included.length > 0 && (
-                      <div className="space-y-2">
-                        <span className="block font-ui font-semibold text-[10.5px] uppercase tracking-wider text-[#ecd08b]">
-                          {activeInv.category === "stalls" ? "Board Details" : "Suite Inclusions"}
-                        </span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {activeInv.included.map((item, idx) => (
-                            <span
-                              key={idx}
-                              className="px-2.5 py-1 rounded-full text-xs font-body font-normal bg-[#00756e]/30 text-[#e4f7f1] border border-[#d4a55a]/35"
-                            >
-                              ✦ {item}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* WhatsApp Booking Button */}
-                <div className="pt-4 border-t border-[#d4a55a]/20 space-y-2">
-                  <a
-                    href={`https://wa.me/918946077234?text=${encodeURIComponent(
-                      `Hi Zauqode, I saw your "${activeInv.name}" ${activeInv.category === "stalls" ? "wedding stall board" : "bespoke invitation"} and would love to design something similar for my upcoming event.`
-                    )}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 py-3 px-6 rounded-full bg-[#d4a55a] hover:bg-[#b8893c] text-[#021816] font-ui text-xs sm:text-sm font-semibold tracking-wider uppercase shadow-[0_4px_25px_rgba(212,165,90,0.35)] transition-all cursor-pointer"
-                  >
-                    Book a similar design
-                  </a>
-                  <p className="text-xs text-center text-[#cdeee3]/90 font-body">
-                    Direct consultation with me via WhatsApp
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Lazy-Loaded Modals */}
+      {activeInv && activeInvitationIndex !== null && (
+        <Suspense fallback={null}>
+          <InvitationShowcaseModal
+            activeInv={activeInv}
+            activeIndex={activeInvitationIndex}
+            totalCount={INVITATION_WORKS.length}
+            onPrev={() =>
+              setActiveInvitationIndex((prev) =>
+                prev !== null
+                  ? (prev - 1 + INVITATION_WORKS.length) % INVITATION_WORKS.length
+                  : null
+              )
+            }
+            onNext={() =>
+              setActiveInvitationIndex((prev) =>
+                prev !== null ? (prev + 1) % INVITATION_WORKS.length : null
+              )
+            }
+            onClose={() => setActiveInvitationIndex(null)}
+          />
+        </Suspense>
       )}
 
-      {/* Android Mobile Mockup Modal */}
       {activeMockup && (
-        <div
-          className="fixed inset-0 z-[99999] bg-[#041412]/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-3 overflow-y-auto transition-all duration-300"
-          onClick={() => setActiveMockup(null)}
-        >
-          <div
-            className="flex flex-col items-center gap-2 relative max-w-full my-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Top Bar */}
-            <div className="flex items-center justify-between gap-2 w-full max-w-[325px] sm:max-w-[365px] px-1.5 text-[#f3e3c0]">
-              <span className="font-heading text-sm sm:text-base tracking-wide truncate">{activeMockup.title}</span>
-              <button
-                type="button"
-                onClick={() => setActiveMockup(null)}
-                className="w-11 h-11 shrink-0 rounded-full border border-[#d4a55a] bg-white/10 hover:bg-[#d4a55a] hover:text-[#005a55] text-[#ecd08b] flex items-center justify-center transition-all cursor-pointer text-sm"
-                aria-label="Close"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Android Flagship Frame */}
-            <div className="w-[325px] sm:w-[365px] max-w-[90vw] h-[640px] sm:h-[780px] max-h-[85vh] sm:max-h-[89vh] bg-[#09201e] rounded-[30px] sm:rounded-[36px] p-[8px] sm:p-[9px] shadow-[0_0_0_2.5px_#d4a55a,0_0_0_5px_#031412,0_30px_80px_-10px_rgba(0,0,0,0.85)] relative flex flex-col">
-              <div className="flex-1 w-full h-full bg-white rounded-[23px] sm:rounded-[28px] overflow-hidden relative flex flex-col">
-                {/* Android Status Bar with Center Punch-Hole Camera */}
-                <div className="absolute top-0 inset-x-0 h-8 z-30 flex items-center justify-between px-4 sm:px-5 pointer-events-none text-[11px] font-medium text-neutral-900 bg-gradient-to-b from-white/95 via-white/80 to-transparent">
-                  <span>9:41</span>
-                  <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-black rounded-full z-35 border border-[#1a2c3f] flex items-center justify-center">
-                    <span className="w-1 h-1 rounded-full bg-[#132437]" />
-                  </div>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span>5G</span>
-                    <svg width="16" height="9" viewBox="0 0 18 10" fill="none" aria-hidden="true">
-                      <rect x="0.75" y="1" width="14.5" height="8" rx="1.8" stroke="currentColor" strokeWidth="1.2" />
-                      <rect x="2.2" y="2.4" width="10.2" height="5.2" rx="0.8" fill="currentColor" />
-                      <path d="M16.5 3.3V6.7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                    </svg>
-                  </span>
-                </div>
-
-                {/* Viewport */}
-                <div
-                  className={`w-full h-full pt-8 pb-3 bg-[#041412] ${
-                    activeMockup.videoUrl || activeMockup.canIframe
-                      ? "overflow-hidden flex items-center justify-center"
-                      : "overflow-y-auto no-scrollbar block"
-                  }`}
-                >
-                  {activeMockup.videoUrl ? (
-                    <video
-                      src={activeMockup.videoUrl}
-                      controls
-                      autoPlay
-                      playsInline
-                      className="w-full h-full object-contain"
-                    />
-                  ) : activeMockup.canIframe ? (
-                    <iframe
-                      src={activeMockup.url}
-                      className="w-full h-full border-0 bg-white"
-                      allow="fullscreen"
-                      title={activeMockup.title}
-                    />
-                  ) : (
-                    <img
-                      src={activeMockup.mobileImg}
-                      alt={activeMockup.title}
-                      className="w-full h-auto block"
-                    />
-                  )}
-                </div>
-
-                {/* Android Gesture Navigation Pill */}
-                <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-24 h-[3px] bg-black/45 rounded-full z-35 pointer-events-none" />
-              </div>
-            </div>
-          </div>
-        </div>
+        <Suspense fallback={null}>
+          <MobileMockupModal
+            activeMockup={activeMockup}
+            onClose={() => setActiveMockup(null)}
+          />
+        </Suspense>
       )}
     </div>
   );
 }
-

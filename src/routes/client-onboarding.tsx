@@ -13,6 +13,12 @@ export const Route = createFileRoute("/client-onboarding")({
       { name: "robots", content: "noindex, nofollow" },
       { name: "googlebot", content: "noindex, nofollow" },
     ],
+    links: [
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;700&display=swap",
+      },
+    ],
   }),
   component: ClientOnboardingPage,
 });

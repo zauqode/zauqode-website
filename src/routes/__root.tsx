@@ -99,8 +99,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/zauqode-logo.png", type: "image/png" },
-      { rel: "shortcut icon", href: "/zauqode-logo.png", type: "image/png" },
+      { rel: "icon", href: "/favicon.png", type: "image/png", sizes: "64x64" },
+      { rel: "shortcut icon", href: "/favicon.png", type: "image/png" },
       { rel: "apple-touch-icon", href: "/zauqode-logo.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
@@ -110,7 +110,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Antic+Didone&family=Croissant+One&family=Jost:wght@300;400;500&family=Poiret+One&family=Sacramento&family=Alice&family=Allura&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Manrope:wght@300;400;500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Antic+Didone&family=Croissant+One&family=Jost:wght@400;500&family=Manrope:wght@500;600&family=Sacramento&display=swap",
       },
     ],
   }),

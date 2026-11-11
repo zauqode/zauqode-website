@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./Hero.module.css";
 import { Button } from "./Button";
 import { HERO_MANTRA_SVGS } from "./heroMantraSvgs";
-import heroLogoPoster from "../../assets/hero-logo-poster.png";
+import heroLogoPoster from "../../assets/hero-logo-poster.webp";
 import heroLogoAnimWebp from "../../assets/hero-logo-anim.webp";
 import logoVideo from "../../assets/logo-video.webm";
 
@@ -21,15 +21,28 @@ export function Hero(_props: HeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const wsvgRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const glowRafRef = useRef<number | null>(null);
   const [activeWord, setActiveWord] = useState(HERO_MANTRA_SVGS[0]?.word ?? "emotion.");
   const [emblemMode, setEmblemMode] = useState<"poster" | "video" | "webp">("poster");
+  const [heroVisible, setHeroVisible] = useState(true);
 
-  // Choose transparent VP9 WebM on Chromium/Firefox or Animated WebP on Apple WebKit / iOS
+  // Choose transparent VP9 WebM on Chromium/Firefox, Animated WebP on Apple WebKit,
+  // or static WebP poster on reduced-motion / Data-Saver / 2G connections
   useEffect(() => {
     const reducedMotion =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion) {
+    const navConn = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean; effectiveType?: string };
+      }
+    ).connection;
+    const lowBandwidth =
+      !!navConn?.saveData ||
+      navConn?.effectiveType === "slow-2g" ||
+      navConn?.effectiveType === "2g";
+
+    if (reducedMotion || lowBandwidth) {
       setEmblemMode("poster");
       return;
     }
@@ -52,7 +65,29 @@ export function Hero(_props: HeroProps) {
     }
   }, []);
 
-  // Ensure audio stays muted across React hydration and loop playback runs cleanly
+  // Pause off-screen Hero video and CSS badge rotation cleanly via IntersectionObserver
+  useEffect(() => {
+    const sectionEl = heroRef.current;
+    if (!sectionEl || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry) {
+          setHeroVisible(entry.isIntersecting);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(sectionEl);
+    return () => {
+      observer.disconnect();
+      if (glowRafRef.current !== null) {
+        window.cancelAnimationFrame(glowRafRef.current);
+      }
+    };
+  }, []);
+
+  // Enforce muted looping & viewport-aware play/pause across React hydration
   useEffect(() => {
     if (emblemMode !== "video" || !videoRef.current) return;
     const el = videoRef.current;
@@ -60,8 +95,12 @@ export function Hero(_props: HeroProps) {
     el.muted = true;
     el.volume = 0;
     el.loop = true;
-    el.play().catch(() => {});
-  }, [emblemMode]);
+    if (heroVisible) {
+      el.play().catch(() => {});
+    } else {
+      el.pause();
+    }
+  }, [emblemMode, heroVisible]);
 
   // Stroke-by-stroke SVG handwriting cycle (~1s initial delay, 5.4s period, 4.7s fade-out)
   useEffect(() => {
@@ -72,7 +111,7 @@ export function Hero(_props: HeroProps) {
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (reducedMotion) {
+    if (reducedMotion || !heroVisible) {
       el.classList.remove(styles.out);
       el.innerHTML = HERO_MANTRA_SVGS[0]?.svg ?? "";
       setActiveWord(HERO_MANTRA_SVGS[0]?.word ?? "emotion.");
@@ -114,16 +153,27 @@ export function Hero(_props: HeroProps) {
         window.clearInterval(intervalId);
       }
     };
-  }, []);
+  }, [heroVisible]);
 
-  // Track mouse for subtle ambient mint glow
+  // Track pointer on fine-pointer desktops throttled with requestAnimationFrame
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    if (!heroRef.current) return;
-    const rect = heroRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    heroRef.current.style.setProperty("--gx", `${x}px`);
-    heroRef.current.style.setProperty("--gy", `${y}px`);
+    if (
+      !heroRef.current ||
+      typeof window === "undefined" ||
+      !window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    ) {
+      return;
+    }
+    const target = heroRef.current;
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+    if (glowRafRef.current !== null) return;
+    glowRafRef.current = window.requestAnimationFrame(() => {
+      const rect = target.getBoundingClientRect();
+      target.style.setProperty("--gx", `${clientX - rect.left}px`);
+      target.style.setProperty("--gy", `${clientY - rect.top}px`);
+      glowRafRef.current = null;
+    });
   };
 
   return (
@@ -209,6 +259,8 @@ export function Hero(_props: HeroProps) {
                 muted
                 playsInline
                 preload="auto"
+                width={580}
+                height={534}
                 aria-hidden="true"
                 className={styles.emblemMedia}
               />
@@ -216,6 +268,11 @@ export function Hero(_props: HeroProps) {
               <img
                 src={heroLogoAnimWebp}
                 alt=""
+                width={320}
+                height={294}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
                 aria-hidden="true"
                 className={styles.emblemMedia}
               />
@@ -223,6 +280,11 @@ export function Hero(_props: HeroProps) {
               <img
                 src={heroLogoPoster}
                 alt=""
+                width={512}
+                height={512}
+                loading="eager"
+                decoding="sync"
+                fetchPriority="high"
                 aria-hidden="true"
                 className={styles.emblemMedia}
               />
@@ -237,7 +299,10 @@ export function Hero(_props: HeroProps) {
       </div>
 
       {/* Bottom-Right Rotating Badge */}
-      <div className={styles.badgeContainer} aria-hidden="true">
+      <div
+        className={`${styles.badgeContainer}${heroVisible ? "" : ` ${styles.badgePaused}`}`}
+        aria-hidden="true"
+      >
         <svg viewBox="0 0 112 112" className={styles.rotatingSvg} aria-hidden="true">
           <defs>
             <path
