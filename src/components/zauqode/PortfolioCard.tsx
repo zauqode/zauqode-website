@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { ArrowIcon } from "@/components/zauqode-home/ArrowIcon";
 import { getOptimizedThumbSources, type WorkItem } from "./portfolioData";
 
 interface PortfolioCardProps {
@@ -7,9 +8,18 @@ interface PortfolioCardProps {
   onSelect: (item: WorkItem) => void;
 }
 
+function getPreviewCue(item: WorkItem): string {
+  if (item.category === "videos" || item.videoUrl) return "Motion Reel";
+  if (item.category === "invitations") return "Full Suite";
+  if (item.category === "stalls") return "Board View";
+  if (item.canIframe) return "Live Preview";
+  return "View Work";
+}
+
 /**
- * Shared Portfolio Card using responsive <picture> (AVIF -> WebP -> JPEG/PNG)
- * with lazy decoding, zero-CLS aspect ratio container, and pointer-only GPU tilt.
+ * Product-first Editorial Showcase Card:
+ * Displays 100% unobstructed, full-color artwork above an ivory caption footer
+ * so visitors immediately see every invitation and website at a glance.
  */
 export function PortfolioCard({ item, variant, onSelect }: PortfolioCardProps) {
   const [imgFailed, setImgFailed] = useState(false);
@@ -18,8 +28,11 @@ export function PortfolioCard({ item, variant, onSelect }: PortfolioCardProps) {
 
   const isHome = variant === "home";
   const sizes = isHome
-    ? "(max-width: 639px) 215px, (max-width: 1023px) 46vw, 240px"
+    ? "(max-width: 639px) 228px, (max-width: 1023px) 46vw, 240px"
     : "(max-width: 639px) 46vw, (max-width: 1023px) 45vw, 320px";
+
+  const previewCue = getPreviewCue(item);
+  const isVideo = item.category === "videos" || !!item.videoUrl;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     if (
@@ -39,7 +52,7 @@ export function PortfolioCard({ item, variant, onSelect }: PortfolioCardProps) {
       const rect = card.getBoundingClientRect();
       const x = (clientX - rect.left) / rect.width - 0.5;
       const y = (clientY - rect.top) / rect.height - 0.5;
-      card.style.transform = `rotateX(${-y * 12}deg) rotateY(${x * 12}deg) translateZ(6px)`;
+      card.style.transform = `translateY(-4px) rotateX(${-y * 5}deg) rotateY(${x * 5}deg)`;
       rafRef.current = null;
     });
   };
@@ -70,84 +83,83 @@ export function PortfolioCard({ item, variant, onSelect }: PortfolioCardProps) {
       aria-label={`Preview ${item.name} — ${item.label}`}
       className={
         isHome
-          ? `w-[215px] shrink-0 snap-start sm:w-auto tilt-card-container card-teal ${item.theme || ""} relative overflow-hidden group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]`
-          : `tilt-card-container catalogue-card card-teal ${item.theme || ""} relative overflow-hidden group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]`
+          ? "w-[228px] shrink-0 snap-start sm:w-auto showcase-card group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]"
+          : "showcase-card catalogue-card group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]"
       }
     >
-      {item.thumb && !imgFailed && (
-        <picture className="absolute inset-0 z-0 pointer-events-none block bg-[#002d2a]">
-          {sources && (
-            <>
-              <source
-                type="image/avif"
-                srcSet={`${sources.avif400} 400w, ${sources.avif800} 800w`}
-                sizes={sizes}
-              />
-              <source
-                type="image/webp"
-                srcSet={`${sources.webp400} 400w, ${sources.webp800} 800w`}
-                sizes={sizes}
-              />
-            </>
-          )}
-          <img
-            src={item.thumb}
-            alt=""
+      {/* Top Stage: 100% Bright, Unobstructed Product Artwork */}
+      <div className="showcase-media relative w-full aspect-[4/4.2] shrink-0 overflow-hidden bg-[#eef8f3]">
+        {item.thumb && !imgFailed ? (
+          <picture className="block w-full h-full">
+            {sources && (
+              <>
+                <source
+                  type="image/avif"
+                  srcSet={`${sources.avif400} 400w, ${sources.avif800} 800w`}
+                  sizes={sizes}
+                />
+                <source
+                  type="image/webp"
+                  srcSet={`${sources.webp400} 400w, ${sources.webp800} 800w`}
+                  sizes={sizes}
+                />
+              </>
+            )}
+            <img
+              src={item.thumb}
+              alt={`${item.name} — ${item.label}`}
+              loading="lazy"
+              decoding="async"
+              width={600}
+              height={630}
+              onError={() => setImgFailed(true)}
+              className="showcase-img w-full h-full object-cover object-top block"
+            />
+          </picture>
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-[#005a55] to-[#003430] flex items-center justify-center p-4 text-center">
+            <span className="font-script text-2xl sm:text-3xl text-[#f3e3c0]">{item.name}</span>
+          </div>
+        )}
+
+        {/* Discreet corner play indicator only on video invitations */}
+        {isVideo && (
+          <span
+            className="absolute bottom-2.5 right-2.5 w-9 h-9 rounded-full bg-[#021816]/80 border border-[#d4a55a]/80 text-[#f3e3c0] flex items-center justify-center shadow-md pointer-events-none"
             aria-hidden="true"
-            loading="lazy"
-            decoding="async"
-            width={600}
-            height={800}
-            onError={() => setImgFailed(true)}
-            className="w-full h-full object-cover"
-          />
-        </picture>
-      )}
-
-      {item.thumb && (
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-[#002d2a]/90 via-[#003430]/65 to-[#002320]/95 z-0 transition-opacity duration-300 group-hover:opacity-90 pointer-events-none"
-          aria-hidden="true"
-        />
-      )}
-
-      <div className="card-inner-gold" />
-
-      <div
-        className={
-          isHome
-            ? "relative z-10 flex justify-between items-center text-[11px] sm:text-xs font-ui font-semibold tracking-wider sm:tracking-widest uppercase"
-            : "relative z-10 flex justify-between items-center gap-1 text-[10.5px] sm:text-xs font-ui font-semibold tracking-wider sm:tracking-widest uppercase"
-        }
-      >
-        <span className={`${isHome ? "" : "truncate "}${item.thumb ? "text-[#fff3d6]" : ""}`}>
-          {item.label}
-        </span>
-        <span className={`text-[#edd08b]${isHome ? "" : " shrink-0"}`} aria-hidden="true">
-          ✦
-        </span>
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+              <path d="M3 1.75L10.5 6L3 10.25V1.75Z" />
+            </svg>
+          </span>
+        )}
       </div>
 
-      <div className={`relative z-10 text-center my-auto${isHome ? "" : " px-1"}`}>
-        <div
-          className={`font-script ${
-            isHome ? "text-2xl sm:text-3xl lg:text-4xl" : "text-[21px] sm:text-3xl lg:text-4xl"
-          } leading-tight ${item.thumb ? "text-white drop-shadow-md" : ""}`}
-        >
-          {item.name}
+      {/* Bottom Editorial Ivory Caption Band */}
+      <div className="flex-1 flex flex-col justify-between gap-2 p-3 sm:p-4 bg-white border-t border-[#d4a55a]/30 text-left">
+        <div className="space-y-1">
+          <span className="block font-ui font-semibold text-[10px] sm:text-[10.5px] tracking-[0.14em] uppercase text-[#785212] truncate">
+            {item.label}
+          </span>
+
+          <h3 className="font-heading text-[16px] sm:text-[19px] text-[#005a55] leading-snug line-clamp-1">
+            {item.name}
+          </h3>
+
+          <p className="font-body text-[11.5px] sm:text-[13px] text-[#0d3b38]/85 font-normal leading-snug line-clamp-2">
+            {item.sub}
+          </p>
         </div>
-        <div
-          className={`font-heading text-xs sm:text-sm mt-1 leading-snug ${
-            isHome ? "" : "line-clamp-2 "
-          }${item.thumb ? "text-[#fff3d6]" : "opacity-90"}`}
-        >
-          {item.sub}
-        </div>
-        <div className="inline-flex items-center justify-center mt-2.5 sm:mt-3 px-3 sm:px-4 py-1 rounded-full border border-[#d4a55a] bg-[#002d2a]/60 text-[#fff3d6] font-ui font-semibold text-[10.5px] sm:text-[11px] tracking-widest uppercase transition-all duration-300 group-hover:bg-[#d4a55a] group-hover:text-[#005a55]">
-          Preview
+
+        <div className="pt-2 border-t border-[#d4a55a]/20 flex items-center justify-between text-[#005a55]">
+          <span className="font-ui font-semibold text-[10.5px] sm:text-[11px] tracking-[0.14em] uppercase group-hover:text-[#785212] transition-colors">
+            {previewCue}
+          </span>
+          <span className="text-xs transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-[#785212]">
+            <ArrowIcon direction="up-right" />
+          </span>
         </div>
       </div>
     </article>
   );
 }
-

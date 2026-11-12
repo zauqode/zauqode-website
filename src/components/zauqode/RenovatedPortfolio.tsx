@@ -657,7 +657,7 @@ export function RenovatedPortfolio() {
 
           {/* 4. Selected Works (Mist Band) */}
           <section className="bg-[#eef8f3] py-16 sm:py-24 px-4 sm:px-6">
-            <div className="max-w-5xl mx-auto space-y-10 sm:space-y-12">
+            <div className="max-w-6xl mx-auto space-y-10 sm:space-y-12">
               <div className="text-center space-y-2 sm:space-y-3">
                 <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
                   Selected Portfolio

@@ -112,75 +112,37 @@
   border-color: var(--cream);
 }
 
-/* Portfolio Work Cards (Zero CLS 3:4 container + GPU composited transitions) */
-.tilt-card-container {
-  aspect-ratio: 3 / 4;
-  border-radius: 24px;
+/* Product-First Portfolio Showcase Cards (Zero CLS + Unobstructed Artwork) */
+.showcase-card {
+  border-radius: 18px;
+  border: 1px solid rgba(212, 165, 90, 0.42);
+  background-color: #ffffff;
   position: relative;
   overflow: hidden;
   cursor: pointer;
   transform-style: preserve-3d;
-  transition: transform 0.22s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.28s ease;
-  box-shadow: 0 12px 32px -8px rgba(13, 59, 56, 0.08);
+  transition:
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+  box-shadow: 0 10px 28px -10px rgba(13, 59, 56, 0.1);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 34px 28px;
 }
 
-.card-inner-gold {
-  position: absolute;
-  inset: 14px;
-  border: 1px solid rgba(212, 165, 90, 0.55);
-  border-radius: 16px;
-  pointer-events: none;
-  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
-  z-index: 2;
+.showcase-img {
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .tilt-card-container:hover .card-inner-gold {
-    transform: scale(1.03);
+  .showcase-card:hover {
     border-color: var(--gold);
+    box-shadow: 0 18px 40px -12px rgba(0, 90, 85, 0.18);
   }
 
-  .tilt-card-container::after {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -60%;
-    width: 50%;
-    height: 200%;
-    background: linear-gradient(
-      60deg,
-      rgba(255, 255, 255, 0) 20%,
-      rgba(255, 255, 255, 0.32) 50%,
-      rgba(255, 255, 255, 0) 80%
-    );
-    transform: rotate(25deg) translateX(-100%);
-    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    pointer-events: none;
-    z-index: 3;
+  .showcase-card:hover .showcase-img {
+    transform: scale(1.035);
   }
-
-  .tilt-card-container:hover::after {
-    transform: rotate(25deg) translateX(450%);
-  }
-}
-
-.card-teal {
-  background: linear-gradient(135deg, #00756e 0%, #005a55 100%);
-  color: var(--cream);
-}
-
-.card-mint {
-  background: linear-gradient(135deg, #cdeee3 0%, #eef8f3 100%);
-  color: var(--teal-deep);
-}
-
-.card-cream {
-  background: linear-gradient(135deg, #f3e3c0 0%, #f9fbf8 100%);
-  color: var(--text-ink);
 }
 
 .service-row-card {
@@ -258,27 +220,9 @@
 }
 
 @media (max-width: 640px) {
-  .tilt-card-container {
-    aspect-ratio: 3 / 4;
-    min-height: 0;
-    padding: 18px 14px;
-    border-radius: 18px;
-    transform: none !important;
-  }
-
-  .tilt-card-container.catalogue-card {
-    padding: 13px 10px;
+  .showcase-card {
     border-radius: 14px;
-  }
-
-  .card-inner-gold {
-    inset: 9px;
-    border-radius: 12px;
-  }
-
-  .catalogue-card .card-inner-gold {
-    inset: 6px;
-    border-radius: 10px;
+    transform: none !important;
   }
 }
 

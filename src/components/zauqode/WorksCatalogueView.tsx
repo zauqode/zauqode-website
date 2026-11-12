@@ -43,8 +43,8 @@ export function WorksCatalogueView({
   );
 
   return (
-    <section className="pt-24 sm:pt-32 pb-16 px-3 sm:px-6 max-w-5xl mx-auto space-y-6 sm:space-y-10 w-full">
-      <div className="text-center space-y-2 sm:space-y-3">
+    <section className="pt-22 sm:pt-28 pb-16 px-3 sm:px-6 max-w-6xl mx-auto space-y-5 sm:space-y-8 w-full">
+      <div className="text-center space-y-1.5 sm:space-y-2">
         <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
           Portfolio Catalogue
         </div>
@@ -54,7 +54,7 @@ export function WorksCatalogueView({
       </div>
 
       {/* Catalogue Filter Bar */}
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-2.5 max-w-full px-1">
           {FILTER_TABS.map((f) => (
             <button
@@ -64,7 +64,7 @@ export function WorksCatalogueView({
               className={`min-h-[44px] font-ui font-semibold text-[11px] sm:text-xs tracking-wider sm:tracking-widest uppercase px-4 py-2 rounded-full border transition-all inline-flex items-center gap-1.5 ${
                 activeFilter === f.id
                   ? "bg-[#005a55] text-white border-[#005a55] shadow-sm"
-                  : "border-[#b8893c]/60 text-[#0d3b38] hover:border-[#005a55] bg-white/80"
+                  : "border-[#b8893c]/60 text-[#0d3b38] hover:border-[#005a55] bg-white/85"
               }`}
             >
               <span>{f.label}</span>
@@ -81,7 +81,7 @@ export function WorksCatalogueView({
       </div>
 
       {/* 2-Column Mobile / 3-Column Desktop Catalogue Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8 w-full">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-7 w-full">
         {filteredWorks.map((item) => (
           <PortfolioCard
             key={item.id}
