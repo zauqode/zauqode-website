@@ -8,14 +8,6 @@ interface PortfolioCardProps {
   onSelect: (item: WorkItem) => void;
 }
 
-function getPreviewCue(item: WorkItem): string {
-  if (item.category === "videos" || item.videoUrl) return "Motion Reel";
-  if (item.category === "invitations") return "Full Suite";
-  if (item.category === "stalls") return "Board View";
-  if (item.canIframe) return "Live Preview";
-  return "View Work";
-}
-
 /**
  * Product-first Editorial Showcase Card:
  * Displays 100% unobstructed, full-color artwork above an ivory caption footer
@@ -31,7 +23,6 @@ export function PortfolioCard({ item, variant, onSelect }: PortfolioCardProps) {
     ? "(max-width: 639px) 228px, (max-width: 1023px) 46vw, 240px"
     : "(max-width: 639px) 46vw, (max-width: 1023px) 45vw, 320px";
 
-  const previewCue = getPreviewCue(item);
   const isVideo = item.category === "videos" || !!item.videoUrl;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
@@ -135,30 +126,22 @@ export function PortfolioCard({ item, variant, onSelect }: PortfolioCardProps) {
         )}
       </div>
 
-      {/* Bottom Editorial Ivory Caption Band */}
-      <div className="flex-1 flex flex-col justify-between gap-2 p-3 sm:p-4 bg-white border-t border-[#d4a55a]/30 text-left">
-        <div className="space-y-1">
-          <span className="block font-ui font-semibold text-[10px] sm:text-[10.5px] tracking-[0.14em] uppercase text-[#785212] truncate">
+      {/* Minimal Caption Band: category eyebrow + name + arrow */}
+      <div className="p-3 sm:p-4 bg-white border-t border-[#d4a55a]/30 text-left flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <span className="block font-ui font-semibold text-[10px] sm:text-[10.5px] tracking-[0.14em] uppercase text-[#785212] truncate mb-0.5">
             {item.label}
           </span>
-
           <h3 className="font-heading text-[16px] sm:text-[19px] text-[#005a55] leading-snug line-clamp-1">
             {item.name}
           </h3>
-
-          <p className="font-body text-[11.5px] sm:text-[13px] text-[#0d3b38]/85 font-normal leading-snug line-clamp-2">
-            {item.sub}
-          </p>
         </div>
-
-        <div className="pt-2 border-t border-[#d4a55a]/20 flex items-center justify-between text-[#005a55]">
-          <span className="font-ui font-semibold text-[10.5px] sm:text-[11px] tracking-[0.14em] uppercase group-hover:text-[#785212] transition-colors">
-            {previewCue}
-          </span>
-          <span className="text-xs transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-[#785212]">
-            <ArrowIcon direction="up-right" />
-          </span>
-        </div>
+        <span
+          className="shrink-0 mt-1 text-[#785212] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          aria-hidden="true"
+        >
+          <ArrowIcon direction="up-right" />
+        </span>
       </div>
     </article>
   );

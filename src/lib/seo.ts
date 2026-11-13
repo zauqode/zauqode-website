@@ -3,7 +3,7 @@
  */
 export const SITE_URL = "https://www.zauqode.com";
 export const SITE_NAME = "Zauqode";
-export const SITE_TITLE = "Zauqode - Design and Development Studio";
+export const SITE_TITLE = "Zauqode | Where Taste Meets Digital";
 export const SITE_DESCRIPTION =
   "Zauqode is a design and development, freelance designing studio crafting customized designs by understanding your business needs and occasions.";
 export const SITE_KEYWORDS =
