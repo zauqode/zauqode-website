@@ -33,3 +33,4 @@ export function ArrowIcon({ direction = "right", className = "" }: ArrowIconProp
     </svg>
   );
 }
+

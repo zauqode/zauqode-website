@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ClientOnboardingRouteImport } from './routes/client-onboarding'
+import { Route as ZauqodeStudioDeskRouteImport } from './routes/zauqode-studio-desk'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const ClientOnboardingRoute = ClientOnboardingRouteImport.update({
   path: '/client-onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ZauqodeStudioDeskRoute = ZauqodeStudioDeskRouteImport.update({
+  id: '/zauqode-studio-desk',
+  path: '/zauqode-studio-desk',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/client-onboarding': typeof ClientOnboardingRoute
+  '/zauqode-studio-desk': typeof ZauqodeStudioDeskRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/client-onboarding': typeof ClientOnboardingRoute
+  '/zauqode-studio-desk': typeof ZauqodeStudioDeskRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/client-onboarding': typeof ClientOnboardingRoute
+  '/zauqode-studio-desk': typeof ZauqodeStudioDeskRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/client-onboarding'
+  fullPaths: '/' | '/client-onboarding' | '/zauqode-studio-desk'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/client-onboarding'
-  id: '__root__' | '/' | '/client-onboarding'
+  to: '/' | '/client-onboarding' | '/zauqode-studio-desk'
+  id: '__root__' | '/' | '/client-onboarding' | '/zauqode-studio-desk'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ClientOnboardingRoute: typeof ClientOnboardingRoute
+  ZauqodeStudioDeskRoute: typeof ZauqodeStudioDeskRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientOnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/zauqode-studio-desk': {
+      id: '/zauqode-studio-desk'
+      path: '/zauqode-studio-desk'
+      fullPath: '/zauqode-studio-desk'
+      preLoaderRoute: typeof ZauqodeStudioDeskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ClientOnboardingRoute: ClientOnboardingRoute,
+  ZauqodeStudioDeskRoute: ZauqodeStudioDeskRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
