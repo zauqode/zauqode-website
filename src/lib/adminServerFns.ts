@@ -120,3 +120,4 @@ export const uploadArtworkFn = createServerFn({ method: "POST" })
 
     return { url: blob.url };
   });
+

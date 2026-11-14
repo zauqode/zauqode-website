@@ -6,6 +6,7 @@ interface WorksCatalogueViewProps {
   activeFilter: string;
   onFilterChange: (filter: string) => void;
   onSelectWork: (item: WorkItem) => void;
+  works?: WorkItem[];
 }
 
 const FILTER_TABS = [
@@ -24,22 +25,23 @@ export function WorksCatalogueView({
   activeFilter,
   onFilterChange,
   onSelectWork,
+  works = PORTFOLIO_WORKS,
 }: WorksCatalogueViewProps) {
   const categoryCounts = useMemo(
     () => ({
-      all: PORTFOLIO_WORKS.length,
-      websites: PORTFOLIO_WORKS.filter((w) => w.category === "websites").length,
-      invitations: PORTFOLIO_WORKS.filter((w) => w.category === "invitations").length,
-      stalls: PORTFOLIO_WORKS.filter((w) => w.category === "stalls").length,
-      videos: PORTFOLIO_WORKS.filter((w) => w.category === "videos").length,
-      business: PORTFOLIO_WORKS.filter((w) => w.category === "business").length,
+      all: works.length,
+      websites: works.filter((w) => w.category === "websites").length,
+      invitations: works.filter((w) => w.category === "invitations").length,
+      stalls: works.filter((w) => w.category === "stalls").length,
+      videos: works.filter((w) => w.category === "videos").length,
+      business: works.filter((w) => w.category === "business").length,
     }),
-    []
+    [works]
   );
 
   const filteredWorks = useMemo(
-    () => PORTFOLIO_WORKS.filter((w) => activeFilter === "all" || w.category === activeFilter),
-    [activeFilter]
+    () => works.filter((w) => activeFilter === "all" || w.category === activeFilter),
+    [works, activeFilter]
   );
 
   return (

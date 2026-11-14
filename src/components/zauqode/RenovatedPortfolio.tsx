@@ -1,17 +1,19 @@
 "use client";
 
-import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import React, { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Hero } from "@/components/zauqode-home/Hero";
 import { ArrowIcon } from "@/components/zauqode-home/ArrowIcon";
 import { PortfolioCard } from "./PortfolioCard";
 import {
   HOME_SELECTED_WORKS,
   INVITATION_WORKS,
+  PORTFOLIO_WORKS,
   TESTIMONIALS,
   WHY_PILLARS,
   type ActiveMockupState,
   type WorkItem,
 } from "./portfolioData";
+import { getAdminDataFn, type AdminWork } from "@/lib/adminServerFns";
 import "./RenovatedPortfolio.css";
 
 const WorksCatalogueView = lazy(() =>
@@ -56,6 +58,21 @@ const PROCESS_STEPS = [
   },
 ] as const;
 
+function mapAdminWorkToWorkItem(w: AdminWork): WorkItem {
+  return {
+    id: w.id,
+    name: w.name,
+    sub: w.label || "Custom Creation",
+    category: (w.category as any) || "websites",
+    label: w.label || "WEDDING WEBSITE",
+    thumb: w.thumbUrl,
+    url: w.liveUrl,
+    canIframe: w.category === "websites" && !!w.liveUrl,
+    story: `Bespoke digital creation for ${w.name}.`,
+    occasion: w.category === "websites" ? "Wedding Celebration" : "Celebration",
+  };
+}
+
 export function RenovatedPortfolio() {
   const [currentRoute, setCurrentRoute] = useState("home");
   const [curtainActive, setCurtainActive] = useState(false);
@@ -66,6 +83,41 @@ export function RenovatedPortfolio() {
   const [activeInvitationIndex, setActiveInvitationIndex] = useState<number | null>(null);
   const [marqueeVisible, setMarqueeVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [dynamicWorks, setDynamicWorks] = useState<WorkItem[]>([]);
+
+  // Load dynamically published works from Vercel Blob cloud store
+  useEffect(() => {
+    let mounted = true;
+    getAdminDataFn()
+      .then((data) => {
+        if (!mounted || !data?.works) return;
+        const visible = data.works
+          .filter((w) => !w.hidden)
+          .map(mapAdminWorkToWorkItem);
+        setDynamicWorks(visible);
+      })
+      .catch((err) => {
+        console.error("Failed to load cloud works:", err);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const allCatalogueWorks = useMemo(() => {
+    return [...dynamicWorks, ...PORTFOLIO_WORKS];
+  }, [dynamicWorks]);
+
+  const homeWorks = useMemo(() => {
+    return [...dynamicWorks, ...HOME_SELECTED_WORKS];
+  }, [dynamicWorks]);
+
+  const allInvitations = useMemo(() => {
+    const dynamicInvs = dynamicWorks.filter(
+      (w) => w.category === "invitations" || w.category === "stalls"
+    );
+    return [...dynamicInvs, ...INVITATION_WORKS];
+  }, [dynamicWorks]);
 
   const marqueeRef = useRef<HTMLDivElement>(null);
   const currentRouteRef = useRef(currentRoute);
@@ -107,11 +159,11 @@ export function RenovatedPortfolio() {
         setMobileMenuOpen(false);
       } else if (e.key === "ArrowLeft") {
         setActiveInvitationIndex((prev) =>
-          prev !== null ? (prev - 1 + INVITATION_WORKS.length) % INVITATION_WORKS.length : null
+          prev !== null ? (prev - 1 + allInvitations.length) % allInvitations.length : null
         );
       } else if (e.key === "ArrowRight") {
         setActiveInvitationIndex((prev) =>
-          prev !== null ? (prev + 1) % INVITATION_WORKS.length : null
+          prev !== null ? (prev + 1) % allInvitations.length : null
         );
       }
     };
@@ -179,26 +231,29 @@ export function RenovatedPortfolio() {
     return () => observer.disconnect();
   }, [currentRoute]);
 
-  const handleSelectWork = useCallback((item: WorkItem) => {
-    if (item.category === "invitations" || item.category === "stalls") {
-      const idx = INVITATION_WORKS.findIndex((inv) => inv.id === item.id);
-      setActiveInvitationIndex(idx !== -1 ? idx : 0);
-    } else if (item.videoUrl) {
-      setActiveMockup({
-        title: `${item.name} — Video Invitation`,
-        videoUrl: item.videoUrl,
-      });
-    } else if (item.url) {
-      setActiveMockup({
-        url: item.url,
-        title: item.name,
-        mobileImg: item.mobileImg || "",
-        canIframe: !!item.canIframe,
-      });
-    } else {
-      window.location.hash = "#contact";
-    }
-  }, []);
+  const handleSelectWork = useCallback(
+    (item: WorkItem) => {
+      if (item.category === "invitations" || item.category === "stalls") {
+        const idx = allInvitations.findIndex((inv) => inv.id === item.id);
+        setActiveInvitationIndex(idx !== -1 ? idx : 0);
+      } else if (item.videoUrl) {
+        setActiveMockup({
+          title: `${item.name} — Video Invitation`,
+          videoUrl: item.videoUrl,
+        });
+      } else if (item.url) {
+        setActiveMockup({
+          url: item.url,
+          title: item.name,
+          mobileImg: item.mobileImg || "",
+          canIframe: item.canIframe !== false,
+        });
+      } else {
+        window.location.hash = "#contact";
+      }
+    },
+    [allInvitations]
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,7 +265,7 @@ export function RenovatedPortfolio() {
   };
 
   const activeInv =
-    activeInvitationIndex !== null ? INVITATION_WORKS[activeInvitationIndex] ?? null : null;
+    activeInvitationIndex !== null ? allInvitations[activeInvitationIndex] ?? null : null;
 
   return (
     <div className="renovated-app min-h-[100dvh] relative overflow-x-hidden">
@@ -671,9 +726,9 @@ export function RenovatedPortfolio() {
                 </h2>
               </div>
 
-              {/* 4 Curated Cards */}
+              {/* Curated Cards */}
               <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 -mx-4 px-4 scroll-pl-4 no-scrollbar sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 w-auto sm:w-full">
-                {HOME_SELECTED_WORKS.map((item) => (
+                {homeWorks.map((item) => (
                   <PortfolioCard
                     key={item.id}
                     item={item}
@@ -956,6 +1011,7 @@ export function RenovatedPortfolio() {
           }
         >
           <WorksCatalogueView
+            works={allCatalogueWorks}
             activeFilter={activeFilter}
             onFilterChange={setActiveFilter}
             onSelectWork={handleSelectWork}
@@ -1044,17 +1100,17 @@ export function RenovatedPortfolio() {
           <InvitationShowcaseModal
             activeInv={activeInv}
             activeIndex={activeInvitationIndex}
-            totalCount={INVITATION_WORKS.length}
+            totalCount={allInvitations.length}
             onPrev={() =>
               setActiveInvitationIndex((prev) =>
                 prev !== null
-                  ? (prev - 1 + INVITATION_WORKS.length) % INVITATION_WORKS.length
+                  ? (prev - 1 + allInvitations.length) % allInvitations.length
                   : null
               )
             }
             onNext={() =>
               setActiveInvitationIndex((prev) =>
-                prev !== null ? (prev + 1) % INVITATION_WORKS.length : null
+                prev !== null ? (prev + 1) % allInvitations.length : null
               )
             }
             onClose={() => setActiveInvitationIndex(null)}

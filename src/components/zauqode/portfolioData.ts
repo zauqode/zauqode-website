@@ -37,6 +37,14 @@ export interface ActiveMockupState {
 }
 
 export function getOptimizedThumbSources(thumbPath: string) {
+  if (
+    !thumbPath ||
+    thumbPath.startsWith("http://") ||
+    thumbPath.startsWith("https://") ||
+    thumbPath.startsWith("data:")
+  ) {
+    return null;
+  }
   const fileName = thumbPath.split("/").pop() || "";
   const stem = fileName.replace(/\.[^/.]+$/, "");
   if (!stem) {
