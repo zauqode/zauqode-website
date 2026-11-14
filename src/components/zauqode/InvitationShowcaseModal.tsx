@@ -148,43 +148,14 @@ export function InvitationShowcaseModal({
                 </p>
               </div>
 
-              <div className="space-y-3.5 pt-1">
-                <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-2.5 text-left">
-                  <div className="p-3 rounded-xl bg-white/[0.03] border border-[#d4a55a]/25">
-                    <span className="block font-ui font-semibold text-[10.5px] uppercase tracking-wider text-[#ecd08b]">
-                      Occasion
-                    </span>
-                    <span className="font-body text-xs sm:text-sm text-[#f3e3c0] font-normal">
-                      {activeInv.occasion || "Celebration"}
-                    </span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-white/[0.03] border border-[#d4a55a]/25">
-                    <span className="block font-ui font-semibold text-[10.5px] uppercase tracking-wider text-[#ecd08b]">
-                      Style &amp; Palette
-                    </span>
-                    <span className="font-body text-xs sm:text-sm text-[#f3e3c0] font-normal">
-                      {activeInv.style || "Bespoke Stationery"}
-                    </span>
-                  </div>
-                </div>
-
-                {activeInv.included && activeInv.included.length > 0 && (
-                  <div className="space-y-2">
-                    <span className="block font-ui font-semibold text-[10.5px] uppercase tracking-wider text-[#ecd08b]">
-                      {activeInv.category === "stalls" ? "Board Details" : "Suite Inclusions"}
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {activeInv.included.map((item, idx) => (
-                        <span
-                          key={idx}
-                          className="px-2.5 py-1 rounded-full text-xs font-body font-normal bg-[#00756e]/30 text-[#e4f7f1] border border-[#d4a55a]/35"
-                        >
-                          ✦ {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+              {/* Occasion */}
+              <div className="space-y-1.5 pt-1">
+                <span className="block font-ui font-semibold text-[11px] uppercase tracking-[0.18em] text-[#ecd08b]">
+                  Occasion
+                </span>
+                <p className="font-body text-sm sm:text-base text-[#f3e3c0] font-normal pl-0.5">
+                  {activeInv.occasion || "Celebration"}
+                </p>
               </div>
             </div>
 
