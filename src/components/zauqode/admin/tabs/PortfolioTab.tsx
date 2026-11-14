@@ -1,6 +1,6 @@
 /**
  * Portfolio Tab — Add, manage, and hide portfolio work entries.
- * Images upload to Vercel Blob via /api/admin-upload endpoint.
+ * Styled in Zauqode's signature luxury atelier aesthetic.
  */
 
 import React, { useState, useRef } from "react";
@@ -29,62 +29,81 @@ const CATEGORY_LABELS: Record<string, string> = {
   business: "BUSINESS WEBSITE",
 };
 
-function WorkCard({ work, onToggleHide, onDelete }: {
+function WorkCard({
+  work,
+  onToggleHide,
+  onDelete,
+}: {
   work: AdminWork;
   onToggleHide: () => void;
   onDelete: () => void;
 }) {
   return (
     <div
-      className={`rounded-xl border overflow-hidden transition-all ${
+      className={`rounded-2xl border overflow-hidden bg-white transition-all shadow-xs hover:shadow-md ${
         work.hidden
-          ? "border-[#d4a55a]/10 opacity-50"
-          : "border-[#d4a55a]/30"
+          ? "border-[#d4a55a]/20 opacity-60"
+          : "border-[#d4a55a]/35 hover:border-[#005a55]/40"
       }`}
     >
       {work.thumbUrl ? (
-        <div className="aspect-[4/3] bg-[#0d2b29] overflow-hidden">
+        <div className="aspect-[4/3] bg-[#eef8f3] overflow-hidden relative">
           <img
             src={work.thumbUrl}
             alt={work.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-top"
             loading="lazy"
           />
+          {work.hidden && (
+            <span className="absolute top-2.5 right-2.5 bg-neutral-900/80 text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full">
+              Hidden
+            </span>
+          )}
         </div>
       ) : (
-        <div className="aspect-[4/3] bg-[#0d2b29] flex items-center justify-center text-[#f3e3c0]/20 text-xs">
-          No image
+        <div className="aspect-[4/3] bg-[#eef8f3] flex items-center justify-center text-[#005a55]/30 text-xs">
+          No artwork uploaded
         </div>
       )}
-      <div className="p-3 bg-[#0d2b29]">
-        <div className="text-[#d4a55a] text-[10px] tracking-widest uppercase mb-0.5">
+
+      <div className="p-4 bg-white border-t border-[#d4a55a]/20">
+        <div className="text-[#8c6218] text-[10px] sm:text-[10.5px] font-bold tracking-[0.18em] uppercase mb-1">
           {work.label}
         </div>
-        <div className="text-[#f3e3c0] text-sm font-semibold truncate">{work.name}</div>
+        <div
+          className="text-[#005a55] text-base font-medium truncate"
+          style={{ fontFamily: "'Antic Didone', serif" }}
+        >
+          {work.name}
+        </div>
+
         {work.liveUrl && (
           <a
             href={work.liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-[#00756e] hover:underline truncate block mt-1"
+            className="text-[11px] text-[#00756e] hover:text-[#005a55] hover:underline truncate block mt-1.5 font-medium"
           >
-            {work.liveUrl}
+            ↗ {work.liveUrl.replace(/^https?:\/\//, "")}
           </a>
         )}
-        <div className="flex gap-2 mt-3">
+
+        <div className="flex gap-2 mt-4 pt-3 border-t border-[#d4a55a]/15">
           <button
+            type="button"
             onClick={onToggleHide}
-            className={`flex-1 text-xs py-1.5 rounded-lg border transition-colors ${
+            className={`flex-1 text-xs py-1.5 px-3 rounded-lg border font-semibold transition-colors cursor-pointer ${
               work.hidden
-                ? "border-[#d4a55a]/40 text-[#d4a55a] hover:bg-[#d4a55a]/10"
-                : "border-[#f3e3c0]/20 text-[#f3e3c0]/60 hover:border-[#f3e3c0]/40"
+                ? "border-[#005a55]/30 text-[#005a55] hover:bg-[#eef8f3]"
+                : "border-[#d4a55a]/40 text-[#8c6218] hover:bg-[#fef9ee]"
             }`}
           >
-            {work.hidden ? "Show" : "Hide"}
+            {work.hidden ? "Unhide" : "Hide from Site"}
           </button>
           <button
+            type="button"
             onClick={onDelete}
-            className="px-3 text-xs py-1.5 rounded-lg border border-red-900/40 text-red-400 hover:bg-red-900/20 transition-colors"
+            className="px-3 text-xs py-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 transition-colors font-medium cursor-pointer"
           >
             Delete
           </button>
@@ -130,8 +149,8 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
       if (!res.ok) throw new Error("Upload failed");
       const json = await res.json();
       setUploadedUrl(json.url);
-    } catch (err) {
-      setError("Image upload failed. Check API route.");
+    } catch {
+      setError("Image upload failed. Ensure server connection.");
     } finally {
       setUploading(false);
     }
@@ -139,8 +158,14 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim()) { setError("Name is required."); return; }
-    if (!uploadedUrl && !previewUrl) { setError("Upload an image first."); return; }
+    if (!form.name.trim()) {
+      setError("Project or couple name is required.");
+      return;
+    }
+    if (!uploadedUrl && !previewUrl) {
+      setError("Please select and upload an image preview.");
+      return;
+    }
 
     const work: AdminWork = {
       id: uid(),
@@ -162,31 +187,44 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#0d2b29] border border-[#d4a55a]/30 rounded-2xl p-6 space-y-4"
+      className="bg-white border border-[#d4a55a]/35 rounded-3xl p-6 sm:p-8 shadow-[0_6px_30px_rgba(0,90,85,0.04)] space-y-6"
     >
-      <h3 className="text-[#d4a55a] text-xs tracking-[0.25em] uppercase font-semibold">
-        Add New Work
-      </h3>
-
-      {/* Image upload */}
       <div>
-        <label className="block text-xs text-[#f3e3c0]/60 mb-2">Thumbnail Image *</label>
+        <div className="text-[10.5px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-1">
+          Atelier Works Curator
+        </div>
+        <h3
+          className="text-xl sm:text-2xl text-[#005a55]"
+          style={{ fontFamily: "'Antic Didone', serif" }}
+        >
+          Add New Portfolio Creation
+        </h3>
+      </div>
+
+      {/* Artwork upload area */}
+      <div>
+        <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
+          Artwork / Thumbnail Preview *
+        </label>
         <div
-          className="relative border-2 border-dashed border-[#d4a55a]/30 rounded-xl overflow-hidden cursor-pointer hover:border-[#d4a55a]/60 transition-colors"
-          style={{ aspectRatio: "4/3", maxWidth: "240px" }}
+          className="relative border-2 border-dashed border-[#d4a55a]/50 hover:border-[#005a55]/70 rounded-2xl overflow-hidden cursor-pointer transition-all bg-[#F7F5EF]/60 hover:bg-[#F7F5EF]"
+          style={{ aspectRatio: "4/3", maxWidth: "260px" }}
           onClick={() => fileRef.current?.click()}
         >
           {previewUrl ? (
             <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
           ) : (
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-[#f3e3c0]/30 text-xs gap-2">
-              <span className="text-2xl">+</span>
-              <span>Click to upload</span>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-[#005a55]/50 text-xs gap-2 p-4 text-center">
+              <span className="text-3xl text-[#d4a55a] font-light">+</span>
+              <span className="font-medium text-[#005a55]">Click to upload artwork</span>
+              <span className="text-[10px] text-[#0d3b38]/40">PNG, WebP or JPG up to 10MB</span>
             </div>
           )}
           {uploading && (
-            <div className="absolute inset-0 bg-[#0a1f1e]/70 flex items-center justify-center">
-              <span className="text-[#d4a55a] text-xs animate-pulse">Uploading…</span>
+            <div className="absolute inset-0 bg-white/80 backdrop-blur-xs flex items-center justify-center">
+              <span className="text-[#005a55] text-xs font-semibold animate-pulse">
+                Uploading to Cloud Storage…
+              </span>
             </div>
           )}
         </div>
@@ -198,54 +236,70 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
           className="hidden"
         />
         {uploadedUrl && (
-          <p className="text-emerald-400 text-[10px] mt-1 truncate">✓ Uploaded</p>
+          <p className="text-[#00756e] text-xs font-semibold mt-1.5 flex items-center gap-1">
+            <span>✓</span> Uploaded to Vercel Storage
+          </p>
         )}
       </div>
 
-      {/* Fields */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Form Fields */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
-          <label className="block text-xs text-[#f3e3c0]/60 mb-1.5">Project / Couple Name *</label>
+          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
+            Project / Couple Name *
+          </label>
           <input
             type="text"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             placeholder="e.g. Sonali & Pallav"
-            className="w-full bg-[#0a1f1e] border border-[#d4a55a]/30 rounded-lg px-3 py-2.5 text-sm text-[#f3e3c0] placeholder-[#f3e3c0]/20 outline-none focus:border-[#d4a55a]/60 transition-colors"
+            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
           />
         </div>
+
         <div>
-          <label className="block text-xs text-[#f3e3c0]/60 mb-1.5">Category *</label>
+          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
+            Category Type *
+          </label>
           <select
             value={form.category}
             onChange={(e) => setForm({ ...form, category: e.target.value })}
-            className="w-full bg-[#0a1f1e] border border-[#d4a55a]/30 rounded-lg px-3 py-2.5 text-sm text-[#f3e3c0] outline-none focus:border-[#d4a55a]/60 transition-colors"
+            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all cursor-pointer"
           >
             {CATEGORIES.map((c) => (
-              <option key={c.value} value={c.value}>{c.label}</option>
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
             ))}
           </select>
         </div>
+
         <div className="sm:col-span-2">
-          <label className="block text-xs text-[#f3e3c0]/60 mb-1.5">Live URL (optional)</label>
+          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
+            Live Preview URL (Optional)
+          </label>
           <input
             type="url"
             value={form.liveUrl}
             onChange={(e) => setForm({ ...form, liveUrl: e.target.value })}
-            placeholder="https://…"
-            className="w-full bg-[#0a1f1e] border border-[#d4a55a]/30 rounded-lg px-3 py-2.5 text-sm text-[#f3e3c0] placeholder-[#f3e3c0]/20 outline-none focus:border-[#d4a55a]/60 transition-colors"
+            placeholder="https://client-wedding.zauqode.com"
+            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
           />
         </div>
       </div>
 
-      {error && <p className="text-red-400 text-xs">{error}</p>}
+      {error && (
+        <p className="text-rose-600 text-xs font-medium bg-rose-50 border border-rose-200 rounded-lg p-2.5">
+          {error}
+        </p>
+      )}
 
       <button
         type="submit"
         disabled={uploading}
-        className="w-full bg-[#d4a55a] text-[#0a1f1e] rounded-lg py-3 text-sm font-semibold hover:bg-[#c49348] disabled:opacity-40 transition-colors"
+        className="w-full bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl py-3.5 text-sm font-semibold tracking-wide shadow-md hover:shadow-lg disabled:opacity-40 transition-all cursor-pointer"
       >
-        Add to Portfolio
+        {uploading ? "Uploading Artwork…" : "Publish to Portfolio ✦"}
       </button>
     </form>
   );
@@ -261,7 +315,7 @@ export function PortfolioTab({ works, onUpdate }: Props) {
   };
 
   const handleDelete = (id: string) => {
-    if (!confirm("Delete this work permanently?")) return;
+    if (!confirm("Permanently delete this artwork entry?")) return;
     onUpdate(works.filter((w) => w.id !== id));
   };
 
@@ -269,33 +323,55 @@ export function PortfolioTab({ works, onUpdate }: Props) {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-baseline justify-between">
-        <h2 className="text-[#f3e3c0] text-xl" style={{ fontFamily: "'Antic Didone', serif" }}>
-          Portfolio Works
-        </h2>
-        <span className="text-xs text-[#f3e3c0]/40">
-          {visible} visible · {works.length - visible} hidden
+      <div className="flex items-baseline justify-between flex-wrap gap-2 border-b border-[#d4a55a]/25 pb-4">
+        <div>
+          <div className="text-[10.5px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-1">
+            Curated Creations
+          </div>
+          <h2
+            className="text-2xl sm:text-3xl text-[#005a55]"
+            style={{ fontFamily: "'Antic Didone', serif" }}
+          >
+            Portfolio Showcase
+          </h2>
+        </div>
+        <span className="text-xs font-semibold px-3 py-1 rounded-full bg-white border border-[#d4a55a]/30 text-[#005a55]">
+          {visible} Live on Website · {works.length - visible} Hidden
         </span>
       </div>
 
       <AddWorkForm onAdd={handleAdd} />
 
-      {works.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {works.map((work) => (
-            <WorkCard
-              key={work.id}
-              work={work}
-              onToggleHide={() => handleToggleHide(work.id)}
-              onDelete={() => handleDelete(work.id)}
-            />
-          ))}
+      <div>
+        <div className="text-xs font-bold text-[#8c6218] tracking-widest uppercase mb-4">
+          All Studio Works ({works.length})
         </div>
-      ) : (
-        <p className="text-center text-[#f3e3c0]/30 text-sm py-12">
-          No works yet. Add your first one above.
-        </p>
-      )}
+
+        {works.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {works.map((work) => (
+              <WorkCard
+                key={work.id}
+                work={work}
+                onToggleHide={() => handleToggleHide(work.id)}
+                onDelete={() => handleDelete(work.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white border border-[#d4a55a]/30 rounded-3xl p-12 text-center shadow-xs">
+            <span
+              className="text-3xl text-[#8c6218] block mb-2"
+              style={{ fontFamily: "'Sacramento', cursive" }}
+            >
+              Empty Canvas
+            </span>
+            <p className="text-sm text-[#005a55]/60 max-w-sm mx-auto">
+              No bespoke works cataloged in the cloud yet. Use the form above to upload your first signature piece.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 /**
  * Finance Tab — Monthly revenue, expenses & profit tracker.
+ * Styled in Zauqode's signature luxury atelier aesthetic.
  */
 
 import React, { useState, useMemo } from "react";
@@ -18,13 +19,26 @@ function fmt(n: number) {
 function monthLabel(m: string) {
   const [y, mo] = m.split("-");
   const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
   return `${months[parseInt(mo, 10) - 1]} ${y}`;
 }
 
-function AddExpenseForm({ month, onAdd }: {
+function AddExpenseForm({
+  month,
+  onAdd,
+}: {
   month: string;
   onAdd: (e: MonthlyExpense) => void;
 }) {
@@ -33,9 +47,15 @@ function AddExpenseForm({ month, onAdd }: {
 
   const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-    if (!form.description.trim()) { setError("Description required."); return; }
+    if (!form.description.trim()) {
+      setError("Expense description is required.");
+      return;
+    }
     const amount = parseFloat(form.amount) || 0;
-    if (amount <= 0) { setError("Enter a valid amount."); return; }
+    if (amount <= 0) {
+      setError("Please enter a valid amount.");
+      return;
+    }
     onAdd({
       id: uid(),
       month,
@@ -48,32 +68,40 @@ function AddExpenseForm({ month, onAdd }: {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 items-end">
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-end">
       <div className="flex-1">
+        <label className="block text-[11px] font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+          New Expense Item
+        </label>
         <input
           type="text"
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
-          placeholder="Expense description"
-          className="w-full bg-[#0a1f1e] border border-[#d4a55a]/30 rounded-lg px-3 py-2 text-sm text-[#f3e3c0] placeholder-[#f3e3c0]/20 outline-none focus:border-[#d4a55a]/60 transition-colors"
+          placeholder="e.g. Hosting, Domain renewal, Fonts license, Software..."
+          className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
         />
-        {error && <p className="text-red-400 text-[10px] mt-1">{error}</p>}
+        {error && <p className="text-rose-600 text-xs mt-1">{error}</p>}
       </div>
-      <div className="w-28 shrink-0">
+
+      <div className="w-full sm:w-36 shrink-0">
+        <label className="block text-[11px] font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+          Cost (₹)
+        </label>
         <input
           type="number"
           value={form.amount}
           onChange={(e) => setForm({ ...form, amount: e.target.value })}
-          placeholder="Amount ₹"
+          placeholder="500"
           min="0"
-          className="w-full bg-[#0a1f1e] border border-[#d4a55a]/30 rounded-lg px-3 py-2 text-sm text-[#f3e3c0] placeholder-[#f3e3c0]/20 outline-none focus:border-[#d4a55a]/60 transition-colors"
+          className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
         />
       </div>
+
       <button
         type="submit"
-        className="shrink-0 bg-[#d4a55a] text-[#0a1f1e] rounded-lg px-4 py-2 text-sm font-semibold hover:bg-[#c49348] transition-colors"
+        className="shrink-0 bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-5 py-2.5 text-sm font-semibold shadow-xs hover:shadow-md transition-all cursor-pointer"
       >
-        Add
+        Record Expense +
       </button>
     </form>
   );
@@ -81,10 +109,9 @@ function AddExpenseForm({ month, onAdd }: {
 
 interface MonthSummary {
   month: string;
-  revenue: number;        // sum of fullPaid orders
-  advanceIn: number;      // sum of advance received
-  expenses: number;       // sum of monthly expenses
-  profit: number;         // revenue - expenses
+  revenue: number; // sum of fullPaid orders + advance received for this month
+  expenses: number; // sum of monthly expenses
+  profit: number; // revenue - expenses
   orderCount: number;
 }
 
@@ -104,13 +131,16 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
     return allMonths.map((m) => {
       const mo = orders.filter((o) => o.month === m);
       const me = expenses.filter((e) => e.month === m);
-      const revenue = mo.filter((o) => o.fullPaid).reduce((s, o) => s + o.amount, 0);
-      const advanceIn = mo.reduce((s, o) => s + o.advance, 0);
+
+      // Revenue collected: settled full orders + any advance received
+      const revenue =
+        mo.filter((o) => o.fullPaid).reduce((s, o) => s + o.amount, 0) +
+        mo.filter((o) => !o.fullPaid && o.advancePaid).reduce((s, o) => s + o.advance, 0);
+
       const expTotal = me.reduce((s, e) => s + e.amount, 0);
       return {
         month: m,
         revenue,
-        advanceIn,
         expenses: expTotal,
         profit: revenue - expTotal,
         orderCount: mo.length,
@@ -119,7 +149,11 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
   }, [allMonths, orders, expenses]);
 
   const curSummary = summaries.find((s) => s.month === selectedMonth) ?? {
-    month: selectedMonth, revenue: 0, advanceIn: 0, expenses: 0, profit: 0, orderCount: 0,
+    month: selectedMonth,
+    revenue: 0,
+    expenses: 0,
+    profit: 0,
+    orderCount: 0,
   };
   const curExpenses = expenses.filter((e) => e.month === selectedMonth);
 
@@ -128,16 +162,12 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
   };
 
   const handleDeleteExpense = (id: string) => {
-    if (!confirm("Delete this expense?")) return;
+    if (!confirm("Remove this expense record?")) return;
     onUpdate(expenses.filter((e) => e.id !== id));
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-[#f3e3c0] text-xl" style={{ fontFamily: "'Antic Didone', serif" }}>
-        Finance
-      </h2>
-
+    <div className="space-y-8">
       {/* Year-at-a-glance totals */}
       {(() => {
         const yr = new Date().getFullYear().toString();
@@ -145,26 +175,57 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
         const yrRevenue = yrSummaries.reduce((s, m) => s + m.revenue, 0);
         const yrExpenses = yrSummaries.reduce((s, m) => s + m.expenses, 0);
         const yrProfit = yrRevenue - yrExpenses;
+
         return (
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { label: `${yr} Revenue`, value: fmt(yrRevenue), color: "text-emerald-400" },
-              { label: `${yr} Expenses`, value: fmt(yrExpenses), color: "text-red-400" },
-              { label: `${yr} Profit`, value: fmt(yrProfit), color: yrProfit >= 0 ? "text-[#d4a55a]" : "text-red-400" },
-            ].map(({ label, value, color }) => (
-              <div key={label} className="bg-[#0d2b29] border border-[#d4a55a]/20 rounded-xl p-4 text-center">
-                <div className={`text-lg font-bold ${color}`}>{value}</div>
-                <div className="text-[10px] text-[#f3e3c0]/40 mt-0.5 tracking-wide">{label}</div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-5 shadow-xs">
+              <div className="text-[10.5px] font-bold text-[#8c6218] tracking-[0.2em] uppercase mb-1">
+                {yr} Studio Gross Inflow
               </div>
-            ))}
+              <div
+                className="text-2xl sm:text-3xl font-bold text-[#00756e]"
+                style={{ fontFamily: "'Antic Didone', serif" }}
+              >
+                {fmt(yrRevenue)}
+              </div>
+              <div className="text-[11px] text-[#0d3b38]/50 mt-1">Total revenue collected</div>
+            </div>
+
+            <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-5 shadow-xs">
+              <div className="text-[10.5px] font-bold text-[#8c6218] tracking-[0.2em] uppercase mb-1">
+                {yr} Studio Expenses
+              </div>
+              <div
+                className="text-2xl sm:text-3xl font-bold text-rose-700"
+                style={{ fontFamily: "'Antic Didone', serif" }}
+              >
+                {fmt(yrExpenses)}
+              </div>
+              <div className="text-[11px] text-[#0d3b38]/50 mt-1">Infrastructure & operational costs</div>
+            </div>
+
+            <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-5 shadow-xs">
+              <div className="text-[10.5px] font-bold text-[#8c6218] tracking-[0.2em] uppercase mb-1">
+                {yr} Net Studio Profit
+              </div>
+              <div
+                className={`text-2xl sm:text-3xl font-bold ${
+                  yrProfit >= 0 ? "text-[#005a55]" : "text-rose-700"
+                }`}
+                style={{ fontFamily: "'Antic Didone', serif" }}
+              >
+                {fmt(yrProfit)}
+              </div>
+              <div className="text-[11px] text-[#0d3b38]/50 mt-1">After operational deductions</div>
+            </div>
           </div>
         );
       })()}
 
       {/* Month selector */}
       <div>
-        <label className="block text-xs text-[#f3e3c0]/50 mb-2 tracking-widest uppercase">
-          Select Month
+        <label className="block text-xs font-bold text-[#8c6218] tracking-widest uppercase mb-3">
+          Select Fiscal Period
         </label>
         <div className="flex flex-wrap gap-2">
           {allMonths.map((m) => (
@@ -172,10 +233,10 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
               key={m}
               type="button"
               onClick={() => setSelectedMonth(m)}
-              className={`px-3 py-1.5 text-xs rounded-full border transition-all ${
+              className={`px-4 py-2 text-xs font-bold rounded-full border transition-all cursor-pointer ${
                 selectedMonth === m
-                  ? "bg-[#d4a55a] border-[#d4a55a] text-[#0a1f1e] font-bold"
-                  : "border-[#d4a55a]/30 text-[#f3e3c0]/60 hover:border-[#d4a55a]/60"
+                  ? "bg-[#005a55] border-[#005a55] text-[#F7F5EF] shadow-xs"
+                  : "bg-white border-[#d4a55a]/40 text-[#005a55] hover:border-[#005a55]"
               }`}
             >
               {monthLabel(m)}
@@ -184,93 +245,129 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
         </div>
       </div>
 
-      {/* Month detail */}
-      <div className="bg-[#0d2b29] border border-[#d4a55a]/20 rounded-2xl p-6 space-y-6">
-        <h3 className="text-[#d4a55a] font-semibold text-sm tracking-wide">
-          {monthLabel(selectedMonth)}
-        </h3>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {[
-            { label: "Revenue", value: fmt(curSummary.revenue), color: "text-emerald-400" },
-            { label: "Advance In", value: fmt(curSummary.advanceIn), color: "text-amber-400" },
-            { label: "Expenses", value: fmt(curSummary.expenses), color: "text-red-400" },
-            {
-              label: "Net Profit",
-              value: fmt(curSummary.profit),
-              color: curSummary.profit >= 0 ? "text-[#d4a55a]" : "text-red-400",
-            },
-          ].map(({ label, value, color }) => (
-            <div key={label} className="bg-[#0a1f1e] rounded-xl p-3 text-center">
-              <div className={`text-base font-bold ${color}`}>{value}</div>
-              <div className="text-[10px] text-[#f3e3c0]/40 mt-0.5">{label}</div>
+      {/* Selected Month Detail Card */}
+      <div className="bg-white border border-[#d4a55a]/35 rounded-3xl p-6 sm:p-8 shadow-[0_6px_30px_rgba(0,90,85,0.04)] space-y-7">
+        <div className="flex items-center justify-between border-b border-[#d4a55a]/20 pb-4 flex-wrap gap-2">
+          <div>
+            <div className="text-[10px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-1">
+              Monthly Statement
             </div>
-          ))}
+            <h3
+              className="text-2xl text-[#005a55]"
+              style={{ fontFamily: "'Antic Didone', serif" }}
+            >
+              {monthLabel(selectedMonth)} Financial Breakdown
+            </h3>
+          </div>
         </div>
 
-        {/* Orders for this month */}
+        {/* 3 Metric Pills */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="bg-[#fdfcf7] border border-[#d4a55a]/25 rounded-2xl p-4 text-center">
+            <div className="text-xl font-bold text-[#00756e]">{fmt(curSummary.revenue)}</div>
+            <div className="text-[11px] text-[#0d3b38]/50 mt-1 uppercase tracking-wider font-semibold">
+              Period Inflow
+            </div>
+          </div>
+
+          <div className="bg-[#fdfcf7] border border-[#d4a55a]/25 rounded-2xl p-4 text-center">
+            <div className="text-xl font-bold text-rose-700">{fmt(curSummary.expenses)}</div>
+            <div className="text-[11px] text-[#0d3b38]/50 mt-1 uppercase tracking-wider font-semibold">
+              Total Expenses
+            </div>
+          </div>
+
+          <div className="bg-[#fdfcf7] border border-[#d4a55a]/25 rounded-2xl p-4 text-center">
+            <div
+              className={`text-xl font-bold ${
+                curSummary.profit >= 0 ? "text-[#005a55]" : "text-rose-700"
+              }`}
+            >
+              {fmt(curSummary.profit)}
+            </div>
+            <div className="text-[11px] text-[#0d3b38]/50 mt-1 uppercase tracking-wider font-semibold">
+              Net Profit
+            </div>
+          </div>
+        </div>
+
+        {/* Commissions Recorded this Month */}
         {(() => {
           const mo = orders.filter((o) => o.month === selectedMonth);
-          return mo.length > 0 ? (
+          return (
             <div>
-              <h4 className="text-xs text-[#f3e3c0]/50 tracking-widest uppercase mb-3">
-                Orders ({mo.length})
+              <h4 className="text-xs font-bold text-[#8c6218] tracking-widest uppercase mb-3">
+                Commissions Logged this Month ({mo.length})
               </h4>
-              <div className="space-y-2">
-                {mo.map((o) => (
-                  <div
-                    key={o.id}
-                    className="flex items-center justify-between gap-3 px-3 py-2.5 bg-[#0a1f1e] rounded-lg"
-                  >
-                    <div>
-                      <div className="text-sm text-[#f3e3c0]">{o.clientName}</div>
-                      <div className="text-[10px] text-[#f3e3c0]/40">{o.projectType}</div>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <div className={`text-sm font-semibold ${o.fullPaid ? "text-emerald-400" : "text-amber-400"}`}>
-                        {fmt(o.amount)}
+              {mo.length > 0 ? (
+                <div className="space-y-2">
+                  {mo.map((o) => (
+                    <div
+                      key={o.id}
+                      className="flex items-center justify-between gap-3 px-4 py-3 bg-[#fdfcf7] border border-[#d4a55a]/20 rounded-xl"
+                    >
+                      <div>
+                        <div
+                          className="text-sm font-semibold text-[#005a55]"
+                          style={{ fontFamily: "'Antic Didone', serif" }}
+                        >
+                          {o.clientName}
+                        </div>
+                        <div className="text-[11px] text-[#8c6218] font-medium">{o.projectType}</div>
                       </div>
-                      <div className="text-[10px] text-[#f3e3c0]/40">
-                        {o.fullPaid ? "✓ Full paid" : o.advancePaid ? `Adv: ${fmt(o.advance)}` : "Unpaid"}
+                      <div className="text-right">
+                        <div className="text-sm font-bold text-[#005a55]">{fmt(o.amount)}</div>
+                        <div className="text-[10px] text-[#0d3b38]/50 font-semibold">
+                          {o.fullPaid ? "✓ Full Paid" : o.advancePaid ? `Adv: ${fmt(o.advance)}` : "Due"}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-[#fdfcf7] border border-[#d4a55a]/20 rounded-xl p-4 text-center text-xs text-[#005a55]/60">
+                  No commissions billed in this period.
+                </div>
+              )}
             </div>
-          ) : (
-            <p className="text-xs text-[#f3e3c0]/30 text-center py-2">No orders for this month.</p>
           );
         })()}
 
-        {/* Expenses */}
-        <div>
-          <h4 className="text-xs text-[#f3e3c0]/50 tracking-widest uppercase mb-3">
-            Expenses
+        {/* Expense Registry */}
+        <div className="pt-2 border-t border-[#d4a55a]/20">
+          <h4 className="text-xs font-bold text-[#8c6218] tracking-widest uppercase mb-3">
+            Operational Expenses ({curExpenses.length})
           </h4>
-          <div className="space-y-2 mb-4">
-            {curExpenses.length === 0 && (
-              <p className="text-xs text-[#f3e3c0]/30 text-center py-2">No expenses logged yet.</p>
-            )}
-            {curExpenses.map((e) => (
-              <div
-                key={e.id}
-                className="flex items-center justify-between gap-3 px-3 py-2.5 bg-[#0a1f1e] rounded-lg"
-              >
-                <span className="text-sm text-[#f3e3c0]/80 flex-1 truncate">{e.description}</span>
-                <span className="text-sm font-semibold text-red-400 shrink-0">{fmt(e.amount)}</span>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteExpense(e.id)}
-                  className="text-[#f3e3c0]/20 hover:text-red-400 text-xs transition-colors shrink-0"
+
+          <div className="space-y-2 mb-5">
+            {curExpenses.length === 0 ? (
+              <p className="text-xs text-[#005a55]/50 italic py-2">
+                No expenses logged for this month yet.
+              </p>
+            ) : (
+              curExpenses.map((e) => (
+                <div
+                  key={e.id}
+                  className="flex items-center justify-between gap-3 px-4 py-3 bg-[#fdfcf7] border border-[#d4a55a]/20 rounded-xl"
                 >
-                  ✕
-                </button>
-              </div>
-            ))}
+                  <span className="text-xs font-medium text-[#005a55] flex-1">{e.description}</span>
+                  <span className="text-sm font-bold text-rose-700 shrink-0">{fmt(e.amount)}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteExpense(e.id)}
+                    className="text-rose-500 hover:text-rose-700 text-xs font-semibold px-2 py-1 rounded transition-colors cursor-pointer"
+                    title="Remove expense"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))
+            )}
           </div>
-          <AddExpenseForm month={selectedMonth} onAdd={handleAddExpense} />
+
+          <div className="bg-[#fdfcf7] border border-[#d4a55a]/30 rounded-2xl p-4">
+            <AddExpenseForm month={selectedMonth} onAdd={handleAddExpense} />
+          </div>
         </div>
       </div>
     </div>
