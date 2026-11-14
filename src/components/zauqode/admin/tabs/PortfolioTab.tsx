@@ -3,13 +3,16 @@
  * Features dynamic category-adaptive fields for Invitations, Websites, Stalls & Videos.
  */
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import { type AdminWork, uid } from "../StudioDesk";
 import { uploadArtworkFn } from "@/lib/adminServerFns";
+import { PORTFOLIO_WORKS } from "@/components/zauqode/portfolioData";
 
 interface Props {
   works: AdminWork[];
+  featuredHomeIds?: string[];
   onUpdate: (works: AdminWork[]) => void;
+  onUpdateFeatured?: (featuredHomeIds: string[]) => void;
 }
 
 const CATEGORIES = [
@@ -30,10 +33,14 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 function WorkCard({
   work,
+  isFeatured,
+  onToggleFeatured,
   onToggleHide,
   onDelete,
 }: {
   work: AdminWork;
+  isFeatured: boolean;
+  onToggleFeatured: () => void;
   onToggleHide: () => void;
   onDelete: () => void;
 }) {
@@ -54,11 +61,18 @@ function WorkCard({
               className="w-full h-full object-cover object-top"
               loading="lazy"
             />
-            {work.hidden && (
-              <span className="absolute top-2.5 right-2.5 bg-neutral-900/80 text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full">
-                Hidden
-              </span>
-            )}
+            <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
+              {isFeatured && (
+                <span className="bg-[#005a55] text-[#F7F5EF] text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full shadow-xs">
+                  ★ On Home
+                </span>
+              )}
+              {work.hidden && (
+                <span className="bg-neutral-900/80 text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full">
+                  Hidden
+                </span>
+              )}
+            </div>
           </div>
         ) : (
           <div className="aspect-[4/3] bg-[#eef8f3] flex items-center justify-center text-[#005a55]/30 text-xs">
@@ -116,8 +130,22 @@ function WorkCard({
         </div>
       </div>
 
-      <div className="p-4 pt-0 bg-white">
-        <div className="flex gap-2 pt-3 border-t border-[#d4a55a]/15">
+      <div className="p-4 pt-0 bg-white space-y-2">
+        <button
+          type="button"
+          onClick={onToggleFeatured}
+          className={`w-full text-xs py-1.5 px-3 rounded-lg border font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+            isFeatured
+              ? "bg-[#eef8f3] border-[#00756e]/50 text-[#00756e] shadow-2xs"
+              : "bg-[#fdfcf7] border-[#d4a55a]/40 text-[#8c6218] hover:border-[#005a55]"
+          }`}
+          title={isFeatured ? "Currently shown in Home Selected Portfolio" : "Feature in Home Selected Portfolio"}
+        >
+          <span>{isFeatured ? "★" : "☆"}</span>
+          <span>{isFeatured ? "Featured on Home Showcase" : "Feature on Home Showcase"}</span>
+        </button>
+
+        <div className="flex gap-2 pt-2 border-t border-[#d4a55a]/15">
           <button
             type="button"
             onClick={onToggleHide}
@@ -142,7 +170,7 @@ function WorkCard({
   );
 }
 
-function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
+function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork, featureOnHome: boolean) => void }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
     name: "",
@@ -153,6 +181,7 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
     liveUrl: "",
     videoUrl: "",
   });
+  const [featureOnHome, setFeatureOnHome] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
@@ -219,7 +248,7 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
       addedAt: new Date().toISOString(),
     };
 
-    onAdd(work);
+    onAdd(work, featureOnHome);
 
     // Reset
     setForm({
@@ -231,6 +260,7 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
       liveUrl: "",
       videoUrl: "",
     });
+    setFeatureOnHome(true);
     setPreviewUrl(null);
     setUploadedUrl(null);
     if (fileRef.current) fileRef.current.value = "";
@@ -424,6 +454,19 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
         )}
       </div>
 
+      <div className="flex items-center gap-2.5 pt-1 px-1">
+        <input
+          type="checkbox"
+          id="featureOnHome"
+          checked={featureOnHome}
+          onChange={(e) => setFeatureOnHome(e.target.checked)}
+          className="w-4 h-4 rounded border-[#d4a55a] text-[#005a55] focus:ring-[#005a55] cursor-pointer"
+        />
+        <label htmlFor="featureOnHome" className="text-xs font-semibold text-[#005a55] cursor-pointer select-none">
+          Feature this creation in Home Selected Portfolio ("Meaningful stories, thoughtfully shaped")
+        </label>
+      </div>
+
       {error && (
         <p className="text-rose-600 text-xs font-medium bg-rose-50 border border-rose-200 rounded-lg p-2.5">
           {error}
@@ -441,9 +484,86 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
   );
 }
 
-export function PortfolioTab({ works, onUpdate }: Props) {
-  const handleAdd = (work: AdminWork) => {
+export function PortfolioTab({ works, featuredHomeIds, onUpdate, onUpdateFeatured }: Props) {
+  // Default featured IDs if not yet configured in blob:
+  const defaultFeatured = useMemo(() => {
+    return [
+      ...works.filter((w) => !w.hidden).map((w) => w.id),
+      "01",
+      "06",
+      "11",
+      "12",
+    ];
+  }, [works]);
+
+  const activeFeaturedIds = useMemo(() => {
+    if (featuredHomeIds && featuredHomeIds.length > 0) {
+      return featuredHomeIds;
+    }
+    return defaultFeatured;
+  }, [featuredHomeIds, defaultFeatured]);
+
+  // Combined pool of all works (both cloud uploads and catalogue items)
+  const allPool = useMemo(() => {
+    const list: { id: string; name: string; label: string; thumb: string; category: string }[] = [];
+    works.forEach((w) => {
+      list.push({
+        id: w.id,
+        name: w.name,
+        label: w.label,
+        thumb: w.thumbUrl,
+        category: w.category,
+      });
+    });
+    PORTFOLIO_WORKS.forEach((p) => {
+      if (!list.some((item) => item.id === p.id)) {
+        list.push({
+          id: p.id,
+          name: p.name,
+          label: p.label,
+          thumb: p.thumb,
+          category: p.category,
+        });
+      }
+    });
+    return list;
+  }, [works]);
+
+  const featuredItems = useMemo(() => {
+    return activeFeaturedIds
+      .map((id) => allPool.find((item) => item.id === id))
+      .filter((item): item is typeof allPool[0] => Boolean(item));
+  }, [activeFeaturedIds, allPool]);
+
+  const unfeaturedItems = useMemo(() => {
+    return allPool.filter((item) => !activeFeaturedIds.includes(item.id));
+  }, [allPool, activeFeaturedIds]);
+
+  const toggleFeature = (id: string) => {
+    if (!onUpdateFeatured) return;
+    if (activeFeaturedIds.includes(id)) {
+      onUpdateFeatured(activeFeaturedIds.filter((x) => x !== id));
+    } else {
+      onUpdateFeatured([...activeFeaturedIds, id]);
+    }
+  };
+
+  const moveFeatured = (index: number, direction: -1 | 1) => {
+    if (!onUpdateFeatured) return;
+    const targetIdx = index + direction;
+    if (targetIdx < 0 || targetIdx >= activeFeaturedIds.length) return;
+    const next = [...activeFeaturedIds];
+    const temp = next[index];
+    next[index] = next[targetIdx];
+    next[targetIdx] = temp;
+    onUpdateFeatured(next);
+  };
+
+  const handleAdd = (work: AdminWork, featureOnHome = true) => {
     onUpdate([work, ...works]);
+    if (featureOnHome && onUpdateFeatured) {
+      onUpdateFeatured([work.id, ...activeFeaturedIds]);
+    }
   };
 
   const handleToggleHide = (id: string) => {
@@ -453,12 +573,15 @@ export function PortfolioTab({ works, onUpdate }: Props) {
   const handleDelete = (id: string) => {
     if (!confirm("Permanently delete this artwork entry?")) return;
     onUpdate(works.filter((w) => w.id !== id));
+    if (onUpdateFeatured && activeFeaturedIds.includes(id)) {
+      onUpdateFeatured(activeFeaturedIds.filter((x) => x !== id));
+    }
   };
 
   const visible = works.filter((w) => !w.hidden).length;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div className="flex items-baseline justify-between flex-wrap gap-2 border-b border-[#d4a55a]/25 pb-4">
         <div>
           <div className="text-[10.5px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-1">
@@ -476,6 +599,134 @@ export function PortfolioTab({ works, onUpdate }: Props) {
         </span>
       </div>
 
+      {/* Selected Portfolio Curator Section */}
+      <div className="bg-white border border-[#d4a55a]/40 rounded-3xl p-6 sm:p-8 shadow-[0_6px_30px_rgba(0,90,85,0.04)] space-y-6">
+        <div className="flex items-start sm:items-center justify-between gap-4 flex-wrap border-b border-[#d4a55a]/25 pb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold text-[#8c6218] tracking-[0.25em] uppercase">
+                Home Page Selected Portfolio
+              </span>
+              <span className="text-[9.5px] uppercase tracking-wider font-bold bg-[#eef8f3] text-[#00756e] px-2 py-0.5 rounded-full border border-[#cdeee3]">
+                Horizontal Scroll
+              </span>
+            </div>
+            <h3
+              className="text-xl sm:text-2xl text-[#005a55] mt-1"
+              style={{ fontFamily: "'Antic Didone', serif" }}
+            >
+              "Meaningful stories, thoughtfully shaped" Curator
+            </h3>
+            <p className="text-xs text-[#0d3b38]/70 mt-1 max-w-2xl leading-relaxed">
+              Decide which creations appear in the horizontal scroll reel on your homepage. Use the arrows to reorder their sequence, or remove and add any creation at any time.
+            </p>
+          </div>
+          <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#fdfcf7] border border-[#d4a55a]/40 text-[#005a55]">
+            {activeFeaturedIds.length} Creations Featured
+          </span>
+        </div>
+
+        {/* Currently Featured Horizontal Reel */}
+        <div>
+          <div className="text-[11px] font-bold text-[#8c6218] tracking-widest uppercase mb-3 flex items-center justify-between">
+            <span>Live Display Order in Horizontal Scroll:</span>
+            <span className="text-[10px] text-[#0d3b38]/50 normal-case font-medium">Use ← → to arrange order</span>
+          </div>
+
+          {featuredItems.length > 0 ? (
+            <div className="flex overflow-x-auto gap-4 pb-3 no-scrollbar">
+              {featuredItems.map((item, idx) => (
+                <div
+                  key={item.id}
+                  className="w-[200px] shrink-0 bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-2xl overflow-hidden shadow-xs flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="aspect-[4/3] bg-[#eef8f3] overflow-hidden relative">
+                      <img
+                        src={item.thumb}
+                        alt={item.name}
+                        className="w-full h-full object-cover object-top"
+                      />
+                      <span className="absolute top-2 left-2 bg-[#005a55] text-[#F7F5EF] text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+                        #{idx + 1}
+                      </span>
+                    </div>
+                    <div className="p-3">
+                      <div className="text-[9.5px] font-bold text-[#8c6218] uppercase tracking-wider truncate">
+                        {item.label}
+                      </div>
+                      <div
+                        className="text-sm font-semibold text-[#005a55] truncate"
+                        style={{ fontFamily: "'Antic Didone', serif" }}
+                      >
+                        {item.name}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 pt-0 flex items-center justify-between gap-1.5 border-t border-[#d4a55a]/20 mt-1">
+                    <button
+                      type="button"
+                      disabled={idx === 0}
+                      onClick={() => moveFeatured(idx, -1)}
+                      className="px-2 py-1 text-xs border border-[#d4a55a]/40 rounded bg-white text-[#005a55] hover:bg-[#eef8f3] disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+                      title="Move left"
+                    >
+                      ←
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => toggleFeature(item.id)}
+                      className="flex-1 text-[10.5px] font-semibold text-rose-600 hover:text-rose-800 py-1 transition-colors cursor-pointer text-center"
+                    >
+                      Remove
+                    </button>
+                    <button
+                      type="button"
+                      disabled={idx === featuredItems.length - 1}
+                      onClick={() => moveFeatured(idx, 1)}
+                      className="px-2 py-1 text-xs border border-[#d4a55a]/40 rounded bg-white text-[#005a55] hover:bg-[#eef8f3] disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+                      title="Move right"
+                    >
+                      →
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-6 text-center text-xs text-[#005a55]/60 bg-[#fdfcf7] rounded-2xl border border-[#d4a55a]/20">
+              No creations featured on home yet. Select from the available works below.
+            </div>
+          )}
+        </div>
+
+        {/* Quick Add Available Works Drawer/List */}
+        {unfeaturedItems.length > 0 && (
+          <div className="pt-3 border-t border-[#d4a55a]/20">
+            <div className="text-[11px] font-bold text-[#8c6218] tracking-widest uppercase mb-3">
+              Add More Creations to Home Selected Portfolio:
+            </div>
+            <div className="flex flex-wrap gap-2.5">
+              {unfeaturedItems.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => toggleFeature(item.id)}
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-[#d4a55a]/40 bg-[#fdfcf7] hover:border-[#005a55] hover:bg-white text-xs font-semibold text-[#005a55] transition-all cursor-pointer shadow-2xs"
+                >
+                  <span className="w-5 h-5 rounded-full bg-[#eef8f3] text-[#00756e] inline-flex items-center justify-center font-bold text-xs shrink-0">
+                    +
+                  </span>
+                  <span className="truncate max-w-[160px]">{item.name}</span>
+                  <span className="text-[10px] text-[#8c6218] font-normal">({item.label})</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
       <AddWorkForm onAdd={handleAdd} />
 
       <div>
@@ -489,6 +740,8 @@ export function PortfolioTab({ works, onUpdate }: Props) {
               <WorkCard
                 key={work.id}
                 work={work}
+                isFeatured={activeFeaturedIds.includes(work.id)}
+                onToggleFeatured={() => toggleFeature(work.id)}
                 onToggleHide={() => handleToggleHide(work.id)}
                 onDelete={() => handleDelete(work.id)}
               />

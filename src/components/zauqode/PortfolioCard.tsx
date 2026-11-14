@@ -74,7 +74,7 @@ export function PortfolioCard({ item, variant, onSelect }: PortfolioCardProps) {
       aria-label={`Preview ${item.name} — ${item.label}`}
       className={
         isHome
-          ? "w-[228px] shrink-0 snap-start sm:w-auto showcase-card group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]"
+          ? "w-[240px] sm:w-[280px] md:w-[310px] shrink-0 snap-start showcase-card group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]"
           : "showcase-card catalogue-card group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00756e]"
       }
     >

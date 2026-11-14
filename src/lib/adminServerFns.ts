@@ -50,6 +50,7 @@ export interface AdminData {
   works: AdminWork[];
   orders: Order[];
   expenses: MonthlyExpense[];
+  featuredHomeIds?: string[];
 }
 
 export function uid(): string {
@@ -86,6 +87,7 @@ export const getAdminDataFn = createServerFn({ method: "GET" }).handler(
         works: data.works || [],
         orders: data.orders || [],
         expenses: data.expenses || [],
+        featuredHomeIds: data.featuredHomeIds || undefined,
       };
     } catch {
       // First run before any data has been saved
@@ -100,7 +102,28 @@ export const saveAdminDataFn = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<{ success: boolean; url?: string }> => {
     const token = getBlobToken();
     try {
-      const blob = await put(BLOB_DATA_KEY, JSON.stringify(data, null, 2), {
+      let existing: AdminData = { works: [], orders: [], expenses: [] };
+      try {
+        const blobInfo = await head(BLOB_DATA_KEY, { token });
+        const res = await fetch(`${blobInfo.url}?_t=${Date.now()}`, { cache: "no-store" });
+        if (res.ok) {
+          existing = (await res.json()) as AdminData;
+        }
+      } catch {
+        // First run
+      }
+
+      const merged: AdminData = {
+        works: data.works ?? existing.works ?? [],
+        orders: data.orders ?? existing.orders ?? [],
+        expenses: data.expenses ?? existing.expenses ?? [],
+        featuredHomeIds:
+          data.featuredHomeIds !== undefined
+            ? data.featuredHomeIds
+            : existing.featuredHomeIds,
+      };
+
+      const blob = await put(BLOB_DATA_KEY, JSON.stringify(merged, null, 2), {
         access: "public",
         contentType: "application/json",
         addRandomSuffix: false,

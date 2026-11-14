@@ -85,17 +85,24 @@ export function RenovatedPortfolio() {
   const [marqueeVisible, setMarqueeVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [dynamicWorks, setDynamicWorks] = useState<WorkItem[]>([]);
+  const [featuredHomeIds, setFeaturedHomeIds] = useState<string[] | null>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
-  // Load dynamically published works from Vercel Blob cloud store
+  // Load dynamically published works and home showcase curation from Vercel Blob cloud store
   useEffect(() => {
     let mounted = true;
     getAdminDataFn()
       .then((data) => {
-        if (!mounted || !data?.works) return;
-        const visible = data.works
-          .filter((w) => !w.hidden)
-          .map(mapAdminWorkToWorkItem);
-        setDynamicWorks(visible);
+        if (!mounted) return;
+        if (data?.works) {
+          const visible = data.works
+            .filter((w) => !w.hidden)
+            .map(mapAdminWorkToWorkItem);
+          setDynamicWorks(visible);
+        }
+        if (data?.featuredHomeIds) {
+          setFeaturedHomeIds(data.featuredHomeIds);
+        }
       })
       .catch((err) => {
         console.error("Failed to load cloud works:", err);
@@ -110,8 +117,22 @@ export function RenovatedPortfolio() {
   }, [dynamicWorks]);
 
   const homeWorks = useMemo(() => {
+    // Combine all available works (cloud uploads + built-in catalogue)
+    const map = new Map<string, WorkItem>();
+    PORTFOLIO_WORKS.forEach((w) => map.set(w.id, w));
+    dynamicWorks.forEach((w) => map.set(w.id, w));
+
+    if (featuredHomeIds && featuredHomeIds.length > 0) {
+      const selected = featuredHomeIds
+        .map((id) => map.get(id))
+        .filter((w): w is WorkItem => Boolean(w));
+      if (selected.length > 0) {
+        return selected;
+      }
+    }
+
     return [...dynamicWorks, ...HOME_SELECTED_WORKS];
-  }, [dynamicWorks]);
+  }, [dynamicWorks, featuredHomeIds]);
 
   const allInvitations = useMemo(() => {
     const dynamicInvs = dynamicWorks.filter(
@@ -727,21 +748,53 @@ export function RenovatedPortfolio() {
                 </h2>
               </div>
 
-              {/* Curated Cards */}
-              <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 -mx-4 px-4 scroll-pl-4 no-scrollbar sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 w-auto sm:w-full">
-                {homeWorks.map((item) => (
-                  <PortfolioCard
-                    key={item.id}
-                    item={item}
-                    variant="home"
-                    onSelect={handleSelectWork}
-                  />
-                ))}
-                <div className="shrink-0 w-1 sm:hidden" aria-hidden="true" />
+              {/* Horizontal Scroll Reel with Navigation Controls */}
+              <div className="relative group/reel">
+                {/* Scroll Left Button (visible on md+) */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    carouselRef.current?.scrollBy({ left: -320, behavior: "smooth" });
+                  }}
+                  className="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/95 border border-[#d4a55a]/60 text-[#005a55] shadow-[0_4px_18px_rgba(0,90,85,0.14)] hover:bg-[#005a55] hover:text-[#F7F5EF] hover:border-[#005a55] items-center justify-center transition-all cursor-pointer backdrop-blur-xs opacity-75 hover:opacity-100"
+                  aria-label="Scroll left"
+                >
+                  <ArrowIcon direction="left" />
+                </button>
+
+                {/* The Horizontal Reel */}
+                <div
+                  ref={carouselRef}
+                  className="flex overflow-x-auto snap-x snap-mandatory gap-5 sm:gap-6 pb-4 pt-1 px-4 sm:px-2 scroll-pl-4 sm:scroll-pl-2 no-scrollbar scroll-smooth"
+                >
+                  {homeWorks.map((item) => (
+                    <PortfolioCard
+                      key={item.id}
+                      item={item}
+                      variant="home"
+                      onSelect={handleSelectWork}
+                    />
+                  ))}
+                  <div className="shrink-0 w-4" aria-hidden="true" />
+                </div>
+
+                {/* Scroll Right Button (visible on md+) */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    carouselRef.current?.scrollBy({ left: 320, behavior: "smooth" });
+                  }}
+                  className="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/95 border border-[#d4a55a]/60 text-[#005a55] shadow-[0_4px_18px_rgba(0,90,85,0.14)] hover:bg-[#005a55] hover:text-[#F7F5EF] hover:border-[#005a55] items-center justify-center transition-all cursor-pointer backdrop-blur-xs opacity-75 hover:opacity-100"
+                  aria-label="Scroll right"
+                >
+                  <ArrowIcon direction="right" />
+                </button>
               </div>
 
-              <div className="sm:hidden text-center font-ui font-semibold text-[11px] tracking-[0.2em] uppercase text-[#785212] -mt-4">
-                Swipe to explore <ArrowIcon direction="right" className="ml-1" />
+              {/* Swipe / Scroll indicator hint */}
+              <div className="text-center font-ui font-semibold text-[11px] sm:text-xs tracking-[0.2em] uppercase text-[#785212] -mt-2 flex items-center justify-center gap-1.5">
+                <span>Swipe to explore creations</span>
+                <ArrowIcon direction="right" className="inline-block" />
               </div>
 
               <div className="text-center pt-4">
