@@ -35,6 +35,46 @@ function monthLabel(m: string) {
   return `${months[parseInt(mo, 10) - 1]} ${y}`;
 }
 
+export function formatDisplayDate(dateStr?: string, fallbackMonth?: string): string {
+  if (!dateStr) {
+    if (fallbackMonth) {
+      const [y, mo] = fallbackMonth.split("-");
+      if (y && mo) {
+        const months = [
+          "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+        ];
+        return `${months[parseInt(mo, 10) - 1]} ${y}`;
+      }
+    }
+    return "";
+  }
+  try {
+    const clean = dateStr.includes("T") ? dateStr.split("T")[0] : dateStr;
+    const [y, m, d] = clean.split("-");
+    if (y && m && d) {
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      return `${parseInt(d, 10)} ${months[parseInt(m, 10) - 1]} ${y}`;
+    }
+    return dateStr;
+  } catch {
+    return dateStr;
+  }
+}
+
 function AddExpenseForm({
   month,
   onAdd,
@@ -42,7 +82,8 @@ function AddExpenseForm({
   month: string;
   onAdd: (e: MonthlyExpense) => void;
 }) {
-  const [form, setForm] = useState({ description: "", amount: "" });
+  const today = new Date().toISOString().split("T")[0];
+  const [form, setForm] = useState({ description: "", amount: "", date: today });
   const [error, setError] = useState("");
 
   const handleSubmit = (ev: React.FormEvent) => {
@@ -56,14 +97,17 @@ function AddExpenseForm({
       setError("Please enter a valid amount.");
       return;
     }
+    const chosenDate = form.date || today;
+    const targetMonth = chosenDate.slice(0, 7) || month;
     onAdd({
       id: uid(),
-      month,
+      month: targetMonth,
       description: form.description.trim(),
       amount,
+      date: chosenDate,
       createdAt: new Date().toISOString(),
     });
-    setForm({ description: "", amount: "" });
+    setForm({ description: "", amount: "", date: today });
     setError("");
   };
 
@@ -77,13 +121,25 @@ function AddExpenseForm({
           type="text"
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
-          placeholder="e.g. Hosting, Domain renewal, Fonts license, Software..."
+          placeholder="e.g. Meta Ads, Hosting, Domain renewal, Fonts license..."
           className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-2.5 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
         />
         {error && <p className="text-rose-600 text-xs mt-1">{error}</p>}
       </div>
 
       <div className="w-full sm:w-36 shrink-0">
+        <label className="block text-[11px] font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+          Expense Date
+        </label>
+        <input
+          type="date"
+          value={form.date}
+          onChange={(e) => setForm({ ...form, date: e.target.value })}
+          className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-3 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all cursor-pointer font-medium"
+        />
+      </div>
+
+      <div className="w-full sm:w-32 shrink-0">
         <label className="block text-[11px] font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
           Cost (₹)
         </label>
@@ -313,7 +369,13 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
                         >
                           {o.clientName}
                         </div>
-                        <div className="text-[11px] text-[#8c6218] font-medium">{o.projectType}</div>
+                        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                          <span className="text-[11px] text-[#8c6218] font-medium">{o.projectType}</span>
+                          <span className="text-[10px] text-[#0d3b38]/30">·</span>
+                          <span className="text-[11px] text-[#005a55]/80 font-semibold">
+                            Date: {formatDisplayDate(o.date || o.createdAt, o.month)}
+                          </span>
+                        </div>
                       </div>
                       <div className="text-right">
                         <div className="text-sm font-bold text-[#005a55]">{fmt(o.amount)}</div>
@@ -350,16 +412,44 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
                   key={e.id}
                   className="flex items-center justify-between gap-3 px-4 py-3 bg-[#fdfcf7] border border-[#d4a55a]/20 rounded-xl"
                 >
-                  <span className="text-xs font-medium text-[#005a55] flex-1">{e.description}</span>
-                  <span className="text-sm font-bold text-rose-700 shrink-0">{fmt(e.amount)}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteExpense(e.id)}
-                    className="text-rose-500 hover:text-rose-700 text-xs font-semibold px-2 py-1 rounded transition-colors cursor-pointer"
-                    title="Remove expense"
-                  >
-                    ✕
-                  </button>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-sm font-medium text-[#005a55] block truncate">
+                      {e.description}
+                    </span>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-[11px] text-[#8c6218] font-semibold">
+                        Date: {formatDisplayDate(e.date || e.createdAt, e.month)}
+                      </span>
+                      <input
+                        type="date"
+                        value={e.date || (e.createdAt ? e.createdAt.split("T")[0] : "")}
+                        onChange={(ev) => {
+                          const val = ev.target.value;
+                          if (!val) return;
+                          onUpdate(
+                            expenses.map((item) =>
+                              item.id === e.id
+                                ? { ...item, date: val, month: val.slice(0, 7) }
+                                : item
+                            )
+                          );
+                        }}
+                        className="text-[10px] bg-white border border-[#d4a55a]/40 rounded px-1.5 py-0.5 text-[#005a55] cursor-pointer outline-none hover:border-[#005a55]"
+                        title="Adjust expense date"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="text-sm font-bold text-rose-700">{fmt(e.amount)}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteExpense(e.id)}
+                      className="text-rose-400 hover:text-rose-700 text-xs font-semibold px-2 py-1 rounded transition-colors cursor-pointer"
+                      title="Remove expense"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 </div>
               ))
             )}

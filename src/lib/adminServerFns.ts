@@ -30,6 +30,7 @@ export interface Order {
   advancePaid: boolean;
   fullPaid: boolean;
   completed: boolean;
+  date?: string;
   deadline?: string;
   notes?: string;
   createdAt: string;
@@ -41,6 +42,7 @@ export interface MonthlyExpense {
   month: string;
   description: string;
   amount: number;
+  date?: string;
   createdAt: string;
 }
 

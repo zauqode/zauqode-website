@@ -5,6 +5,7 @@
 
 import React, { useState } from "react";
 import { type Order, uid, currentMonth } from "../StudioDesk";
+import { formatDisplayDate } from "./FinanceTab";
 
 interface Props {
   orders: Order[];
@@ -83,6 +84,10 @@ function OrderRow({
             <span className="text-[#8c6218] font-semibold">{order.projectType}</span>
             <span>·</span>
             <span className="text-[#005a55] font-bold">{fmt(order.amount)}</span>
+            <span>·</span>
+            <span className="text-[11px] text-[#005a55]/80 font-medium">
+              {formatDisplayDate(order.date || order.createdAt, order.month)}
+            </span>
             {order.deadline && (
               <>
                 <span>·</span>
@@ -185,6 +190,7 @@ function OrderRow({
 
 function AddOrderForm({ onAdd }: { onAdd: (o: Order) => void }) {
   const [open, setOpen] = useState(false);
+  const today = new Date().toISOString().split("T")[0];
   const [form, setForm] = useState({
     clientName: "",
     projectType: PROJECT_TYPES[0],
@@ -193,6 +199,7 @@ function AddOrderForm({ onAdd }: { onAdd: (o: Order) => void }) {
     advancePaid: false,
     fullPaid: false,
     completed: false,
+    date: today,
     deadline: "",
     notes: "",
   });
@@ -211,6 +218,9 @@ function AddOrderForm({ onAdd }: { onAdd: (o: Order) => void }) {
       return;
     }
 
+    const chosenDate = form.date || today;
+    const targetMonth = chosenDate.slice(0, 7) || currentMonth();
+
     const order: Order = {
       id: uid(),
       clientName: form.clientName.trim(),
@@ -220,10 +230,11 @@ function AddOrderForm({ onAdd }: { onAdd: (o: Order) => void }) {
       advancePaid: form.advancePaid,
       fullPaid: form.fullPaid,
       completed: form.completed,
+      date: chosenDate,
       deadline: form.deadline || undefined,
       notes: form.notes.trim() || undefined,
       createdAt: new Date().toISOString(),
-      month: currentMonth(),
+      month: targetMonth,
     };
     onAdd(order);
     setForm({
@@ -234,6 +245,7 @@ function AddOrderForm({ onAdd }: { onAdd: (o: Order) => void }) {
       advancePaid: false,
       fullPaid: false,
       completed: false,
+      date: today,
       deadline: "",
       notes: "",
     });
@@ -327,6 +339,18 @@ function AddOrderForm({ onAdd }: { onAdd: (o: Order) => void }) {
             placeholder="e.g. 10000"
             min="0"
             className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
+            Order / Commission Date
+          </label>
+          <input
+            type="date"
+            value={form.date}
+            onChange={(e) => setForm({ ...form, date: e.target.value })}
+            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all cursor-pointer font-medium"
           />
         </div>
 
