@@ -88,6 +88,7 @@ export const saveAdminDataFn = createServerFn({ method: "POST" })
         access: "public",
         contentType: "application/json",
         addRandomSuffix: false,
+        allowOverwrite: true,
         token,
       });
       return { success: true, url: blob.url };
