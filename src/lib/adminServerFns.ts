@@ -11,8 +11,12 @@ export interface AdminWork {
   name: string;
   category: string;
   label: string;
+  sub?: string;
   thumbUrl: string;
   liveUrl?: string;
+  videoUrl?: string;
+  story?: string;
+  occasion?: string;
   hidden: boolean;
   addedAt: string;
 }

@@ -62,14 +62,15 @@ function mapAdminWorkToWorkItem(w: AdminWork): WorkItem {
   return {
     id: w.id,
     name: w.name,
-    sub: w.label || "Custom Creation",
+    sub: w.sub || w.label || "Custom Creation",
     category: (w.category as any) || "websites",
     label: w.label || "WEDDING WEBSITE",
     thumb: w.thumbUrl,
     url: w.liveUrl,
-    canIframe: w.category === "websites" && !!w.liveUrl,
-    story: `Bespoke digital creation for ${w.name}.`,
-    occasion: w.category === "websites" ? "Wedding Celebration" : "Celebration",
+    videoUrl: w.videoUrl,
+    canIframe: (w.category === "websites" || w.category === "business") && !!w.liveUrl,
+    story: w.story || `Bespoke digital creation for ${w.name}.`,
+    occasion: w.occasion || (w.category === "websites" ? "Wedding Celebration" : "Celebration"),
   };
 }
 

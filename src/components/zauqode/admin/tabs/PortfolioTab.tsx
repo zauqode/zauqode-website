@@ -1,6 +1,6 @@
 /**
  * Portfolio Tab — Add, manage, and hide portfolio work entries.
- * Styled in Zauqode's signature luxury atelier aesthetic.
+ * Features dynamic category-adaptive fields for Invitations, Websites, Stalls & Videos.
  */
 
 import React, { useState, useRef } from "react";
@@ -15,16 +15,16 @@ interface Props {
 const CATEGORIES = [
   { value: "websites", label: "Wedding Website" },
   { value: "invitations", label: "Invitation Suite" },
+  { value: "stalls", label: "Stall Board" },
   { value: "videos", label: "Video Reel" },
-  { value: "stalls", label: "Stall Design" },
   { value: "business", label: "Business Website" },
 ];
 
 const CATEGORY_LABELS: Record<string, string> = {
   websites: "WEDDING WEBSITE",
   invitations: "INVITATION SUITE",
+  stalls: "STALL BOARD",
   videos: "VIDEO REEL",
-  stalls: "STALL DESIGN",
   business: "BUSINESS WEBSITE",
 };
 
@@ -39,55 +39,85 @@ function WorkCard({
 }) {
   return (
     <div
-      className={`rounded-2xl border overflow-hidden bg-white transition-all shadow-xs hover:shadow-md ${
+      className={`rounded-2xl border overflow-hidden bg-white transition-all shadow-xs hover:shadow-md flex flex-col justify-between ${
         work.hidden
           ? "border-[#d4a55a]/20 opacity-60"
           : "border-[#d4a55a]/35 hover:border-[#005a55]/40"
       }`}
     >
-      {work.thumbUrl ? (
-        <div className="aspect-[4/3] bg-[#eef8f3] overflow-hidden relative">
-          <img
-            src={work.thumbUrl}
-            alt={work.name}
-            className="w-full h-full object-cover object-top"
-            loading="lazy"
-          />
-          {work.hidden && (
-            <span className="absolute top-2.5 right-2.5 bg-neutral-900/80 text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full">
-              Hidden
-            </span>
-          )}
-        </div>
-      ) : (
-        <div className="aspect-[4/3] bg-[#eef8f3] flex items-center justify-center text-[#005a55]/30 text-xs">
-          No artwork uploaded
-        </div>
-      )}
-
-      <div className="p-4 bg-white border-t border-[#d4a55a]/20">
-        <div className="text-[#8c6218] text-[10px] sm:text-[10.5px] font-bold tracking-[0.18em] uppercase mb-1">
-          {work.label}
-        </div>
-        <div
-          className="text-[#005a55] text-base font-medium truncate"
-          style={{ fontFamily: "'Antic Didone', serif" }}
-        >
-          {work.name}
-        </div>
-
-        {work.liveUrl && (
-          <a
-            href={work.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[11px] text-[#00756e] hover:text-[#005a55] hover:underline truncate block mt-1.5 font-medium"
-          >
-            ↗ {work.liveUrl.replace(/^https?:\/\//, "")}
-          </a>
+      <div>
+        {work.thumbUrl ? (
+          <div className="aspect-[4/3] bg-[#eef8f3] overflow-hidden relative">
+            <img
+              src={work.thumbUrl}
+              alt={work.name}
+              className="w-full h-full object-cover object-top"
+              loading="lazy"
+            />
+            {work.hidden && (
+              <span className="absolute top-2.5 right-2.5 bg-neutral-900/80 text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full">
+                Hidden
+              </span>
+            )}
+          </div>
+        ) : (
+          <div className="aspect-[4/3] bg-[#eef8f3] flex items-center justify-center text-[#005a55]/30 text-xs">
+            No artwork uploaded
+          </div>
         )}
 
-        <div className="flex gap-2 mt-4 pt-3 border-t border-[#d4a55a]/15">
+        <div className="p-4 bg-white">
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <span className="text-[#8c6218] text-[10px] sm:text-[10.5px] font-bold tracking-[0.18em] uppercase">
+              {work.label}
+            </span>
+            {work.occasion && (
+              <span className="text-[10px] text-[#00756e] font-semibold bg-[#eef8f3] px-2 py-0.5 rounded-full truncate max-w-[140px]">
+                {work.occasion}
+              </span>
+            )}
+          </div>
+
+          <div
+            className="text-[#005a55] text-lg font-medium leading-snug truncate"
+            style={{ fontFamily: "'Antic Didone', serif" }}
+          >
+            {work.name}
+          </div>
+
+          {work.sub && (
+            <div className="text-[11px] text-[#8c6218] font-medium truncate mt-0.5">
+              {work.sub}
+            </div>
+          )}
+
+          {work.story && (
+            <p className="text-[11.5px] text-[#0d3b38]/70 italic line-clamp-2 mt-2 leading-relaxed">
+              "{work.story}"
+            </p>
+          )}
+
+          {work.liveUrl && (
+            <a
+              href={work.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] text-[#00756e] hover:text-[#005a55] hover:underline truncate block mt-2 font-medium"
+            >
+              ↗ {work.liveUrl.replace(/^https?:\/\//, "")}
+            </a>
+          )}
+
+          {work.videoUrl && (
+            <div className="text-[11px] text-[#8c6218] truncate mt-2 font-medium">
+              🎬 {work.videoUrl.replace(/^https?:\/\//, "")}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="p-4 pt-0 bg-white">
+        <div className="flex gap-2 pt-3 border-t border-[#d4a55a]/15">
           <button
             type="button"
             onClick={onToggleHide}
@@ -117,12 +147,20 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
   const [form, setForm] = useState({
     name: "",
     category: "websites",
+    sub: "",
+    occasion: "",
+    story: "",
     liveUrl: "",
+    videoUrl: "",
   });
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [error, setError] = useState("");
+
+  const isStationery = form.category === "invitations" || form.category === "stalls";
+  const isVideo = form.category === "videos";
+  const isWebsite = form.category === "websites" || form.category === "business";
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -171,13 +209,28 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
       name: form.name.trim(),
       category: form.category,
       label: CATEGORY_LABELS[form.category] || form.category.toUpperCase(),
+      sub: form.sub.trim() || undefined,
+      occasion: form.occasion.trim() || undefined,
+      story: form.story.trim() || undefined,
+      liveUrl: isWebsite && form.liveUrl.trim() ? form.liveUrl.trim() : undefined,
+      videoUrl: isVideo && form.videoUrl.trim() ? form.videoUrl.trim() : undefined,
       thumbUrl: uploadedUrl || previewUrl || "",
-      liveUrl: form.liveUrl.trim() || undefined,
       hidden: false,
       addedAt: new Date().toISOString(),
     };
+
     onAdd(work);
-    setForm({ name: "", category: "websites", liveUrl: "" });
+
+    // Reset
+    setForm({
+      name: "",
+      category: form.category,
+      sub: "",
+      occasion: "",
+      story: "",
+      liveUrl: "",
+      videoUrl: "",
+    });
     setPreviewUrl(null);
     setUploadedUrl(null);
     if (fileRef.current) fileRef.current.value = "";
@@ -198,6 +251,9 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
         >
           Add New Portfolio Creation
         </h3>
+        <p className="text-xs text-[#0d3b38]/60 mt-1">
+          Fields automatically adapt to match what appears on the website for each category.
+        </p>
       </div>
 
       {/* Artwork upload area */}
@@ -241,7 +297,7 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
         )}
       </div>
 
-      {/* Form Fields */}
+      {/* Core Fields */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
@@ -251,7 +307,7 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
             type="text"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            placeholder="e.g. Sonali & Pallav"
+            placeholder={isStationery ? "e.g. Kaadhalum Valaiyalum" : "e.g. Sonali & Pallav"}
             className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
           />
         </div>
@@ -263,7 +319,7 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
           <select
             value={form.category}
             onChange={(e) => setForm({ ...form, category: e.target.value })}
-            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all cursor-pointer"
+            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all cursor-pointer font-semibold"
           >
             {CATEGORIES.map((c) => (
               <option key={c.value} value={c.value}>
@@ -273,18 +329,99 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
           </select>
         </div>
 
-        <div className="sm:col-span-2">
+        {/* Occasion — Relevant for ALL categories (especially Invitations & Stalls) */}
+        <div>
           <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
-            Live Preview URL (Optional)
+            Occasion *
           </label>
           <input
-            type="url"
-            value={form.liveUrl}
-            onChange={(e) => setForm({ ...form, liveUrl: e.target.value })}
-            placeholder="https://client-wedding.zauqode.com"
+            type="text"
+            value={form.occasion}
+            onChange={(e) => setForm({ ...form, occasion: e.target.value })}
+            placeholder={
+              form.category === "stalls"
+                ? "e.g. Wedding Event Bangle Stall"
+                : form.category === "invitations"
+                ? "e.g. Sacred Temple Wedding"
+                : "e.g. Grand Celebration & Itinerary Portal"
+            }
             className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
           />
         </div>
+
+        {/* Subtitle / Eyebrow */}
+        <div>
+          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
+            Subtitle / Theme Eyebrow (Optional)
+          </label>
+          <input
+            type="text"
+            value={form.sub}
+            onChange={(e) => setForm({ ...form, sub: e.target.value })}
+            placeholder={
+              isStationery
+                ? "e.g. Bangle Stall Counter Board"
+                : "e.g. Occasion Website & RSVP Concierge"
+            }
+            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
+          />
+        </div>
+
+        {/* Design Story — Required for Invitations & Stalls modal */}
+        <div className="sm:col-span-2">
+          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
+            Design Story {isStationery && "*"}
+          </label>
+          <textarea
+            value={form.story}
+            onChange={(e) => setForm({ ...form, story: e.target.value })}
+            rows={3}
+            placeholder={
+              isStationery
+                ? "e.g. Bespoke event stall board crafted for a traditional wedding bangle counter. Combines nostalgic Tamil lyrical charm with illustrated bangle stand artwork, temple bells, and festive borders."
+                : "Describe the aesthetic inspiration, mood, and crafted details of this digital creation..."
+            }
+            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all resize-none leading-relaxed"
+          />
+        </div>
+
+        {/* Dynamic Category Specific: Live Website URL for Websites */}
+        {isWebsite && (
+          <div className="sm:col-span-2 bg-[#F7F5EF]/60 border border-[#d4a55a]/30 rounded-2xl p-4 space-y-1.5">
+            <label className="block text-xs font-semibold text-[#005a55] uppercase tracking-wider">
+              Live Website URL *
+            </label>
+            <input
+              type="url"
+              value={form.liveUrl}
+              onChange={(e) => setForm({ ...form, liveUrl: e.target.value })}
+              placeholder="https://joel-weds-tanvi.vercel.app/"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
+            />
+            <p className="text-[11px] text-[#0d3b38]/50">
+              This link is rendered inside the live mobile device frame when clicked on the website.
+            </p>
+          </div>
+        )}
+
+        {/* Dynamic Category Specific: Video URL for Video Reels */}
+        {isVideo && (
+          <div className="sm:col-span-2 bg-[#F7F5EF]/60 border border-[#d4a55a]/30 rounded-2xl p-4 space-y-1.5">
+            <label className="block text-xs font-semibold text-[#005a55] uppercase tracking-wider">
+              Video File / Stream URL *
+            </label>
+            <input
+              type="url"
+              value={form.videoUrl}
+              onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
+              placeholder="https://.../video.mp4"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
+            />
+            <p className="text-[11px] text-[#0d3b38]/50">
+              Direct MP4, WebM, or HLS stream link that plays inside the phone mockup.
+            </p>
+          </div>
+        )}
       </div>
 
       {error && (
