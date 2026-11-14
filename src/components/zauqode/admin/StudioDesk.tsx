@@ -13,51 +13,19 @@ import React, { useState, useEffect, useCallback } from "react";
 import { PortfolioTab } from "./tabs/PortfolioTab";
 import { OrdersTab } from "./tabs/OrdersTab";
 import { FinanceTab } from "./tabs/FinanceTab";
+import {
+  getAdminDataFn,
+  saveAdminDataFn,
+  type AdminData,
+  type AdminWork,
+  type Order,
+  type MonthlyExpense,
+} from "@/lib/adminServerFns";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-export interface AdminWork {
-  id: string;
-  name: string;
-  category: string;
-  label: string;
-  thumbUrl: string;
-  liveUrl?: string;
-  hidden: boolean;
-  addedAt: string;
-}
-
-export interface Order {
-  id: string;
-  clientName: string;
-  projectType: string;
-  amount: number;        // total agreed amount (₹)
-  advance: number;       // advance received (₹)
-  advancePaid: boolean;
-  fullPaid: boolean;
-  completed: boolean;
-  deadline?: string;
-  notes?: string;
-  createdAt: string;
-  month: string;         // "2026-11" for grouping
-}
-
-export interface MonthlyExpense {
-  id: string;
-  month: string;         // "2026-11"
-  description: string;
-  amount: number;        // ₹
-  createdAt: string;
-}
-
-export interface AdminData {
-  works: AdminWork[];
-  orders: Order[];
-  expenses: MonthlyExpense[];
-}
+// Re-export for child tabs
+export type { AdminData, AdminWork, Order, MonthlyExpense };
 
 const SESSION_KEY = "zsd_auth";
-const BLOB_DATA_KEY = "zauqode-admin-data.json";
 // VITE_ZAUQODE_ADMIN_SECRET must be set in Vercel env vars (Production + Preview)
 const ADMIN_SECRET = import.meta.env.VITE_ZAUQODE_ADMIN_SECRET || "";
 
@@ -74,33 +42,23 @@ function currentMonth(): string {
 
 export { uid, currentMonth };
 
-// ─── Blob helpers ────────────────────────────────────────────────────────────
+// ─── Direct Server Functions ──────────────────────────────────────────────────
 
 async function loadAdminData(): Promise<AdminData> {
   try {
-    const res = await fetch(`/api/admin-blob?key=${encodeURIComponent(BLOB_DATA_KEY)}`, {
-      headers: { "x-admin-secret": ADMIN_SECRET },
-    });
-    if (!res.ok) return { works: [], orders: [], expenses: [] };
-    const json = await res.json();
-    return json as AdminData;
-  } catch {
+    return await getAdminDataFn();
+  } catch (err) {
+    console.error("loadAdminData error:", err);
     return { works: [], orders: [], expenses: [] };
   }
 }
 
 async function saveAdminData(data: AdminData): Promise<boolean> {
   try {
-    const res = await fetch("/api/admin-blob", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-admin-secret": ADMIN_SECRET,
-      },
-      body: JSON.stringify({ key: BLOB_DATA_KEY, data }),
-    });
-    return res.ok;
-  } catch {
+    const res = await saveAdminDataFn({ data });
+    return !!res?.success;
+  } catch (err) {
+    console.error("saveAdminData error:", err);
     return false;
   }
 }

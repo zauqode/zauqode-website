@@ -5,8 +5,7 @@
 
 import React, { useState, useRef } from "react";
 import { type AdminWork, uid } from "../StudioDesk";
-
-const ADMIN_SECRET = import.meta.env.VITE_ZAUQODE_ADMIN_SECRET || "";
+import { uploadArtworkFn } from "@/lib/adminServerFns";
 
 interface Props {
   works: AdminWork[];
@@ -130,30 +129,30 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork) => void }) {
     if (!file) return;
     setError("");
 
-    // Local preview
+    // Read base64
     const reader = new FileReader();
-    reader.onload = (ev) => setPreviewUrl(ev.target?.result as string);
-    reader.readAsDataURL(file);
+    reader.onload = async (ev) => {
+      const base64 = ev.target?.result as string;
+      setPreviewUrl(base64);
 
-    // Upload
-    setUploading(true);
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      fd.append("folder", "portfolio");
-      const res = await fetch("/api/admin-upload", {
-        method: "POST",
-        headers: { "x-admin-secret": ADMIN_SECRET },
-        body: fd,
-      });
-      if (!res.ok) throw new Error("Upload failed");
-      const json = await res.json();
-      setUploadedUrl(json.url);
-    } catch {
-      setError("Image upload failed. Ensure server connection.");
-    } finally {
-      setUploading(false);
-    }
+      setUploading(true);
+      try {
+        const res = await uploadArtworkFn({
+          data: {
+            filename: file.name,
+            contentType: file.type || "image/jpeg",
+            base64,
+          },
+        });
+        setUploadedUrl(res.url);
+      } catch (err) {
+        console.error("Artwork upload error:", err);
+        setError("Image upload failed. Please try again.");
+      } finally {
+        setUploading(false);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = (e: React.FormEvent) => {

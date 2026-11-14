@@ -15,3 +15,4 @@ export const Route = createFileRoute("/zauqode-studio-desk")({
 function StudioDeskPage() {
   return <StudioDesk />;
 }
+
