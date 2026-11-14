@@ -6,6 +6,7 @@
 import React, { useState } from "react";
 import { type Order, uid, currentMonth } from "../StudioDesk";
 import { formatDisplayDate } from "./FinanceTab";
+import { DatePickerDDMMYYYY, toDDMMYYYY } from "../DatePickerDDMMYYYY";
 
 interface Props {
   orders: Order[];
@@ -86,12 +87,12 @@ function OrderRow({
             <span className="text-[#005a55] font-bold">{fmt(order.amount)}</span>
             <span>·</span>
             <span className="text-[11px] text-[#005a55]/80 font-medium">
-              {formatDisplayDate(order.date || order.createdAt, order.month)}
+              Date: {formatDisplayDate(order.date || order.createdAt, order.month)}
             </span>
             {order.deadline && (
               <>
                 <span>·</span>
-                <span className="text-[11px]">Due: {order.deadline}</span>
+                <span className="text-[11px]">Due: {toDDMMYYYY(order.deadline)}</span>
               </>
             )}
           </div>
@@ -159,7 +160,7 @@ function OrderRow({
             <div>
               <span className="text-[#0d3b38]/50 block mb-0.5">Target Delivery</span>
               <span className="text-sm font-semibold text-[#005a55]">
-                {order.deadline || "Flexible"}
+                {toDDMMYYYY(order.deadline) || "Flexible"}
               </span>
             </div>
           </div>
@@ -344,13 +345,11 @@ function AddOrderForm({ onAdd }: { onAdd: (o: Order) => void }) {
 
         <div>
           <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
-            Order / Commission Date
+            Order Date
           </label>
-          <input
-            type="date"
+          <DatePickerDDMMYYYY
             value={form.date}
-            onChange={(e) => setForm({ ...form, date: e.target.value })}
-            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all cursor-pointer font-medium"
+            onChange={(d) => setForm({ ...form, date: d })}
           />
         </div>
 
@@ -358,11 +357,10 @@ function AddOrderForm({ onAdd }: { onAdd: (o: Order) => void }) {
           <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
             Delivery Deadline
           </label>
-          <input
-            type="date"
+          <DatePickerDDMMYYYY
             value={form.deadline}
-            onChange={(e) => setForm({ ...form, deadline: e.target.value })}
-            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all cursor-pointer"
+            onChange={(d) => setForm({ ...form, deadline: d })}
+            placeholder="dd/mm/yyyy"
           />
         </div>
 

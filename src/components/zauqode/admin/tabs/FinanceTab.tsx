@@ -5,6 +5,11 @@
 
 import React, { useState, useMemo } from "react";
 import { type Order, type MonthlyExpense, uid, currentMonth } from "../StudioDesk";
+import {
+  DatePickerDDMMYYYY,
+  InlineDatePickerDDMMYYYY,
+  toDDMMYYYY,
+} from "../DatePickerDDMMYYYY";
 
 interface Props {
   orders: Order[];
@@ -40,39 +45,12 @@ export function formatDisplayDate(dateStr?: string, fallbackMonth?: string): str
     if (fallbackMonth) {
       const [y, mo] = fallbackMonth.split("-");
       if (y && mo) {
-        const months = [
-          "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-        ];
-        return `${months[parseInt(mo, 10) - 1]} ${y}`;
+        return `${mo.padStart(2, "0")}/${y}`;
       }
     }
     return "";
   }
-  try {
-    const clean = dateStr.includes("T") ? dateStr.split("T")[0] : dateStr;
-    const [y, m, d] = clean.split("-");
-    if (y && m && d) {
-      const months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-      return `${parseInt(d, 10)} ${months[parseInt(m, 10) - 1]} ${y}`;
-    }
-    return dateStr;
-  } catch {
-    return dateStr;
-  }
+  return toDDMMYYYY(dateStr);
 }
 
 function AddExpenseForm({
@@ -127,15 +105,13 @@ function AddExpenseForm({
         {error && <p className="text-rose-600 text-xs mt-1">{error}</p>}
       </div>
 
-      <div className="w-full sm:w-36 shrink-0">
+      <div className="w-full sm:w-40 shrink-0">
         <label className="block text-[11px] font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
           Expense Date
         </label>
-        <input
-          type="date"
+        <DatePickerDDMMYYYY
           value={form.date}
-          onChange={(e) => setForm({ ...form, date: e.target.value })}
-          className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-3 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all cursor-pointer font-medium"
+          onChange={(d) => setForm({ ...form, date: d })}
         />
       </div>
 
@@ -418,13 +394,11 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
                     </span>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-[11px] text-[#8c6218] font-semibold">
-                        Date: {formatDisplayDate(e.date || e.createdAt, e.month)}
+                        Date:
                       </span>
-                      <input
-                        type="date"
+                      <InlineDatePickerDDMMYYYY
                         value={e.date || (e.createdAt ? e.createdAt.split("T")[0] : "")}
-                        onChange={(ev) => {
-                          const val = ev.target.value;
+                        onChange={(val) => {
                           if (!val) return;
                           onUpdate(
                             expenses.map((item) =>
@@ -434,8 +408,6 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
                             )
                           );
                         }}
-                        className="text-[10px] bg-white border border-[#d4a55a]/40 rounded px-1.5 py-0.5 text-[#005a55] cursor-pointer outline-none hover:border-[#005a55]"
-                        title="Adjust expense date"
                       />
                     </div>
                   </div>
