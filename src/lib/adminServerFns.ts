@@ -52,6 +52,15 @@ export interface AdminData {
   expenses: MonthlyExpense[];
 }
 
+export function uid(): string {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+export function currentMonth(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
 const BLOB_DATA_KEY = "zauqode-admin/zauqode-admin-data.json";
 
 function getBlobToken(): string {
@@ -67,7 +76,8 @@ export const getAdminDataFn = createServerFn({ method: "GET" }).handler(
     const token = getBlobToken();
     try {
       const blobInfo = await head(BLOB_DATA_KEY, { token });
-      const res = await fetch(blobInfo.url, { cache: "no-store" });
+      const cacheBustUrl = `${blobInfo.url}?_t=${Date.now()}`;
+      const res = await fetch(cacheBustUrl, { cache: "no-store" });
       if (!res.ok) {
         return { works: [], orders: [], expenses: [] };
       }

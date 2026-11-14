@@ -20,27 +20,17 @@ import {
   type AdminWork,
   type Order,
   type MonthlyExpense,
+  uid,
+  currentMonth,
 } from "@/lib/adminServerFns";
 
 // Re-export for child tabs
 export type { AdminData, AdminWork, Order, MonthlyExpense };
+export { uid, currentMonth };
 
 const SESSION_KEY = "zsd_auth";
 // VITE_ZAUQODE_ADMIN_SECRET must be set in Vercel env vars (Production + Preview)
 const ADMIN_SECRET = import.meta.env.VITE_ZAUQODE_ADMIN_SECRET || "";
-
-// ─── Utilities ───────────────────────────────────────────────────────────────
-
-function uid(): string {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-}
-
-function currentMonth(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-}
-
-export { uid, currentMonth };
 
 // ─── Direct Server Functions ──────────────────────────────────────────────────
 
@@ -219,13 +209,16 @@ export function StudioDesk() {
     return ok;
   }, []);
 
+  const dataRef = React.useRef(data);
+  dataRef.current = data;
+
   const updateData = useCallback(
     async (patch: Partial<AdminData>) => {
-      const updated = { ...data, ...patch };
+      const updated = { ...dataRef.current, ...patch };
       setData(updated);
       await handleSave(updated);
     },
-    [data, handleSave]
+    [handleSave]
   );
 
   if (!authed) {
