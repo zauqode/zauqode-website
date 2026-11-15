@@ -22,6 +22,23 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
 // from cross-site requests.
 const csrfMiddleware = createCsrfMiddleware({
   filter: (ctx) => ctx.handlerType === "serverFn",
+  origin: (origin: string) => {
+    if (!origin) return true;
+    try {
+      const u = new URL(origin);
+      const host = u.hostname.toLowerCase();
+      return (
+        host === "zauqode.com" ||
+        host.endsWith(".zauqode.com") ||
+        host.endsWith(".vercel.app") ||
+        host === "localhost" ||
+        host === "127.0.0.1"
+      );
+    } catch {
+      return false;
+    }
+  },
+  allowRequestsWithoutOriginCheck: true,
 });
 
 export const startInstance = createStart(() => ({

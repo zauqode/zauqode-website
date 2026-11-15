@@ -210,17 +210,22 @@ export interface UploadPayload {
 export const uploadArtworkFn = createServerFn({ method: "POST" })
   .validator((d: UploadPayload) => d)
   .handler(async ({ data }): Promise<{ url: string }> => {
-    const token = getBlobToken();
-    const cleanName = data.filename.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const rawBase64 = data.base64.replace(/^data:[^;]+;base64,/, "");
-    const buffer = Buffer.from(rawBase64, "base64");
+    try {
+      const token = getBlobToken();
+      const cleanName = (data.filename || "artwork.jpg").replace(/[^a-zA-Z0-9._-]/g, "_");
+      const rawBase64 = data.base64.replace(/^data:[^;]+;base64,/, "");
+      const buffer = Buffer.from(rawBase64, "base64");
 
-    const blob = await put(`portfolio/${Date.now()}-${cleanName}`, buffer, {
-      access: "public",
-      contentType: data.contentType || "image/jpeg",
-      token,
-    });
+      const blob = await put(`portfolio/${Date.now()}-${cleanName}`, buffer, {
+        access: "public",
+        contentType: data.contentType || "image/jpeg",
+        token,
+      });
 
-    return { url: blob.url };
+      return { url: blob.url };
+    } catch (err: any) {
+      console.error("Vercel Blob upload failed:", err);
+      throw new Error(err?.message || "Failed to store image in cloud storage.");
+    }
   });
 

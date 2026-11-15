@@ -10,6 +10,7 @@
 import React, { useState, useRef, useMemo } from "react";
 import { type AdminWork, uid } from "../StudioDesk";
 import { uploadArtworkFn, getDefaultAdminWorks } from "@/lib/adminServerFns";
+import { compressImage } from "@/lib/imageUtils";
 
 interface Props {
   works: AdminWork[];
@@ -134,30 +135,31 @@ function AddWorkModal({
     const file = e.target.files?.[0];
     if (!file) return;
     setError("");
+    setUploading(true);
 
-    const reader = new FileReader();
-    reader.onload = async (ev) => {
-      const base64 = ev.target?.result as string;
-      setPreviewUrl(base64);
+    try {
+      // 1. Instant client-side compression: resizes phone camera photos (5MB-15MB) to ~150KB-250KB
+      const compressed = await compressImage(file, 1400, 0.85);
+      setPreviewUrl(compressed.base64);
 
-      setUploading(true);
-      try {
-        const res = await uploadArtworkFn({
-          data: {
-            filename: file.name,
-            contentType: file.type || "image/jpeg",
-            base64,
-          },
-        });
+      // 2. Upload lightweight optimized image to Vercel Blob
+      const res = await uploadArtworkFn({
+        data: {
+          filename: file.name,
+          contentType: compressed.contentType,
+          base64: compressed.base64,
+        },
+      });
+      if (res?.url) {
         setUploadedUrl(res.url);
-      } catch (err) {
-        console.error("Artwork upload error:", err);
-        setError("Image upload failed. Please try again.");
-      } finally {
-        setUploading(false);
       }
-    };
-    reader.readAsDataURL(file);
+    } catch (err: any) {
+      console.error("Artwork upload error:", err);
+      // Keep local compressed preview so the creator is never blocked from saving their work
+      setError("Cloud storage upload warning: artwork preview stored locally.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -473,30 +475,28 @@ function EditWorkModal({
     const file = e.target.files?.[0];
     if (!file) return;
     setError("");
+    setUploading(true);
 
-    const reader = new FileReader();
-    reader.onload = async (ev) => {
-      const base64 = ev.target?.result as string;
-      setThumbUrl(base64);
+    try {
+      const compressed = await compressImage(file, 1400, 0.85);
+      setThumbUrl(compressed.base64);
 
-      setUploading(true);
-      try {
-        const res = await uploadArtworkFn({
-          data: {
-            filename: file.name,
-            contentType: file.type || "image/jpeg",
-            base64,
-          },
-        });
+      const res = await uploadArtworkFn({
+        data: {
+          filename: file.name,
+          contentType: compressed.contentType,
+          base64: compressed.base64,
+        },
+      });
+      if (res?.url) {
         setThumbUrl(res.url);
-      } catch (err) {
-        console.error("Artwork upload error:", err);
-        setError("Image upload failed. Please try again.");
-      } finally {
-        setUploading(false);
       }
-    };
-    reader.readAsDataURL(file);
+    } catch (err: any) {
+      console.error("Artwork upload error:", err);
+      setError("Cloud storage upload warning: artwork preview stored locally.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
