@@ -13,7 +13,7 @@ import {
   type ActiveMockupState,
   type WorkItem,
 } from "./portfolioData";
-import { getAdminDataFn, type AdminWork } from "@/lib/adminServerFns";
+import { getAdminDataFn, type AdminWork, type AdminData } from "@/lib/adminServerFns";
 import { trackMetaContact, trackMetaLead, trackMetaViewContent } from "@/lib/metaPixel";
 import "./RenovatedPortfolio.css";
 
@@ -78,7 +78,11 @@ function mapAdminWorkToWorkItem(w: AdminWork): WorkItem {
   };
 }
 
-export function RenovatedPortfolio() {
+interface RenovatedPortfolioProps {
+  initialData?: AdminData | null;
+}
+
+export function RenovatedPortfolio({ initialData }: RenovatedPortfolioProps = {}) {
   const [currentRoute, setCurrentRoute] = useState("home");
   const [curtainActive, setCurtainActive] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -88,8 +92,15 @@ export function RenovatedPortfolio() {
   const [activeInvitationIndex, setActiveInvitationIndex] = useState<number | null>(null);
   const [marqueeVisible, setMarqueeVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [dynamicWorks, setDynamicWorks] = useState<WorkItem[]>([]);
-  const [featuredHomeIds, setFeaturedHomeIds] = useState<string[] | null>(null);
+  const [dynamicWorks, setDynamicWorks] = useState<WorkItem[]>(() => {
+    if (initialData?.works && initialData.works.length > 0) {
+      return initialData.works.filter((w) => !w.hidden).map(mapAdminWorkToWorkItem);
+    }
+    return [];
+  });
+  const [featuredHomeIds, setFeaturedHomeIds] = useState<string[] | null>(() => {
+    return initialData?.featuredHomeIds || null;
+  });
   const carouselRef = useRef<HTMLDivElement>(null);
 
   // Load dynamically published works and home showcase curation from Vercel Blob cloud store
@@ -124,7 +135,7 @@ export function RenovatedPortfolio() {
   }, [dynamicWorks]);
 
   const homeWorks = useMemo(() => {
-    const list = allCatalogueWorks;
+    const list = allCatalogueWorks.filter((w) => !w.hidden);
     const map = new Map<string, WorkItem>();
     list.forEach((w) => map.set(w.id, w));
 
@@ -132,12 +143,22 @@ export function RenovatedPortfolio() {
       const selected = featuredHomeIds
         .map((id) => map.get(id))
         .filter((w): w is WorkItem => Boolean(w));
-      if (selected.length > 0) {
-        return selected;
+
+      // Ensure any newly added creations by the creator are featured upfront
+      const selectedIds = new Set(selected.map((w) => w.id));
+      const customNew = list.filter(
+        (w) =>
+          !selectedIds.has(w.id) &&
+          !["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18"].includes(w.id)
+      );
+
+      const combined = [...customNew, ...selected];
+      if (combined.length > 0) {
+        return combined;
       }
     }
 
-    return list.slice(0, 4);
+    return list;
   }, [allCatalogueWorks, featuredHomeIds]);
 
   const allInvitations = useMemo(() => {

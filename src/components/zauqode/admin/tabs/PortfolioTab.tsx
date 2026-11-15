@@ -15,7 +15,7 @@ import { compressImage } from "@/lib/imageUtils";
 interface Props {
   works: AdminWork[];
   featuredHomeIds?: string[];
-  onUpdate: (works: AdminWork[]) => void;
+  onUpdate: (works: AdminWork[], featuredHomeIds?: string[]) => void;
   onUpdateFeatured?: (featuredHomeIds: string[]) => void;
 }
 
@@ -1098,22 +1098,23 @@ export function PortfolioTab({ works, featuredHomeIds, onUpdate, onUpdateFeature
   };
 
   const handleAdd = (work: AdminWork, featureOnHome = true) => {
-    onUpdate([work, ...works]);
-    if (featureOnHome && onUpdateFeatured) {
-      onUpdateFeatured([work.id, ...activeFeaturedIds]);
-    }
+    const updatedWorks = [work, ...works];
+    const updatedFeatured = featureOnHome
+      ? [work.id, ...activeFeaturedIds.filter((id) => id !== work.id)]
+      : activeFeaturedIds;
+    onUpdate(updatedWorks, updatedFeatured);
   };
 
   const handleSaveEdit = (updated: AdminWork, featureOnHome: boolean) => {
-    onUpdate(works.map((w) => (w.id === updated.id ? updated : w)));
-    if (onUpdateFeatured) {
-      const isNowFeatured = activeFeaturedIds.includes(updated.id);
-      if (featureOnHome && !isNowFeatured) {
-        onUpdateFeatured([updated.id, ...activeFeaturedIds]);
-      } else if (!featureOnHome && isNowFeatured) {
-        onUpdateFeatured(activeFeaturedIds.filter((x) => x !== updated.id));
-      }
+    const updatedWorks = works.map((w) => (w.id === updated.id ? updated : w));
+    const isNowFeatured = activeFeaturedIds.includes(updated.id);
+    let updatedFeatured = activeFeaturedIds;
+    if (featureOnHome && !isNowFeatured) {
+      updatedFeatured = [updated.id, ...activeFeaturedIds];
+    } else if (!featureOnHome && isNowFeatured) {
+      updatedFeatured = activeFeaturedIds.filter((x) => x !== updated.id);
     }
+    onUpdate(updatedWorks, updatedFeatured);
   };
 
   const handleToggleHide = (id: string) => {
@@ -1122,10 +1123,9 @@ export function PortfolioTab({ works, featuredHomeIds, onUpdate, onUpdateFeature
 
   const handleDelete = (id: string) => {
     if (!confirm("Permanently delete this creation from your studio portfolio?")) return;
-    onUpdate(works.filter((w) => w.id !== id));
-    if (onUpdateFeatured && activeFeaturedIds.includes(id)) {
-      onUpdateFeatured(activeFeaturedIds.filter((x) => x !== id));
-    }
+    const updatedWorks = works.filter((w) => w.id !== id);
+    const updatedFeatured = activeFeaturedIds.filter((x) => x !== id);
+    onUpdate(updatedWorks, updatedFeatured);
   };
 
   // Restore/Sync defaults utility

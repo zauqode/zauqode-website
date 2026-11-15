@@ -2,8 +2,16 @@ import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { RenovatedPortfolio } from "@/components/zauqode/RenovatedPortfolio";
 import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/seo";
+import { getAdminDataFn } from "@/lib/adminServerFns";
 
 export const Route = createFileRoute("/")({
+  loader: async () => {
+    try {
+      return await getAdminDataFn();
+    } catch {
+      return null;
+    }
+  },
   head: () => ({
     meta: [
       {
@@ -31,9 +39,11 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const initialData = Route.useLoaderData();
+
   useEffect(() => {
     document.title = SITE_TITLE;
   }, []);
 
-  return <RenovatedPortfolio />;
+  return <RenovatedPortfolio initialData={initialData} />;
 }

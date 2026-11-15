@@ -342,7 +342,12 @@ export function StudioDesk() {
               <PortfolioTab
                 works={data.works}
                 featuredHomeIds={data.featuredHomeIds}
-                onUpdate={(works) => updateData({ works })}
+                onUpdate={(works, featuredHomeIds) =>
+                  updateData({
+                    works,
+                    ...(featuredHomeIds ? { featuredHomeIds } : {}),
+                  })
+                }
                 onUpdateFeatured={(featuredHomeIds) => updateData({ featuredHomeIds })}
               />
             )}
