@@ -820,31 +820,6 @@ export function RenovatedPortfolio() {
                     .
                   </h2>
                 </div>
-
-                {/* Prominent Desktop Navigation Arrows */}
-                <div className="hidden sm:flex items-center gap-2.5 self-center sm:self-end">
-                  <span className="text-[11px] font-ui font-semibold tracking-wider uppercase text-[#785212]/80 mr-1">
-                    Swipe or Click
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => scrollCarousel(-1)}
-                    className="w-10 h-10 rounded-full border border-[#d4a55a]/50 bg-white hover:bg-[#005a55] text-[#005a55] hover:text-[#F7F5EF] flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
-                    aria-label="Previous creation"
-                    title="Previous"
-                  >
-                    <ArrowIcon direction="left" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => scrollCarousel(1)}
-                    className="w-10 h-10 rounded-full border border-[#d4a55a]/50 bg-white hover:bg-[#005a55] text-[#005a55] hover:text-[#F7F5EF] flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
-                    aria-label="Next creation"
-                    title="Next"
-                  >
-                    <ArrowIcon direction="right" />
-                  </button>
-                </div>
               </div>
 
               {/* Horizontal Scroll Reel with Drag-to-Swipe & Side Arrow Controls */}
@@ -892,9 +867,8 @@ export function RenovatedPortfolio() {
               </div>
 
               {/* Intuitive visual swipe & navigation indicator */}
-              <div className="flex items-center justify-center gap-2 text-center font-ui font-semibold text-[11px] sm:text-xs tracking-[0.2em] uppercase text-[#785212] -mt-2">
-                <span className="hidden sm:inline">Click &amp; drag mouse or use arrows to explore</span>
-                <span className="sm:hidden">Swipe to explore creations</span>
+              <div className="flex items-center justify-center gap-2 text-center font-ui font-semibold text-xs tracking-[0.22em] uppercase text-[#785212] -mt-2">
+                <span>Swipe to explore creations</span>
                 <ArrowIcon direction="right" className="inline-block" />
               </div>
 
