@@ -68,9 +68,12 @@ function mapAdminWorkToWorkItem(w: AdminWork): WorkItem {
     thumb: w.thumbUrl,
     url: w.liveUrl,
     videoUrl: w.videoUrl,
+    mobileImg: w.mobileImg || w.thumbUrl,
     canIframe: (w.category === "websites" || w.category === "business") && !!w.liveUrl,
     story: w.story || `Bespoke digital creation for ${w.name}.`,
     occasion: w.occasion || (w.category === "websites" ? "Wedding Celebration" : "Celebration"),
+    style: w.style,
+    included: w.included,
   };
 }
 
@@ -113,14 +116,16 @@ export function RenovatedPortfolio() {
   }, []);
 
   const allCatalogueWorks = useMemo(() => {
-    return [...dynamicWorks, ...PORTFOLIO_WORKS];
+    if (dynamicWorks.length > 0) {
+      return dynamicWorks;
+    }
+    return PORTFOLIO_WORKS;
   }, [dynamicWorks]);
 
   const homeWorks = useMemo(() => {
-    // Combine all available works (cloud uploads + built-in catalogue)
+    const list = allCatalogueWorks;
     const map = new Map<string, WorkItem>();
-    PORTFOLIO_WORKS.forEach((w) => map.set(w.id, w));
-    dynamicWorks.forEach((w) => map.set(w.id, w));
+    list.forEach((w) => map.set(w.id, w));
 
     if (featuredHomeIds && featuredHomeIds.length > 0) {
       const selected = featuredHomeIds
@@ -131,14 +136,16 @@ export function RenovatedPortfolio() {
       }
     }
 
-    return [...dynamicWorks, ...HOME_SELECTED_WORKS];
-  }, [dynamicWorks, featuredHomeIds]);
+    return list.slice(0, 4);
+  }, [allCatalogueWorks, featuredHomeIds]);
 
   const allInvitations = useMemo(() => {
-    const dynamicInvs = dynamicWorks.filter(
-      (w) => w.category === "invitations" || w.category === "stalls"
-    );
-    return [...dynamicInvs, ...INVITATION_WORKS];
+    if (dynamicWorks.length > 0) {
+      return dynamicWorks.filter(
+        (w) => w.category === "invitations" || w.category === "stalls"
+      );
+    }
+    return INVITATION_WORKS;
   }, [dynamicWorks]);
 
   const marqueeRef = useRef<HTMLDivElement>(null);

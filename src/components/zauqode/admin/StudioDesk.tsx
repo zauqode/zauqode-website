@@ -283,7 +283,11 @@ export function StudioDesk() {
       <div className="bg-white border-b border-[#d4a55a]/25 px-6 sm:px-10 shadow-xs">
         <div className="max-w-6xl mx-auto flex items-center justify-between flex-wrap gap-4 pt-4">
           <nav className="flex gap-2 sm:gap-3">
-            {TABS.map((t) => (
+            {[
+              { id: "portfolio" as const, label: "Portfolio Works", count: data.works.length, icon: "✦" },
+              { id: "orders" as const, label: "Client Orders", count: data.orders.length, icon: "◈" },
+              { id: "finance" as const, label: "Profit & Expenses", icon: "₹" },
+            ].map((t) => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
@@ -294,7 +298,18 @@ export function StudioDesk() {
                 }`}
               >
                 <span className="text-[#8c6218] text-xs">{t.icon}</span>
-                {t.label}
+                <span>{t.label}</span>
+                {t.count !== undefined && (
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                      tab === t.id
+                        ? "bg-[#005a55] text-[#F7F5EF]"
+                        : "bg-[#005a55]/10 text-[#005a55]"
+                    }`}
+                  >
+                    {t.count}
+                  </span>
+                )}
               </button>
             ))}
           </nav>

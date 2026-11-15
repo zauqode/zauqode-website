@@ -5,6 +5,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { put, head } from "@vercel/blob";
+import { PORTFOLIO_WORKS } from "@/components/zauqode/portfolioData";
 
 export interface AdminWork {
   id: string;
@@ -15,8 +16,11 @@ export interface AdminWork {
   thumbUrl: string;
   liveUrl?: string;
   videoUrl?: string;
+  mobileImg?: string;
   story?: string;
   occasion?: string;
+  style?: string;
+  included?: string[];
   hidden: boolean;
   addedAt: string;
 }
@@ -51,6 +55,27 @@ export interface AdminData {
   orders: Order[];
   expenses: MonthlyExpense[];
   featuredHomeIds?: string[];
+  seeded?: boolean;
+}
+
+export function getDefaultAdminWorks(): AdminWork[] {
+  return PORTFOLIO_WORKS.map((w) => ({
+    id: w.id,
+    name: w.name,
+    category: w.category,
+    label: w.label || (w.category === "websites" ? "WEDDING WEBSITE" : w.category.toUpperCase()),
+    sub: w.sub || "",
+    thumbUrl: w.thumb,
+    liveUrl: w.url || "",
+    videoUrl: w.videoUrl || "",
+    mobileImg: w.mobileImg || "",
+    story: w.story || "",
+    occasion: w.occasion || "",
+    style: w.style || "",
+    included: w.included || [],
+    hidden: false,
+    addedAt: "2026-01-01T00:00:00.000Z",
+  }));
 }
 
 export function uid(): string {
@@ -80,18 +105,55 @@ export const getAdminDataFn = createServerFn({ method: "GET" }).handler(
       const cacheBustUrl = `${blobInfo.url}?_t=${Date.now()}`;
       const res = await fetch(cacheBustUrl, { cache: "no-store" });
       if (!res.ok) {
-        return { works: [], orders: [], expenses: [] };
+        return {
+          works: getDefaultAdminWorks(),
+          orders: [],
+          expenses: [],
+          featuredHomeIds: ["01", "06", "11", "12"],
+          seeded: true,
+        };
       }
       const data = (await res.json()) as AdminData;
+
+      let works = data.works || [];
+      let seeded = data.seeded ?? false;
+      let featuredHomeIds = data.featuredHomeIds;
+
+      // Seed earlier website catalogue if not yet seeded
+      if (!seeded) {
+        const defaults = getDefaultAdminWorks();
+        const existingIds = new Set(works.map((w) => w.id));
+        const missingDefaults = defaults.filter((d) => !existingIds.has(d.id));
+        works = [...works, ...missingDefaults];
+        seeded = true;
+      }
+
+      if (!featuredHomeIds || featuredHomeIds.length === 0) {
+        featuredHomeIds = [
+          ...works.filter((w) => !w.hidden && !["01", "06", "11", "12"].includes(w.id)).map((w) => w.id),
+          "01",
+          "06",
+          "11",
+          "12",
+        ];
+      }
+
       return {
-        works: data.works || [],
+        works,
         orders: data.orders || [],
         expenses: data.expenses || [],
-        featuredHomeIds: data.featuredHomeIds || undefined,
+        featuredHomeIds,
+        seeded,
       };
     } catch {
       // First run before any data has been saved
-      return { works: [], orders: [], expenses: [] };
+      return {
+        works: getDefaultAdminWorks(),
+        orders: [],
+        expenses: [],
+        featuredHomeIds: ["01", "06", "11", "12"],
+        seeded: true,
+      };
     }
   }
 );
@@ -121,6 +183,7 @@ export const saveAdminDataFn = createServerFn({ method: "POST" })
           data.featuredHomeIds !== undefined
             ? data.featuredHomeIds
             : existing.featuredHomeIds,
+        seeded: data.seeded ?? existing.seeded ?? true,
       };
 
       const blob = await put(BLOB_DATA_KEY, JSON.stringify(merged, null, 2), {

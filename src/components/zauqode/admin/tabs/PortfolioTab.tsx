@@ -1,12 +1,15 @@
 /**
- * Portfolio Tab — Add, manage, and hide portfolio work entries.
- * Features dynamic category-adaptive fields for Invitations, Websites, Stalls & Videos.
+ * Portfolio Tab — Manage, edit, hide, and curate portfolio works.
+ * Features:
+ *  - Full CRUD: Create, Read (Grid & Compact Table), Update (Edit Modal), Delete.
+ *  - Sub-views: "All Portfolio Works" vs "Home Showcase Curator" (no infinite scrolling).
+ *  - Search & Category filtering.
+ *  - Pre-seeded with all earlier website catalogue works.
  */
 
 import React, { useState, useRef, useMemo } from "react";
 import { type AdminWork, uid } from "../StudioDesk";
-import { uploadArtworkFn } from "@/lib/adminServerFns";
-import { PORTFOLIO_WORKS } from "@/components/zauqode/portfolioData";
+import { uploadArtworkFn, getDefaultAdminWorks } from "@/lib/adminServerFns";
 
 interface Props {
   works: AdminWork[];
@@ -31,146 +34,78 @@ const CATEGORY_LABELS: Record<string, string> = {
   business: "BUSINESS WEBSITE",
 };
 
-function WorkCard({
-  work,
-  isFeatured,
-  onToggleFeatured,
-  onToggleHide,
-  onDelete,
+// ─── Modal Dialog Wrapper ─────────────────────────────────────────────────────
+
+function Modal({
+  open,
+  onClose,
+  title,
+  subtitle,
+  children,
+  maxWidth = "max-w-2xl",
 }: {
-  work: AdminWork;
-  isFeatured: boolean;
-  onToggleFeatured: () => void;
-  onToggleHide: () => void;
-  onDelete: () => void;
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+  maxWidth?: string;
 }) {
+  if (!open) return null;
+
   return (
-    <div
-      className={`rounded-2xl border overflow-hidden bg-white transition-all shadow-xs hover:shadow-md flex flex-col justify-between ${
-        work.hidden
-          ? "border-[#d4a55a]/20 opacity-60"
-          : "border-[#d4a55a]/35 hover:border-[#005a55]/40"
-      }`}
-    >
-      <div>
-        {work.thumbUrl ? (
-          <div className="aspect-[4/3] bg-[#eef8f3] overflow-hidden relative">
-            <img
-              src={work.thumbUrl}
-              alt={work.name}
-              className="w-full h-full object-cover object-top"
-              loading="lazy"
-            />
-            <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
-              {isFeatured && (
-                <span className="bg-[#005a55] text-[#F7F5EF] text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full shadow-xs">
-                  ★ On Home
-                </span>
-              )}
-              {work.hidden && (
-                <span className="bg-neutral-900/80 text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full">
-                  Hidden
-                </span>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="aspect-[4/3] bg-[#eef8f3] flex items-center justify-center text-[#005a55]/30 text-xs">
-            No artwork uploaded
-          </div>
-        )}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-[#005a55]/30 backdrop-blur-xs transition-opacity"
+        onClick={onClose}
+      />
 
-        <div className="p-4 bg-white">
-          <div className="flex items-center justify-between gap-2 mb-1">
-            <span className="text-[#8c6218] text-[10px] sm:text-[10.5px] font-bold tracking-[0.18em] uppercase">
-              {work.label}
-            </span>
-            {work.occasion && (
-              <span className="text-[10px] text-[#00756e] font-semibold bg-[#eef8f3] px-2 py-0.5 rounded-full truncate max-w-[140px]">
-                {work.occasion}
-              </span>
+      {/* Dialog content */}
+      <div
+        className={`relative w-full ${maxWidth} bg-[#F7F5EF] border border-[#d4a55a]/45 rounded-3xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,90,85,0.18)] z-10 max-h-[90vh] overflow-y-auto`}
+      >
+        <div className="flex items-start justify-between border-b border-[#d4a55a]/25 pb-4 mb-6">
+          <div>
+            {subtitle && (
+              <div className="text-[10px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-1">
+                {subtitle}
+              </div>
             )}
-          </div>
-
-          <div
-            className="text-[#005a55] text-lg font-medium leading-snug truncate"
-            style={{ fontFamily: "'Antic Didone', serif" }}
-          >
-            {work.name}
-          </div>
-
-          {work.sub && (
-            <div className="text-[11px] text-[#8c6218] font-medium truncate mt-0.5">
-              {work.sub}
-            </div>
-          )}
-
-          {work.story && (
-            <p className="text-[11.5px] text-[#0d3b38]/70 italic line-clamp-2 mt-2 leading-relaxed">
-              "{work.story}"
-            </p>
-          )}
-
-          {work.liveUrl && (
-            <a
-              href={work.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[11px] text-[#00756e] hover:text-[#005a55] hover:underline truncate block mt-2 font-medium"
+            <h3
+              className="text-2xl text-[#005a55]"
+              style={{ fontFamily: "'Antic Didone', serif" }}
             >
-              ↗ {work.liveUrl.replace(/^https?:\/\//, "")}
-            </a>
-          )}
-
-          {work.videoUrl && (
-            <div className="text-[11px] text-[#8c6218] truncate mt-2 font-medium">
-              🎬 {work.videoUrl.replace(/^https?:\/\//, "")}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="p-4 pt-0 bg-white space-y-2">
-        <button
-          type="button"
-          onClick={onToggleFeatured}
-          className={`w-full text-xs py-1.5 px-3 rounded-lg border font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-            isFeatured
-              ? "bg-[#eef8f3] border-[#00756e]/50 text-[#00756e] shadow-2xs"
-              : "bg-[#fdfcf7] border-[#d4a55a]/40 text-[#8c6218] hover:border-[#005a55]"
-          }`}
-          title={isFeatured ? "Currently shown in Home Selected Portfolio" : "Feature in Home Selected Portfolio"}
-        >
-          <span>{isFeatured ? "★" : "☆"}</span>
-          <span>{isFeatured ? "Featured on Home Showcase" : "Feature on Home Showcase"}</span>
-        </button>
-
-        <div className="flex gap-2 pt-2 border-t border-[#d4a55a]/15">
+              {title}
+            </h3>
+          </div>
           <button
             type="button"
-            onClick={onToggleHide}
-            className={`flex-1 text-xs py-1.5 px-3 rounded-lg border font-semibold transition-colors cursor-pointer ${
-              work.hidden
-                ? "border-[#005a55]/30 text-[#005a55] hover:bg-[#eef8f3]"
-                : "border-[#d4a55a]/40 text-[#8c6218] hover:bg-[#fef9ee]"
-            }`}
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-white border border-[#d4a55a]/40 text-[#005a55] hover:bg-[#005a55] hover:text-[#F7F5EF] flex items-center justify-center text-sm font-semibold transition-all cursor-pointer shadow-2xs"
+            title="Close"
           >
-            {work.hidden ? "Unhide" : "Hide from Site"}
-          </button>
-          <button
-            type="button"
-            onClick={onDelete}
-            className="px-3 text-xs py-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 transition-colors font-medium cursor-pointer"
-          >
-            Delete
+            ✕
           </button>
         </div>
+
+        {children}
       </div>
     </div>
   );
 }
 
-function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork, featureOnHome: boolean) => void }) {
+// ─── Add Creation Modal ───────────────────────────────────────────────────────
+
+function AddWorkModal({
+  open,
+  onClose,
+  onAdd,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onAdd: (work: AdminWork, featureOnHome: boolean) => void;
+}) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
     name: "",
@@ -196,7 +131,6 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork, featureOnHome: boolea
     if (!file) return;
     setError("");
 
-    // Read base64
     const reader = new FileReader();
     reader.onload = async (ev) => {
       const base64 = ev.target?.result as string;
@@ -250,294 +184,899 @@ function AddWorkForm({ onAdd }: { onAdd: (work: AdminWork, featureOnHome: boolea
 
     onAdd(work, featureOnHome);
 
-    // Reset
+    // Reset & close
     setForm({
       name: "",
-      category: form.category,
+      category: "websites",
       sub: "",
       occasion: "",
       story: "",
       liveUrl: "",
       videoUrl: "",
     });
-    setFeatureOnHome(true);
     setPreviewUrl(null);
     setUploadedUrl(null);
-    if (fileRef.current) fileRef.current.value = "";
+    setError("");
+    onClose();
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white border border-[#d4a55a]/35 rounded-3xl p-6 sm:p-8 shadow-[0_6px_30px_rgba(0,90,85,0.04)] space-y-6"
+    <Modal
+      open={open}
+      onClose={onClose}
+      title="Add New Portfolio Creation"
+      subtitle="Atelier Works Curator"
     >
-      <div>
-        <div className="text-[10.5px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-1">
-          Atelier Works Curator
-        </div>
-        <h3
-          className="text-xl sm:text-2xl text-[#005a55]"
-          style={{ fontFamily: "'Antic Didone', serif" }}
-        >
-          Add New Portfolio Creation
-        </h3>
-        <p className="text-xs text-[#0d3b38]/60 mt-1">
-          Fields automatically adapt to match what appears on the website for each category.
-        </p>
-      </div>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Artwork upload area */}
+        <div>
+          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
+            Artwork / Thumbnail Preview *
+          </label>
+          <div className="flex items-center gap-4">
+            <div
+              className="relative border-2 border-dashed border-[#d4a55a]/50 hover:border-[#005a55]/70 rounded-2xl overflow-hidden cursor-pointer transition-all bg-white hover:bg-white/80 shrink-0 shadow-2xs"
+              style={{ width: "160px", height: "100px" }}
+              onClick={() => fileRef.current?.click()}
+            >
+              {previewUrl ? (
+                <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+              ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-[#005a55]/50 text-xs p-2 text-center">
+                  <span className="text-xl text-[#d4a55a] font-light leading-none">+</span>
+                  <span className="font-semibold text-[11px] text-[#005a55] mt-1">Upload Artwork</span>
+                  <span className="text-[9px] text-[#0d3b38]/40">PNG, WebP, JPG</span>
+                </div>
+              )}
+              {uploading && (
+                <div className="absolute inset-0 bg-white/80 backdrop-blur-xs flex items-center justify-center">
+                  <span className="text-[#005a55] text-[10px] font-semibold animate-pulse">
+                    Uploading…
+                  </span>
+                </div>
+              )}
+            </div>
 
-      {/* Artwork upload area */}
-      <div>
-        <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
-          Artwork / Thumbnail Preview *
-        </label>
-        <div
-          className="relative border-2 border-dashed border-[#d4a55a]/50 hover:border-[#005a55]/70 rounded-2xl overflow-hidden cursor-pointer transition-all bg-[#F7F5EF]/60 hover:bg-[#F7F5EF]"
-          style={{ aspectRatio: "4/3", maxWidth: "260px" }}
-          onClick={() => fileRef.current?.click()}
-        >
-          {previewUrl ? (
-            <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-          ) : (
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-[#005a55]/50 text-xs gap-2 p-4 text-center">
-              <span className="text-3xl text-[#d4a55a] font-light">+</span>
-              <span className="font-medium text-[#005a55]">Click to upload artwork</span>
-              <span className="text-[10px] text-[#0d3b38]/40">PNG, WebP or JPG up to 10MB</span>
+            <div className="text-xs text-[#0d3b38]/70 leading-relaxed">
+              <p className="font-semibold text-[#005a55]">Select image file from your device</p>
+              <p className="text-[11px] text-[#0d3b38]/50 mt-0.5">
+                Recommended aspect: 16:9 or 4:3 landscape artwork.
+              </p>
+              {uploadedUrl && (
+                <p className="text-[#00756e] font-bold text-xs mt-1.5 flex items-center gap-1">
+                  <span>✓</span> Uploaded to Cloud Storage
+                </p>
+              )}
             </div>
-          )}
-          {uploading && (
-            <div className="absolute inset-0 bg-white/80 backdrop-blur-xs flex items-center justify-center">
-              <span className="text-[#005a55] text-xs font-semibold animate-pulse">
-                Uploading to Cloud Storage…
-              </span>
-            </div>
-          )}
+          </div>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
         </div>
-        <input
-          ref={fileRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-        {uploadedUrl && (
-          <p className="text-[#00756e] text-xs font-semibold mt-1.5 flex items-center gap-1">
-            <span>✓</span> Uploaded to Vercel Storage
+
+        {/* Fields Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+              Project / Couple Name *
+            </label>
+            <input
+              type="text"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder={isStationery ? "e.g. Kaadhalum Valaiyalum" : "e.g. Sonali & Pallav"}
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+              Category Type *
+            </label>
+            <select
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 cursor-pointer font-semibold"
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+              Occasion
+            </label>
+            <input
+              type="text"
+              value={form.occasion}
+              onChange={(e) => setForm({ ...form, occasion: e.target.value })}
+              placeholder="e.g. Sacred Temple Wedding"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+              Subtitle / Theme Eyebrow
+            </label>
+            <input
+              type="text"
+              value={form.sub}
+              onChange={(e) => setForm({ ...form, sub: e.target.value })}
+              placeholder="e.g. Four-Ceremony Royal Folio Suite"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10"
+            />
+          </div>
+
+          {/* Website URL */}
+          {isWebsite && (
+            <div className="sm:col-span-2 bg-white/70 border border-[#d4a55a]/30 rounded-xl p-3.5">
+              <label className="block text-xs font-semibold text-[#005a55] uppercase tracking-wider mb-1">
+                Live Website URL *
+              </label>
+              <input
+                type="url"
+                value={form.liveUrl}
+                onChange={(e) => setForm({ ...form, liveUrl: e.target.value })}
+                placeholder="https://client-weds.vercel.app/"
+                className="w-full bg-white border border-[#d4a55a]/40 rounded-lg px-3 py-2 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55]"
+              />
+              <p className="text-[10.5px] text-[#0d3b38]/50 mt-1">
+                Rendered live in interactive device frame on the website.
+              </p>
+            </div>
+          )}
+
+          {/* Video URL */}
+          {isVideo && (
+            <div className="sm:col-span-2 bg-white/70 border border-[#d4a55a]/30 rounded-xl p-3.5">
+              <label className="block text-xs font-semibold text-[#005a55] uppercase tracking-wider mb-1">
+                Video File / Stream URL *
+              </label>
+              <input
+                type="url"
+                value={form.videoUrl}
+                onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
+                placeholder="https://.../video.mp4"
+                className="w-full bg-white border border-[#d4a55a]/40 rounded-lg px-3 py-2 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55]"
+              />
+            </div>
+          )}
+
+          {/* Story */}
+          <div className="sm:col-span-2">
+            <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+              Design Story & Details
+            </label>
+            <textarea
+              value={form.story}
+              onChange={(e) => setForm({ ...form, story: e.target.value })}
+              rows={2}
+              placeholder="Describe the aesthetic, colors, crafted details..."
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] resize-none leading-relaxed"
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 pt-1">
+          <input
+            type="checkbox"
+            id="modal-featureOnHome"
+            checked={featureOnHome}
+            onChange={(e) => setFeatureOnHome(e.target.checked)}
+            className="w-4 h-4 rounded border-[#d4a55a] text-[#005a55] focus:ring-[#005a55] cursor-pointer"
+          />
+          <label
+            htmlFor="modal-featureOnHome"
+            className="text-xs font-semibold text-[#005a55] cursor-pointer select-none"
+          >
+            Feature this creation in Home Selected Portfolio ("Meaningful stories, thoughtfully shaped")
+          </label>
+        </div>
+
+        {error && (
+          <p className="text-rose-600 text-xs font-semibold bg-rose-50 border border-rose-200 rounded-lg p-2.5">
+            {error}
           </p>
         )}
-      </div>
 
-      {/* Core Fields */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div>
-          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
-            Project / Couple Name *
-          </label>
-          <input
-            type="text"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            placeholder={isStationery ? "e.g. Kaadhalum Valaiyalum" : "e.g. Sonali & Pallav"}
-            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
-          />
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
-            Category Type *
-          </label>
-          <select
-            value={form.category}
-            onChange={(e) => setForm({ ...form, category: e.target.value })}
-            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all cursor-pointer font-semibold"
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#d4a55a]/20">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-5 py-2.5 text-xs font-semibold text-[#005a55] hover:bg-white rounded-xl border border-[#d4a55a]/40 transition-colors cursor-pointer"
           >
-            {CATEGORIES.map((c) => (
-              <option key={c.value} value={c.value}>
-                {c.label}
-              </option>
-            ))}
-          </select>
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={uploading}
+            className="bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-6 py-2.5 text-xs font-bold tracking-wide shadow-sm hover:shadow-md disabled:opacity-40 transition-all cursor-pointer"
+          >
+            {uploading ? "Uploading Artwork…" : "Publish to Portfolio ✦"}
+          </button>
         </div>
-
-        {/* Occasion — Relevant for ALL categories (especially Invitations & Stalls) */}
-        <div>
-          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
-            Occasion *
-          </label>
-          <input
-            type="text"
-            value={form.occasion}
-            onChange={(e) => setForm({ ...form, occasion: e.target.value })}
-            placeholder={
-              form.category === "stalls"
-                ? "e.g. Wedding Event Bangle Stall"
-                : form.category === "invitations"
-                ? "e.g. Sacred Temple Wedding"
-                : "e.g. Grand Celebration & Itinerary Portal"
-            }
-            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
-          />
-        </div>
-
-        {/* Subtitle / Eyebrow */}
-        <div>
-          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
-            Subtitle / Theme Eyebrow (Optional)
-          </label>
-          <input
-            type="text"
-            value={form.sub}
-            onChange={(e) => setForm({ ...form, sub: e.target.value })}
-            placeholder={
-              isStationery
-                ? "e.g. Bangle Stall Counter Board"
-                : "e.g. Occasion Website & RSVP Concierge"
-            }
-            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
-          />
-        </div>
-
-        {/* Design Story — Required for Invitations & Stalls modal */}
-        <div className="sm:col-span-2">
-          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
-            Design Story {isStationery && "*"}
-          </label>
-          <textarea
-            value={form.story}
-            onChange={(e) => setForm({ ...form, story: e.target.value })}
-            rows={3}
-            placeholder={
-              isStationery
-                ? "e.g. Bespoke event stall board crafted for a traditional wedding bangle counter. Combines nostalgic Tamil lyrical charm with illustrated bangle stand artwork, temple bells, and festive borders."
-                : "Describe the aesthetic inspiration, mood, and crafted details of this digital creation..."
-            }
-            className="w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all resize-none leading-relaxed"
-          />
-        </div>
-
-        {/* Dynamic Category Specific: Live Website URL for Websites */}
-        {isWebsite && (
-          <div className="sm:col-span-2 bg-[#F7F5EF]/60 border border-[#d4a55a]/30 rounded-2xl p-4 space-y-1.5">
-            <label className="block text-xs font-semibold text-[#005a55] uppercase tracking-wider">
-              Live Website URL *
-            </label>
-            <input
-              type="url"
-              value={form.liveUrl}
-              onChange={(e) => setForm({ ...form, liveUrl: e.target.value })}
-              placeholder="https://joel-weds-tanvi.vercel.app/"
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
-            />
-            <p className="text-[11px] text-[#0d3b38]/50">
-              This link is rendered inside the live mobile device frame when clicked on the website.
-            </p>
-          </div>
-        )}
-
-        {/* Dynamic Category Specific: Video URL for Video Reels */}
-        {isVideo && (
-          <div className="sm:col-span-2 bg-[#F7F5EF]/60 border border-[#d4a55a]/30 rounded-2xl p-4 space-y-1.5">
-            <label className="block text-xs font-semibold text-[#005a55] uppercase tracking-wider">
-              Video File / Stream URL *
-            </label>
-            <input
-              type="url"
-              value={form.videoUrl}
-              onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
-              placeholder="https://.../video.mp4"
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-4 py-3 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all"
-            />
-            <p className="text-[11px] text-[#0d3b38]/50">
-              Direct MP4, WebM, or HLS stream link that plays inside the phone mockup.
-            </p>
-          </div>
-        )}
-      </div>
-
-      <div className="flex items-center gap-2.5 pt-1 px-1">
-        <input
-          type="checkbox"
-          id="featureOnHome"
-          checked={featureOnHome}
-          onChange={(e) => setFeatureOnHome(e.target.checked)}
-          className="w-4 h-4 rounded border-[#d4a55a] text-[#005a55] focus:ring-[#005a55] cursor-pointer"
-        />
-        <label htmlFor="featureOnHome" className="text-xs font-semibold text-[#005a55] cursor-pointer select-none">
-          Feature this creation in Home Selected Portfolio ("Meaningful stories, thoughtfully shaped")
-        </label>
-      </div>
-
-      {error && (
-        <p className="text-rose-600 text-xs font-medium bg-rose-50 border border-rose-200 rounded-lg p-2.5">
-          {error}
-        </p>
-      )}
-
-      <button
-        type="submit"
-        disabled={uploading}
-        className="w-full bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl py-3.5 text-sm font-semibold tracking-wide shadow-md hover:shadow-lg disabled:opacity-40 transition-all cursor-pointer"
-      >
-        {uploading ? "Uploading Artwork…" : "Publish to Portfolio ✦"}
-      </button>
-    </form>
+      </form>
+    </Modal>
   );
 }
 
+// ─── Edit Creation Modal ──────────────────────────────────────────────────────
+
+function EditWorkModal({
+  work,
+  open,
+  isFeatured,
+  onClose,
+  onSave,
+}: {
+  work: AdminWork | null;
+  open: boolean;
+  isFeatured: boolean;
+  onClose: () => void;
+  onSave: (updated: AdminWork, featureOnHome: boolean) => void;
+}) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [form, setForm] = useState({
+    name: "",
+    category: "websites",
+    sub: "",
+    occasion: "",
+    story: "",
+    liveUrl: "",
+    videoUrl: "",
+    hidden: false,
+  });
+  const [featureOnHome, setFeatureOnHome] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [thumbUrl, setThumbUrl] = useState("");
+  const [error, setError] = useState("");
+
+  // Sync form when work changes
+  React.useEffect(() => {
+    if (work) {
+      setForm({
+        name: work.name || "",
+        category: work.category || "websites",
+        sub: work.sub || "",
+        occasion: work.occasion || "",
+        story: work.story || "",
+        liveUrl: work.liveUrl || "",
+        videoUrl: work.videoUrl || "",
+        hidden: !!work.hidden,
+      });
+      setThumbUrl(work.thumbUrl || "");
+      setFeatureOnHome(isFeatured);
+      setError("");
+    }
+  }, [work, isFeatured]);
+
+  if (!work) return null;
+
+  const isStationery = form.category === "invitations" || form.category === "stalls";
+  const isVideo = form.category === "videos";
+  const isWebsite = form.category === "websites" || form.category === "business";
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setError("");
+
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const base64 = ev.target?.result as string;
+      setThumbUrl(base64);
+
+      setUploading(true);
+      try {
+        const res = await uploadArtworkFn({
+          data: {
+            filename: file.name,
+            contentType: file.type || "image/jpeg",
+            base64,
+          },
+        });
+        setThumbUrl(res.url);
+      } catch (err) {
+        console.error("Artwork upload error:", err);
+        setError("Image upload failed. Please try again.");
+      } finally {
+        setUploading(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim()) {
+      setError("Project or couple name is required.");
+      return;
+    }
+    if (!thumbUrl) {
+      setError("Artwork image is required.");
+      return;
+    }
+
+    const updated: AdminWork = {
+      ...work,
+      name: form.name.trim(),
+      category: form.category,
+      label: CATEGORY_LABELS[form.category] || form.category.toUpperCase(),
+      sub: form.sub.trim() || undefined,
+      occasion: form.occasion.trim() || undefined,
+      story: form.story.trim() || undefined,
+      liveUrl: isWebsite && form.liveUrl.trim() ? form.liveUrl.trim() : undefined,
+      videoUrl: isVideo && form.videoUrl.trim() ? form.videoUrl.trim() : undefined,
+      thumbUrl,
+      hidden: form.hidden,
+    };
+
+    onSave(updated, featureOnHome);
+    onClose();
+  };
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={`Edit Creation: ${work.name}`}
+      subtitle="Atelier Work Editor"
+    >
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Artwork replace area */}
+        <div>
+          <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-2">
+            Artwork / Thumbnail
+          </label>
+          <div className="flex items-center gap-4">
+            <div
+              className="relative border-2 border-dashed border-[#d4a55a]/50 hover:border-[#005a55]/70 rounded-2xl overflow-hidden cursor-pointer transition-all bg-white shrink-0 shadow-2xs"
+              style={{ width: "160px", height: "100px" }}
+              onClick={() => fileRef.current?.click()}
+              title="Click to replace artwork"
+            >
+              {thumbUrl ? (
+                <img src={thumbUrl} alt="Thumbnail" className="w-full h-full object-cover" />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-xs text-[#005a55]/50">
+                  No image
+                </div>
+              )}
+              <div className="absolute bottom-0 inset-x-0 bg-black/50 text-white text-[9.5px] text-center py-0.5 font-medium">
+                Click to change
+              </div>
+              {uploading && (
+                <div className="absolute inset-0 bg-white/80 backdrop-blur-xs flex items-center justify-center">
+                  <span className="text-[#005a55] text-[10px] font-semibold animate-pulse">
+                    Uploading…
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <div className="text-xs text-[#0d3b38]/70 leading-relaxed">
+              <p className="font-semibold text-[#005a55]">Change creation preview artwork</p>
+              <p className="text-[11px] text-[#0d3b38]/50 mt-0.5">
+                Upload a new image to replace the current thumbnail.
+              </p>
+            </div>
+          </div>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+        </div>
+
+        {/* Fields Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+              Project / Couple Name *
+            </label>
+            <input
+              type="text"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+              Category Type *
+            </label>
+            <select
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55] cursor-pointer font-semibold"
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+              Occasion
+            </label>
+            <input
+              type="text"
+              value={form.occasion}
+              onChange={(e) => setForm({ ...form, occasion: e.target.value })}
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+              Subtitle / Theme Eyebrow
+            </label>
+            <input
+              type="text"
+              value={form.sub}
+              onChange={(e) => setForm({ ...form, sub: e.target.value })}
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+            />
+          </div>
+
+          {/* Website URL */}
+          {isWebsite && (
+            <div className="sm:col-span-2 bg-white/70 border border-[#d4a55a]/30 rounded-xl p-3.5">
+              <label className="block text-xs font-semibold text-[#005a55] uppercase tracking-wider mb-1">
+                Live Website URL
+              </label>
+              <input
+                type="url"
+                value={form.liveUrl}
+                onChange={(e) => setForm({ ...form, liveUrl: e.target.value })}
+                className="w-full bg-white border border-[#d4a55a]/40 rounded-lg px-3 py-2 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              />
+            </div>
+          )}
+
+          {/* Video URL */}
+          {isVideo && (
+            <div className="sm:col-span-2 bg-white/70 border border-[#d4a55a]/30 rounded-xl p-3.5">
+              <label className="block text-xs font-semibold text-[#005a55] uppercase tracking-wider mb-1">
+                Video File / Stream URL
+              </label>
+              <input
+                type="url"
+                value={form.videoUrl}
+                onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
+                className="w-full bg-white border border-[#d4a55a]/40 rounded-lg px-3 py-2 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              />
+            </div>
+          )}
+
+          {/* Story */}
+          <div className="sm:col-span-2">
+            <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
+              Design Story & Details
+            </label>
+            <textarea
+              value={form.story}
+              onChange={(e) => setForm({ ...form, story: e.target.value })}
+              rows={2}
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2 text-sm text-[#005a55] outline-none focus:border-[#005a55] resize-none leading-relaxed"
+            />
+          </div>
+        </div>
+
+        {/* Toggles */}
+        <div className="pt-2 space-y-2 border-t border-[#d4a55a]/20">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="edit-featureOnHome"
+              checked={featureOnHome}
+              onChange={(e) => setFeatureOnHome(e.target.checked)}
+              className="w-4 h-4 rounded border-[#d4a55a] text-[#005a55] focus:ring-[#005a55] cursor-pointer"
+            />
+            <label
+              htmlFor="edit-featureOnHome"
+              className="text-xs font-semibold text-[#005a55] cursor-pointer select-none"
+            >
+              Feature this creation on Home Selected Portfolio ("Meaningful stories, thoughtfully shaped")
+            </label>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="edit-hidden"
+              checked={form.hidden}
+              onChange={(e) => setForm({ ...form, hidden: e.target.checked })}
+              className="w-4 h-4 rounded border-[#d4a55a] text-neutral-800 focus:ring-neutral-800 cursor-pointer"
+            />
+            <label
+              htmlFor="edit-hidden"
+              className="text-xs font-semibold text-[#0d3b38]/80 cursor-pointer select-none"
+            >
+              Hide this creation from public website (Draft mode)
+            </label>
+          </div>
+        </div>
+
+        {error && (
+          <p className="text-rose-600 text-xs font-semibold bg-rose-50 border border-rose-200 rounded-lg p-2.5">
+            {error}
+          </p>
+        )}
+
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#d4a55a]/20">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-5 py-2.5 text-xs font-semibold text-[#005a55] hover:bg-white rounded-xl border border-[#d4a55a]/40 transition-colors cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={uploading}
+            className="bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-6 py-2.5 text-xs font-bold tracking-wide shadow-sm hover:shadow-md disabled:opacity-40 transition-all cursor-pointer"
+          >
+            {uploading ? "Uploading…" : "Save Changes ✦"}
+          </button>
+        </div>
+      </form>
+    </Modal>
+  );
+}
+
+// ─── Compact Work Card ────────────────────────────────────────────────────────
+
+function CompactWorkCard({
+  work,
+  isFeatured,
+  onEdit,
+  onToggleFeatured,
+  onToggleHide,
+  onDelete,
+}: {
+  work: AdminWork;
+  isFeatured: boolean;
+  onEdit: () => void;
+  onToggleFeatured: () => void;
+  onToggleHide: () => void;
+  onDelete: () => void;
+}) {
+  return (
+    <div
+      className={`rounded-2xl border overflow-hidden bg-white transition-all shadow-2xs hover:shadow-md flex flex-col justify-between ${
+        work.hidden
+          ? "border-[#d4a55a]/20 opacity-60"
+          : "border-[#d4a55a]/35 hover:border-[#005a55]/40"
+      }`}
+    >
+      <div>
+        {/* Compact 16:9 Thumbnail preview */}
+        <div className="aspect-[16/10] bg-[#eef8f3] overflow-hidden relative group">
+          {work.thumbUrl ? (
+            <img
+              src={work.thumbUrl}
+              alt={work.name}
+              className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-[#005a55]/30 text-xs">
+              No artwork
+            </div>
+          )}
+
+          {/* Floating Badges */}
+          <div className="absolute top-2 inset-x-2 flex items-center justify-between gap-1 pointer-events-none">
+            <span className="bg-[#005a55]/90 backdrop-blur-xs text-[#F7F5EF] text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full shadow-2xs">
+              {work.label}
+            </span>
+
+            <div className="flex items-center gap-1">
+              {isFeatured && (
+                <span className="bg-[#8c6218] text-[#F7F5EF] text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full shadow-2xs">
+                  ★ On Home
+                </span>
+              )}
+              {work.hidden && (
+                <span className="bg-neutral-900/80 text-white text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full">
+                  Hidden
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Content Body */}
+        <div className="p-3.5 bg-white">
+          <div className="flex items-center justify-between gap-1.5 mb-0.5">
+            <div
+              className="text-[#005a55] text-base font-medium truncate flex-1"
+              style={{ fontFamily: "'Antic Didone', serif" }}
+              title={work.name}
+            >
+              {work.name}
+            </div>
+            {work.occasion && (
+              <span className="text-[9.5px] text-[#00756e] font-semibold bg-[#eef8f3] px-2 py-0.5 rounded-full truncate max-w-[110px]">
+                {work.occasion}
+              </span>
+            )}
+          </div>
+
+          {work.sub && (
+            <div className="text-[11px] text-[#8c6218] font-medium truncate">
+              {work.sub}
+            </div>
+          )}
+
+          {work.liveUrl && (
+            <a
+              href={work.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10.5px] text-[#00756e] hover:text-[#005a55] hover:underline truncate block mt-1.5 font-medium"
+            >
+              ↗ {work.liveUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+            </a>
+          )}
+        </div>
+      </div>
+
+      {/* Action Toolbar */}
+      <div className="p-3 pt-0 bg-white border-t border-[#d4a55a]/15 mt-1">
+        <div className="grid grid-cols-4 gap-1.5 pt-2">
+          <button
+            type="button"
+            onClick={onEdit}
+            className="text-[11px] py-1 px-1.5 rounded-lg border border-[#005a55]/30 text-[#005a55] hover:bg-[#eef8f3] font-semibold transition-colors cursor-pointer text-center"
+            title="Edit all fields & artwork"
+          >
+            ✏️ Edit
+          </button>
+
+          <button
+            type="button"
+            onClick={onToggleHide}
+            className={`text-[11px] py-1 px-1.5 rounded-lg border font-semibold transition-colors cursor-pointer text-center ${
+              work.hidden
+                ? "border-[#005a55]/30 text-[#005a55] bg-[#eef8f3]"
+                : "border-[#d4a55a]/40 text-[#8c6218] hover:bg-[#fef9ee]"
+            }`}
+            title={work.hidden ? "Make visible on website" : "Hide from website"}
+          >
+            {work.hidden ? "Show" : "Hide"}
+          </button>
+
+          <button
+            type="button"
+            onClick={onToggleFeatured}
+            className={`text-[11px] py-1 px-1.5 rounded-lg border font-semibold transition-colors cursor-pointer text-center ${
+              isFeatured
+                ? "bg-[#8c6218] border-[#8c6218] text-white"
+                : "border-[#d4a55a]/40 text-[#8c6218] hover:bg-[#fef9ee]"
+            }`}
+            title={isFeatured ? "Remove from Home Reel" : "Feature in Home Reel"}
+          >
+            {isFeatured ? "★ Home" : "☆ Reel"}
+          </button>
+
+          <button
+            type="button"
+            onClick={onDelete}
+            className="text-[11px] py-1 px-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 font-semibold transition-colors cursor-pointer text-center"
+            title="Permanently delete creation"
+          >
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Compact Table View Row ───────────────────────────────────────────────────
+
+function CompactWorkTableRow({
+  work,
+  isFeatured,
+  onEdit,
+  onToggleFeatured,
+  onToggleHide,
+  onDelete,
+}: {
+  work: AdminWork;
+  isFeatured: boolean;
+  onEdit: () => void;
+  onToggleFeatured: () => void;
+  onToggleHide: () => void;
+  onDelete: () => void;
+}) {
+  return (
+    <tr
+      className={`border-b border-[#d4a55a]/15 hover:bg-[#fdfcf7] transition-colors ${
+        work.hidden ? "opacity-60 bg-neutral-50/50" : ""
+      }`}
+    >
+      {/* Thumbnail */}
+      <td className="py-2.5 px-3">
+        <div className="w-12 h-9 rounded-lg overflow-hidden bg-[#eef8f3] shrink-0 border border-[#d4a55a]/30">
+          {work.thumbUrl ? (
+            <img src={work.thumbUrl} alt={work.name} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-[8px] text-[#005a55]/30">
+              —
+            </div>
+          )}
+        </div>
+      </td>
+
+      {/* Name & Subtitle */}
+      <td className="py-2.5 px-3 min-w-[160px]">
+        <div
+          className="text-sm font-semibold text-[#005a55] truncate"
+          style={{ fontFamily: "'Antic Didone', serif" }}
+        >
+          {work.name}
+        </div>
+        {work.sub && (
+          <div className="text-[10.5px] text-[#8c6218] truncate">{work.sub}</div>
+        )}
+      </td>
+
+      {/* Category */}
+      <td className="py-2.5 px-3">
+        <span className="text-[9.5px] font-bold uppercase tracking-wider text-[#005a55] bg-[#eef8f3] border border-[#cdeee3] px-2 py-0.5 rounded-full inline-block">
+          {work.label}
+        </span>
+      </td>
+
+      {/* Occasion */}
+      <td className="py-2.5 px-3 text-xs text-[#0d3b38]/70 truncate max-w-[140px]">
+        {work.occasion || "—"}
+      </td>
+
+      {/* Link */}
+      <td className="py-2.5 px-3 max-w-[160px] truncate text-xs">
+        {work.liveUrl ? (
+          <a
+            href={work.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#00756e] hover:underline font-medium truncate block text-[11px]"
+          >
+            ↗ {work.liveUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+          </a>
+        ) : work.videoUrl ? (
+          <span className="text-[#8c6218] text-[11px]">🎬 Video</span>
+        ) : (
+          <span className="text-[#0d3b38]/30">—</span>
+        )}
+      </td>
+
+      {/* Home Reel Status */}
+      <td className="py-2.5 px-3 text-center">
+        <button
+          type="button"
+          onClick={onToggleFeatured}
+          className={`text-[10px] font-bold px-2 py-0.5 rounded-full border transition-colors cursor-pointer ${
+            isFeatured
+              ? "bg-[#8c6218] text-white border-[#8c6218]"
+              : "bg-white text-[#8c6218] border-[#d4a55a]/40 hover:border-[#8c6218]"
+          }`}
+          title={isFeatured ? "Featured on Home Reel" : "Add to Home Reel"}
+        >
+          {isFeatured ? "★ Featured" : "+ Feature"}
+        </button>
+      </td>
+
+      {/* Visibility Status */}
+      <td className="py-2.5 px-3 text-center">
+        <button
+          type="button"
+          onClick={onToggleHide}
+          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border transition-colors cursor-pointer ${
+            work.hidden
+              ? "bg-neutral-800 text-white border-neutral-800"
+              : "bg-[#eef8f3] text-[#00756e] border-[#cdeee3]"
+          }`}
+        >
+          {work.hidden ? "Hidden" : "Live"}
+        </button>
+      </td>
+
+      {/* Actions */}
+      <td className="py-2.5 px-3 text-right">
+        <div className="flex items-center justify-end gap-1.5">
+          <button
+            type="button"
+            onClick={onEdit}
+            className="text-xs text-[#005a55] hover:text-[#00756e] font-semibold px-2 py-1 rounded border border-[#005a55]/20 hover:border-[#005a55]/50 bg-white cursor-pointer"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            onClick={onDelete}
+            className="text-xs text-rose-600 hover:text-rose-800 font-semibold px-2 py-1 rounded border border-rose-200 hover:bg-rose-50 bg-white cursor-pointer"
+          >
+            Delete
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+// ─── Main Portfolio Tab ───────────────────────────────────────────────────────
+
 export function PortfolioTab({ works, featuredHomeIds, onUpdate, onUpdateFeatured }: Props) {
-  // Default featured IDs if not yet configured in blob:
-  const defaultFeatured = useMemo(() => {
+  // Sub-view: "catalogue" vs "curator"
+  const [subView, setSubView] = useState<"catalogue" | "curator">("catalogue");
+  const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
+  const [search, setSearch] = useState("");
+  const [catFilter, setCatFilter] = useState("all");
+
+  // Modals state
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [editingWork, setEditingWork] = useState<AdminWork | null>(null);
+
+  // Active Featured IDs
+  const activeFeaturedIds = useMemo(() => {
+    if (featuredHomeIds && featuredHomeIds.length > 0) {
+      return featuredHomeIds;
+    }
     return [
-      ...works.filter((w) => !w.hidden).map((w) => w.id),
+      ...works.filter((w) => !w.hidden && !["01", "06", "11", "12"].includes(w.id)).map((w) => w.id),
       "01",
       "06",
       "11",
       "12",
     ];
-  }, [works]);
+  }, [featuredHomeIds, works]);
 
-  const activeFeaturedIds = useMemo(() => {
-    if (featuredHomeIds && featuredHomeIds.length > 0) {
-      return featuredHomeIds;
-    }
-    return defaultFeatured;
-  }, [featuredHomeIds, defaultFeatured]);
-
-  // Combined pool of all works (both cloud uploads and catalogue items)
-  const allPool = useMemo(() => {
-    const list: { id: string; name: string; label: string; thumb: string; category: string }[] = [];
-    works.forEach((w) => {
-      list.push({
-        id: w.id,
-        name: w.name,
-        label: w.label,
-        thumb: w.thumbUrl,
-        category: w.category,
-      });
-    });
-    PORTFOLIO_WORKS.forEach((p) => {
-      if (!list.some((item) => item.id === p.id)) {
-        list.push({
-          id: p.id,
-          name: p.name,
-          label: p.label,
-          thumb: p.thumb,
-          category: p.category,
-        });
-      }
-    });
-    return list;
-  }, [works]);
-
+  // Featured items in ordered list
   const featuredItems = useMemo(() => {
     return activeFeaturedIds
-      .map((id) => allPool.find((item) => item.id === id))
-      .filter((item): item is typeof allPool[0] => Boolean(item));
-  }, [activeFeaturedIds, allPool]);
+      .map((id) => works.find((item) => item.id === id))
+      .filter((item): item is AdminWork => Boolean(item));
+  }, [activeFeaturedIds, works]);
 
+  // Unfeatured items
   const unfeaturedItems = useMemo(() => {
-    return allPool.filter((item) => !activeFeaturedIds.includes(item.id));
-  }, [allPool, activeFeaturedIds]);
+    return works.filter((item) => !activeFeaturedIds.includes(item.id));
+  }, [works, activeFeaturedIds]);
+
+  // Filtered catalogue works
+  const filteredWorks = useMemo(() => {
+    return works.filter((w) => {
+      if (catFilter !== "all" && w.category !== catFilter) return false;
+      if (search.trim()) {
+        const q = search.toLowerCase();
+        const matchName = w.name.toLowerCase().includes(q);
+        const matchSub = (w.sub || "").toLowerCase().includes(q);
+        const matchOccasion = (w.occasion || "").toLowerCase().includes(q);
+        const matchLabel = (w.label || "").toLowerCase().includes(q);
+        if (!matchName && !matchSub && !matchOccasion && !matchLabel) return false;
+      }
+      return true;
+    });
+  }, [works, catFilter, search]);
 
   const toggleFeature = (id: string) => {
     if (!onUpdateFeatured) return;
@@ -566,201 +1105,385 @@ export function PortfolioTab({ works, featuredHomeIds, onUpdate, onUpdateFeature
     }
   };
 
+  const handleSaveEdit = (updated: AdminWork, featureOnHome: boolean) => {
+    onUpdate(works.map((w) => (w.id === updated.id ? updated : w)));
+    if (onUpdateFeatured) {
+      const isNowFeatured = activeFeaturedIds.includes(updated.id);
+      if (featureOnHome && !isNowFeatured) {
+        onUpdateFeatured([updated.id, ...activeFeaturedIds]);
+      } else if (!featureOnHome && isNowFeatured) {
+        onUpdateFeatured(activeFeaturedIds.filter((x) => x !== updated.id));
+      }
+    }
+  };
+
   const handleToggleHide = (id: string) => {
     onUpdate(works.map((w) => (w.id === id ? { ...w, hidden: !w.hidden } : w)));
   };
 
   const handleDelete = (id: string) => {
-    if (!confirm("Permanently delete this artwork entry?")) return;
+    if (!confirm("Permanently delete this creation from your studio portfolio?")) return;
     onUpdate(works.filter((w) => w.id !== id));
     if (onUpdateFeatured && activeFeaturedIds.includes(id)) {
       onUpdateFeatured(activeFeaturedIds.filter((x) => x !== id));
     }
   };
 
-  const visible = works.filter((w) => !w.hidden).length;
+  // Restore/Sync defaults utility
+  const handleRestoreDefaults = () => {
+    if (
+      !confirm(
+        "Import any missing built-in website works (Sonali & Pallav, Bala & Shahin, etc.) back into your desk?"
+      )
+    )
+      return;
+    const defaults = getDefaultAdminWorks();
+    const existingIds = new Set(works.map((w) => w.id));
+    const missing = defaults.filter((d) => !existingIds.has(d.id));
+    if (missing.length === 0) {
+      alert("All default website works are already present in your desk.");
+      return;
+    }
+    onUpdate([...works, ...missing]);
+    alert(`Successfully imported ${missing.length} creations into your Studio Desk!`);
+  };
+
+  const visibleCount = works.filter((w) => !w.hidden).length;
 
   return (
-    <div className="space-y-10">
-      <div className="flex items-baseline justify-between flex-wrap gap-2 border-b border-[#d4a55a]/25 pb-4">
-        <div>
-          <div className="text-[10.5px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-1">
-            Curated Creations
-          </div>
-          <h2
-            className="text-2xl sm:text-3xl text-[#005a55]"
-            style={{ fontFamily: "'Antic Didone', serif" }}
+    <div className="space-y-6">
+      {/* Modals */}
+      <AddWorkModal
+        open={addModalOpen}
+        onClose={() => setAddModalOpen(false)}
+        onAdd={handleAdd}
+      />
+
+      <EditWorkModal
+        work={editingWork}
+        open={!!editingWork}
+        isFeatured={editingWork ? activeFeaturedIds.includes(editingWork.id) : false}
+        onClose={() => setEditingWork(null)}
+        onSave={handleSaveEdit}
+      />
+
+      {/* Top Studio Control Bar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white border border-[#d4a55a]/30 rounded-2xl p-3 sm:p-4 shadow-2xs">
+        {/* Sub-view Segmented Toggle */}
+        <div className="flex items-center gap-1.5 bg-[#F7F5EF] p-1 rounded-xl border border-[#d4a55a]/25 shrink-0">
+          <button
+            type="button"
+            onClick={() => setSubView("catalogue")}
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+              subView === "catalogue"
+                ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
+                : "text-[#005a55]/70 hover:text-[#005a55]"
+            }`}
           >
-            Portfolio Showcase
-          </h2>
+            📁 Portfolio Works ({works.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setSubView("curator")}
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+              subView === "curator"
+                ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
+                : "text-[#005a55]/70 hover:text-[#005a55]"
+            }`}
+          >
+            ★ Home Reel Curator ({activeFeaturedIds.length})
+          </button>
         </div>
-        <span className="text-xs font-semibold px-3 py-1 rounded-full bg-white border border-[#d4a55a]/30 text-[#005a55]">
-          {visible} Live on Website · {works.length - visible} Hidden
-        </span>
+
+        {/* Action Button & Utilities */}
+        <div className="flex items-center gap-2.5 justify-end flex-wrap">
+          <button
+            type="button"
+            onClick={handleRestoreDefaults}
+            className="text-[11px] font-semibold text-[#8c6218] hover:text-[#005a55] border border-[#d4a55a]/40 hover:border-[#005a55] rounded-xl px-3 py-2 bg-[#fdfcf7] transition-all cursor-pointer shadow-2xs"
+            title="Import or restore default website creations"
+          >
+            ↺ Sync Defaults
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setAddModalOpen(true)}
+            className="bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-4 py-2 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center gap-1.5"
+          >
+            <span className="text-[#d4a55a] text-sm leading-none">+</span>
+            <span>Add New Creation</span>
+          </button>
+        </div>
       </div>
 
-      {/* Selected Portfolio Curator Section */}
-      <div className="bg-white border border-[#d4a55a]/40 rounded-3xl p-6 sm:p-8 shadow-[0_6px_30px_rgba(0,90,85,0.04)] space-y-6">
-        <div className="flex items-start sm:items-center justify-between gap-4 flex-wrap border-b border-[#d4a55a]/25 pb-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold text-[#8c6218] tracking-[0.25em] uppercase">
-                Home Page Selected Portfolio
-              </span>
-              <span className="text-[9.5px] uppercase tracking-wider font-bold bg-[#eef8f3] text-[#00756e] px-2 py-0.5 rounded-full border border-[#cdeee3]">
-                Horizontal Scroll
-              </span>
-            </div>
-            <h3
-              className="text-xl sm:text-2xl text-[#005a55] mt-1"
-              style={{ fontFamily: "'Antic Didone', serif" }}
-            >
-              "Meaningful stories, thoughtfully shaped" Curator
-            </h3>
-            <p className="text-xs text-[#0d3b38]/70 mt-1 max-w-2xl leading-relaxed">
-              Decide which creations appear in the horizontal scroll reel on your homepage. Use the arrows to reorder their sequence, or remove and add any creation at any time.
-            </p>
-          </div>
-          <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#fdfcf7] border border-[#d4a55a]/40 text-[#005a55]">
-            {activeFeaturedIds.length} Creations Featured
-          </span>
-        </div>
-
-        {/* Currently Featured Horizontal Reel */}
-        <div>
-          <div className="text-[11px] font-bold text-[#8c6218] tracking-widest uppercase mb-3 flex items-center justify-between">
-            <span>Live Display Order in Horizontal Scroll:</span>
-            <span className="text-[10px] text-[#0d3b38]/50 normal-case font-medium">Use ← → to arrange order</span>
-          </div>
-
-          {featuredItems.length > 0 ? (
-            <div className="flex overflow-x-auto gap-4 pb-3 no-scrollbar">
-              {featuredItems.map((item, idx) => (
-                <div
-                  key={item.id}
-                  className="w-[200px] shrink-0 bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-2xl overflow-hidden shadow-xs flex flex-col justify-between"
+      {/* ─── SUB-VIEW 1: CATALOGUE WORKS ───────────────────────────────────── */}
+      {subView === "catalogue" && (
+        <div className="space-y-4">
+          {/* Filter & Density Ribbon */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white border border-[#d4a55a]/25 rounded-2xl p-3 text-xs shadow-2xs">
+            {/* Search */}
+            <div className="relative flex-1 max-w-sm">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search by name, occasion, style..."
+                className="w-full bg-[#fdfcf7] border border-[#d4a55a]/35 rounded-xl px-3.5 py-1.5 text-xs text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55]"
+              />
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#005a55]/40 hover:text-[#005a55] text-xs"
                 >
-                  <div>
-                    <div className="aspect-[4/3] bg-[#eef8f3] overflow-hidden relative">
-                      <img
-                        src={item.thumb}
-                        alt={item.name}
-                        className="w-full h-full object-cover object-top"
-                      />
-                      <span className="absolute top-2 left-2 bg-[#005a55] text-[#F7F5EF] text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
-                        #{idx + 1}
-                      </span>
-                    </div>
-                    <div className="p-3">
-                      <div className="text-[9.5px] font-bold text-[#8c6218] uppercase tracking-wider truncate">
-                        {item.label}
-                      </div>
-                      <div
-                        className="text-sm font-semibold text-[#005a55] truncate"
-                        style={{ fontFamily: "'Antic Didone', serif" }}
-                      >
-                        {item.name}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-2.5 pt-0 flex items-center justify-between gap-1.5 border-t border-[#d4a55a]/20 mt-1">
-                    <button
-                      type="button"
-                      disabled={idx === 0}
-                      onClick={() => moveFeatured(idx, -1)}
-                      className="px-2 py-1 text-xs border border-[#d4a55a]/40 rounded bg-white text-[#005a55] hover:bg-[#eef8f3] disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
-                      title="Move left"
-                    >
-                      ←
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => toggleFeature(item.id)}
-                      className="flex-1 text-[10.5px] font-semibold text-rose-600 hover:text-rose-800 py-1 transition-colors cursor-pointer text-center"
-                    >
-                      Remove
-                    </button>
-                    <button
-                      type="button"
-                      disabled={idx === featuredItems.length - 1}
-                      onClick={() => moveFeatured(idx, 1)}
-                      className="px-2 py-1 text-xs border border-[#d4a55a]/40 rounded bg-white text-[#005a55] hover:bg-[#eef8f3] disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
-                      title="Move right"
-                    >
-                      →
-                    </button>
-                  </div>
-                </div>
-              ))}
+                  ✕
+                </button>
+              )}
             </div>
+
+            {/* Category Filter Pills / Dropdown */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <select
+                value={catFilter}
+                onChange={(e) => setCatFilter(e.target.value)}
+                className="bg-[#fdfcf7] border border-[#d4a55a]/35 rounded-xl px-3 py-1.5 text-xs text-[#005a55] font-semibold outline-none focus:border-[#005a55] cursor-pointer"
+              >
+                <option value="all">All Categories ({works.length})</option>
+                {CATEGORIES.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label} ({works.filter((w) => w.category === c.value).length})
+                  </option>
+                ))}
+              </select>
+
+              {/* View Mode Toggle */}
+              <div className="flex items-center bg-[#fdfcf7] border border-[#d4a55a]/35 rounded-xl p-0.5">
+                <button
+                  type="button"
+                  onClick={() => setViewMode("grid")}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    viewMode === "grid"
+                      ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
+                      : "text-[#005a55]/60 hover:text-[#005a55]"
+                  }`}
+                  title="Grid View"
+                >
+                  ▦ Grid
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("table")}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    viewMode === "table"
+                      ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
+                      : "text-[#005a55]/60 hover:text-[#005a55]"
+                  }`}
+                  title="Table View"
+                >
+                  ☰ Table
+                </button>
+              </div>
+
+              {/* Quick Counter */}
+              <span className="text-[11px] font-bold text-[#8c6218] bg-[#fdfcf7] px-2.5 py-1 rounded-full border border-[#d4a55a]/25">
+                {visibleCount} Live · {works.length - visibleCount} Hidden
+              </span>
+            </div>
+          </div>
+
+          {/* Works Collection */}
+          {filteredWorks.length > 0 ? (
+            viewMode === "grid" ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {filteredWorks.map((work) => (
+                  <CompactWorkCard
+                    key={work.id}
+                    work={work}
+                    isFeatured={activeFeaturedIds.includes(work.id)}
+                    onEdit={() => setEditingWork(work)}
+                    onToggleFeatured={() => toggleFeature(work.id)}
+                    onToggleHide={() => handleToggleHide(work.id)}
+                    onDelete={() => handleDelete(work.id)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="bg-white border border-[#d4a55a]/30 rounded-2xl overflow-hidden shadow-2xs">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="bg-[#fdfcf7] border-b border-[#d4a55a]/25 text-[#8c6218] uppercase text-[10px] font-bold tracking-wider">
+                        <th className="py-3 px-3">Artwork</th>
+                        <th className="py-3 px-3">Creation Name</th>
+                        <th className="py-3 px-3">Category</th>
+                        <th className="py-3 px-3">Occasion</th>
+                        <th className="py-3 px-3">Live Link</th>
+                        <th className="py-3 px-3 text-center">Home Reel</th>
+                        <th className="py-3 px-3 text-center">Visibility</th>
+                        <th className="py-3 px-3 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredWorks.map((work) => (
+                        <CompactWorkTableRow
+                          key={work.id}
+                          work={work}
+                          isFeatured={activeFeaturedIds.includes(work.id)}
+                          onEdit={() => setEditingWork(work)}
+                          onToggleFeatured={() => toggleFeature(work.id)}
+                          onToggleHide={() => handleToggleHide(work.id)}
+                          onDelete={() => handleDelete(work.id)}
+                        />
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )
           ) : (
-            <div className="p-6 text-center text-xs text-[#005a55]/60 bg-[#fdfcf7] rounded-2xl border border-[#d4a55a]/20">
-              No creations featured on home yet. Select from the available works below.
+            <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-12 text-center text-xs text-[#005a55]/60 shadow-2xs">
+              No creations matching your filter.
             </div>
           )}
         </div>
+      )}
 
-        {/* Quick Add Available Works Drawer/List */}
-        {unfeaturedItems.length > 0 && (
-          <div className="pt-3 border-t border-[#d4a55a]/20">
-            <div className="text-[11px] font-bold text-[#8c6218] tracking-widest uppercase mb-3">
-              Add More Creations to Home Selected Portfolio:
+      {/* ─── SUB-VIEW 2: HOME REEL CURATOR ─────────────────────────────────── */}
+      {subView === "curator" && (
+        <div className="bg-white border border-[#d4a55a]/40 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+          <div className="flex items-start sm:items-center justify-between gap-4 flex-wrap border-b border-[#d4a55a]/25 pb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-[#8c6218] tracking-[0.25em] uppercase">
+                  Home Page Selected Portfolio
+                </span>
+                <span className="text-[9.5px] uppercase tracking-wider font-bold bg-[#eef8f3] text-[#00756e] px-2 py-0.5 rounded-full border border-[#cdeee3]">
+                  Horizontal Scroll Reel
+                </span>
+              </div>
+              <h3
+                className="text-xl sm:text-2xl text-[#005a55] mt-1"
+                style={{ fontFamily: "'Antic Didone', serif" }}
+              >
+                "Meaningful stories, thoughtfully shaped" Reel Curator
+              </h3>
+              <p className="text-xs text-[#0d3b38]/70 mt-1 max-w-2xl leading-relaxed">
+                Reorder the exact sequence of items shown in the horizontal swipe carousel on your home page.
+              </p>
             </div>
-            <div className="flex flex-wrap gap-2.5">
-              {unfeaturedItems.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => toggleFeature(item.id)}
-                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-[#d4a55a]/40 bg-[#fdfcf7] hover:border-[#005a55] hover:bg-white text-xs font-semibold text-[#005a55] transition-all cursor-pointer shadow-2xs"
-                >
-                  <span className="w-5 h-5 rounded-full bg-[#eef8f3] text-[#00756e] inline-flex items-center justify-center font-bold text-xs shrink-0">
-                    +
-                  </span>
-                  <span className="truncate max-w-[160px]">{item.name}</span>
-                  <span className="text-[10px] text-[#8c6218] font-normal">({item.label})</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <AddWorkForm onAdd={handleAdd} />
-
-      <div>
-        <div className="text-xs font-bold text-[#8c6218] tracking-widest uppercase mb-4">
-          All Studio Works ({works.length})
-        </div>
-
-        {works.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {works.map((work) => (
-              <WorkCard
-                key={work.id}
-                work={work}
-                isFeatured={activeFeaturedIds.includes(work.id)}
-                onToggleFeatured={() => toggleFeature(work.id)}
-                onToggleHide={() => handleToggleHide(work.id)}
-                onDelete={() => handleDelete(work.id)}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="bg-white border border-[#d4a55a]/30 rounded-3xl p-12 text-center shadow-xs">
-            <span
-              className="text-3xl text-[#8c6218] block mb-2"
-              style={{ fontFamily: "'Sacramento', cursive" }}
-            >
-              Empty Canvas
+            <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#fdfcf7] border border-[#d4a55a]/40 text-[#005a55]">
+              {featuredItems.length} Featured in Reel
             </span>
-            <p className="text-sm text-[#005a55]/60 max-w-sm mx-auto">
-              No bespoke works cataloged in the cloud yet. Use the form above to upload your first signature piece.
-            </p>
           </div>
-        )}
-      </div>
+
+          {/* Reel Sequence */}
+          <div>
+            <div className="text-[11px] font-bold text-[#8c6218] tracking-widest uppercase mb-3 flex items-center justify-between">
+              <span>Live Sequence on Homepage:</span>
+              <span className="text-[10px] text-[#0d3b38]/50 normal-case font-medium">Use ← → to reorder</span>
+            </div>
+
+            {featuredItems.length > 0 ? (
+              <div className="flex overflow-x-auto gap-4 pb-3 no-scrollbar">
+                {featuredItems.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className="w-[200px] shrink-0 bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-2xl overflow-hidden shadow-2xs flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="aspect-[4/3] bg-[#eef8f3] overflow-hidden relative">
+                        {item.thumbUrl ? (
+                          <img
+                            src={item.thumbUrl}
+                            alt={item.name}
+                            className="w-full h-full object-cover object-top"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-xs text-[#005a55]/30">
+                            No image
+                          </div>
+                        )}
+                        <span className="absolute top-2 left-2 bg-[#005a55] text-[#F7F5EF] text-[10px] font-bold px-2 py-0.5 rounded-full shadow-2xs">
+                          #{idx + 1}
+                        </span>
+                      </div>
+                      <div className="p-3">
+                        <div className="text-[9.5px] font-bold text-[#8c6218] uppercase tracking-wider truncate">
+                          {item.label}
+                        </div>
+                        <div
+                          className="text-sm font-semibold text-[#005a55] truncate"
+                          style={{ fontFamily: "'Antic Didone', serif" }}
+                        >
+                          {item.name}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 pt-0 flex items-center justify-between gap-1.5 border-t border-[#d4a55a]/20 mt-1">
+                      <button
+                        type="button"
+                        disabled={idx === 0}
+                        onClick={() => moveFeatured(idx, -1)}
+                        className="px-2 py-1 text-xs border border-[#d4a55a]/40 rounded bg-white text-[#005a55] hover:bg-[#eef8f3] disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+                        title="Move earlier in reel"
+                      >
+                        ←
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleFeature(item.id)}
+                        className="flex-1 text-[10.5px] font-semibold text-rose-600 hover:text-rose-800 py-1 transition-colors cursor-pointer text-center"
+                      >
+                        Remove
+                      </button>
+                      <button
+                        type="button"
+                        disabled={idx === featuredItems.length - 1}
+                        onClick={() => moveFeatured(idx, 1)}
+                        className="px-2 py-1 text-xs border border-[#d4a55a]/40 rounded bg-white text-[#005a55] hover:bg-[#eef8f3] disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+                        title="Move later in reel"
+                      >
+                        →
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-6 text-center text-xs text-[#005a55]/60 bg-[#fdfcf7] rounded-2xl border border-[#d4a55a]/20">
+                No creations featured on home reel yet. Click any creation below to add it.
+              </div>
+            )}
+          </div>
+
+          {/* Quick Add Available Works Drawer */}
+          {unfeaturedItems.length > 0 && (
+            <div className="pt-3 border-t border-[#d4a55a]/20">
+              <div className="text-[11px] font-bold text-[#8c6218] tracking-widest uppercase mb-3">
+                Click to Add Creations to Homepage Reel:
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {unfeaturedItems.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => toggleFeature(item.id)}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-[#d4a55a]/40 bg-[#fdfcf7] hover:border-[#005a55] hover:bg-white text-xs font-semibold text-[#005a55] transition-all cursor-pointer shadow-2xs"
+                  >
+                    <span className="w-4 h-4 rounded-full bg-[#eef8f3] text-[#00756e] inline-flex items-center justify-center font-bold text-[10px] shrink-0">
+                      +
+                    </span>
+                    <span className="truncate max-w-[140px]">{item.name}</span>
+                    <span className="text-[9.5px] text-[#8c6218] font-normal">({item.label})</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
