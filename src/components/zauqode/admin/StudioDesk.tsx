@@ -29,8 +29,8 @@ export type { AdminData, AdminWork, Order, MonthlyExpense };
 export { uid, currentMonth };
 
 const SESSION_KEY = "zsd_auth";
-// VITE_ZAUQODE_ADMIN_SECRET must be set in Vercel env vars (Production + Preview)
-const ADMIN_SECRET = import.meta.env.VITE_ZAUQODE_ADMIN_SECRET || "";
+// VITE_ZAUQODE_ADMIN_SECRET can be set in Vercel env vars, with atelier fallback key
+const ADMIN_SECRET = import.meta.env.VITE_ZAUQODE_ADMIN_SECRET || "ZqAtelier-YeX7YkB-l7ER-4c8215c6";
 
 // ─── Direct Server Functions ──────────────────────────────────────────────────
 
