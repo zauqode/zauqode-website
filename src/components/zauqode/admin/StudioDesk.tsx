@@ -30,7 +30,7 @@ export { uid, currentMonth };
 
 const SESSION_KEY = "zsd_auth";
 // VITE_ZAUQODE_ADMIN_SECRET can be set in Vercel env vars, with atelier fallback key
-const ADMIN_SECRET = import.meta.env.VITE_ZAUQODE_ADMIN_SECRET || "ZqAtelier-YeX7YkB-l7ER-4c8215c6";
+const ADMIN_SECRET = import.meta.env.VITE_ZAUQODE_ADMIN_SECRET || "thrive@123";
 
 // ─── Direct Server Functions ──────────────────────────────────────────────────
 
