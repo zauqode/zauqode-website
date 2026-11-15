@@ -70,17 +70,18 @@ export function DatePickerDDMMYYYY({
 
   return (
     <div className={`relative flex items-center ${className}`}>
+      {/* 16px text-base on mobile prevents iOS Safari auto-zoom on input focus */}
       <input
         type="text"
         value={text}
         onChange={handleTextChange}
         placeholder={placeholder}
-        className={`w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 font-medium tracking-wide pr-9 ${inputClassName}`}
+        className={`w-full bg-[#fdfcf7] border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 font-medium tracking-wide pr-9 ${inputClassName}`}
       />
       <button
         type="button"
         onClick={openPicker}
-        className="absolute right-2.5 text-[#8c6218] hover:text-[#005a55] transition-colors p-1 cursor-pointer"
+        className="absolute right-2 text-[#8c6218] hover:text-[#005a55] transition-colors p-1.5 cursor-pointer touch-manipulation"
         title="Open calendar"
       >
         <svg
@@ -97,6 +98,8 @@ export function DatePickerDDMMYYYY({
           />
         </svg>
       </button>
+
+      {/* Invisible native date picker over the button for 100% native iOS Safari support */}
       <input
         ref={hiddenRef}
         type="date"
@@ -107,7 +110,7 @@ export function DatePickerDDMMYYYY({
             setText(toDDMMYYYY(e.target.value));
           }
         }}
-        className="absolute opacity-0 pointer-events-none w-0 h-0"
+        className="absolute right-0 top-0 bottom-0 w-10 opacity-0 cursor-pointer touch-manipulation"
         tabIndex={-1}
         aria-hidden="true"
       />
@@ -123,34 +126,16 @@ export function InlineDatePickerDDMMYYYY({
   onChange: (ymd: string) => void;
 }) {
   const hiddenRef = useRef<HTMLInputElement>(null);
-
-  const openPicker = () => {
-    if (hiddenRef.current) {
-      if (typeof hiddenRef.current.showPicker === "function") {
-        try {
-          hiddenRef.current.showPicker();
-        } catch {
-          hiddenRef.current.focus();
-        }
-      } else {
-        hiddenRef.current.focus();
-      }
-    }
-  };
-
   const formatted = toDDMMYYYY(value) || "dd/mm/yyyy";
 
   return (
     <div className="relative inline-flex items-center">
-      <button
-        type="button"
-        onClick={openPicker}
-        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border border-[#d4a55a]/40 bg-white hover:border-[#005a55] hover:bg-[#F7F5EF] text-[11px] font-semibold text-[#005a55] transition-colors cursor-pointer"
-        title="Click to change date (dd/mm/yyyy)"
+      <div
+        className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-[#d4a55a]/40 bg-white hover:border-[#005a55] hover:bg-[#F7F5EF] text-xs font-semibold text-[#005a55] transition-colors shadow-2xs pointer-events-none"
       >
         <span>{formatted}</span>
         <svg
-          className="w-3 h-3 text-[#8c6218]"
+          className="w-3.5 h-3.5 text-[#8c6218]"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -162,7 +147,9 @@ export function InlineDatePickerDDMMYYYY({
             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
           />
         </svg>
-      </button>
+      </div>
+
+      {/* Native date input covers the entire pill for smooth 1-tap iOS wheel picker */}
       <input
         ref={hiddenRef}
         type="date"
@@ -172,9 +159,8 @@ export function InlineDatePickerDDMMYYYY({
             onChange(e.target.value);
           }
         }}
-        className="absolute opacity-0 pointer-events-none w-0 h-0"
-        tabIndex={-1}
-        aria-hidden="true"
+        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full touch-manipulation"
+        title="Tap to change date"
       />
     </div>
   );

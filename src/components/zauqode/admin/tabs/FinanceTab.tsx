@@ -1,10 +1,6 @@
 /**
  * Finance Tab — Monthly revenue, operational expenses & net profit tracker.
- * Features:
- *  - Full CRUD: Create, Read (Compact Atelier Rows), Update (Edit Expense Modal), Delete.
- *  - High-density KPI strip (eliminates stacked massive boxes).
- *  - Sub-views: Operational Expenses, Commissions Inflow, Statement Breakdown.
- *  - Strict dd/mm/yyyy date formatting.
+ * Fully optimized for mobile & iOS Safari with zero layout clipping or text overlap.
  */
 
 import React, { useState, useMemo } from "react";
@@ -57,7 +53,7 @@ export function formatDisplayDate(dateStr?: string, fallbackMonth?: string): str
   return toDDMMYYYY(dateStr);
 }
 
-// ─── Modal Wrapper ────────────────────────────────────────────────────────────
+// ─── iOS Mobile Sheet Modal ───────────────────────────────────────────────────
 
 function Modal({
   open,
@@ -77,23 +73,30 @@ function Modal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto">
+      {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[#005a55]/30 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-[#005a55]/40 backdrop-blur-xs transition-opacity"
         onClick={onClose}
       />
+
+      {/* Sheet Content — Bottom Sheet on Mobile, Centered Card on sm+ */}
       <div
-        className={`relative w-full ${maxWidth} bg-[#F7F5EF] border border-[#d4a55a]/45 rounded-3xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,90,85,0.18)] z-10 max-h-[90vh] overflow-y-auto`}
+        className={`relative w-full ${maxWidth} bg-[#F7F5EF] border-t sm:border border-[#d4a55a]/45 rounded-t-3xl sm:rounded-3xl p-5 sm:p-7 shadow-[0_20px_60px_rgba(0,90,85,0.22)] z-10 max-h-[92dvh] overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom,20px)]`}
+        style={{ WebkitOverflowScrolling: "touch" }}
       >
-        <div className="flex items-start justify-between border-b border-[#d4a55a]/25 pb-4 mb-6">
+        {/* iOS Drag Handle */}
+        <div className="w-10 h-1 bg-[#d4a55a]/40 rounded-full mx-auto mb-3 sm:hidden" />
+
+        <div className="flex items-start justify-between border-b border-[#d4a55a]/25 pb-3 mb-4">
           <div>
             {subtitle && (
-              <div className="text-[10px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-1">
+              <div className="text-[10px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-0.5">
                 {subtitle}
               </div>
             )}
             <h3
-              className="text-2xl text-[#005a55]"
+              className="text-xl sm:text-2xl text-[#005a55]"
               style={{ fontFamily: "'Antic Didone', serif" }}
             >
               {title}
@@ -102,7 +105,7 @@ function Modal({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white border border-[#d4a55a]/40 text-[#005a55] hover:bg-[#005a55] hover:text-[#F7F5EF] flex items-center justify-center text-sm font-semibold transition-all cursor-pointer shadow-2xs"
+            className="w-8 h-8 rounded-full bg-white border border-[#d4a55a]/40 text-[#005a55] hover:bg-[#005a55] hover:text-[#F7F5EF] flex items-center justify-center text-sm font-semibold transition-all cursor-pointer shadow-2xs touch-manipulation"
             title="Close"
           >
             ✕
@@ -180,12 +183,12 @@ function AddExpenseModal({
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g. Meta Ads, Cloud Hosting, Font Licenses..."
-            className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+            placeholder="e.g. Meta Ads, Cloud Hosting, Fonts..."
+            className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-3 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
             <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
               Cost (₹) *
@@ -196,7 +199,7 @@ function AddExpenseModal({
               onChange={(e) => setAmount(e.target.value)}
               placeholder="e.g. 2300"
               min="0"
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-3 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
             />
           </div>
 
@@ -218,13 +221,13 @@ function AddExpenseModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 text-xs font-semibold text-[#005a55] hover:bg-white rounded-xl border border-[#d4a55a]/40 transition-colors cursor-pointer"
+            className="flex-1 sm:flex-none px-4 py-3 sm:py-2.5 text-xs font-semibold text-[#005a55] hover:bg-white rounded-xl border border-[#d4a55a]/40 transition-colors cursor-pointer touch-manipulation text-center"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-6 py-2.5 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer"
+            className="flex-1 sm:flex-none bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-5 py-3 sm:py-2.5 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer touch-manipulation text-center"
           >
             Record Expense +
           </button>
@@ -303,11 +306,11 @@ function EditExpenseModal({
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+            className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-3 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
             <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
               Cost (₹) *
@@ -317,7 +320,7 @@ function EditExpenseModal({
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               min="0"
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-3 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
             />
           </div>
 
@@ -339,13 +342,13 @@ function EditExpenseModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 text-xs font-semibold text-[#005a55] hover:bg-white rounded-xl border border-[#d4a55a]/40 transition-colors cursor-pointer"
+            className="flex-1 sm:flex-none px-4 py-3 sm:py-2.5 text-xs font-semibold text-[#005a55] hover:bg-white rounded-xl border border-[#d4a55a]/40 transition-colors cursor-pointer touch-manipulation text-center"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-6 py-2.5 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer"
+            className="flex-1 sm:flex-none bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-5 py-3 sm:py-2.5 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer touch-manipulation text-center"
           >
             Save Changes ✦
           </button>
@@ -431,7 +434,7 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Modals */}
       <AddExpenseModal
         open={addModalOpen}
@@ -447,43 +450,42 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
         onSave={handleSaveExpense}
       />
 
-      {/* Sleek Horizontal Year KPI Ribbon (Replaces massive stacked boxes) */}
-      <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-3 sm:p-4 shadow-2xs flex items-center justify-between gap-3 flex-wrap text-xs">
-        <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
-          <div>
-            <span className="text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block">
-              {yr} Gross Inflow
+      {/* Mobile-Optimized Fiscal KPI Card */}
+      <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-3.5 sm:p-4 shadow-2xs space-y-3">
+        {/* 3 Metrics in balanced 3-column grid on all viewports */}
+        <div className="grid grid-cols-3 gap-2 text-center sm:text-left sm:flex sm:items-center sm:gap-6">
+          <div className="border-r sm:border-r-0 border-[#d4a55a]/20 pr-1 sm:pr-0">
+            <span className="text-[9px] sm:text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block truncate">
+              {yr} Inflow
             </span>
             <span
-              className="text-lg font-bold text-[#00756e]"
+              className="text-base sm:text-lg font-bold text-[#00756e] truncate block"
               style={{ fontFamily: "'Antic Didone', serif" }}
             >
               {fmt(yrRevenue)}
             </span>
           </div>
 
-          <div className="h-7 w-px bg-[#d4a55a]/25 hidden sm:block" />
-
-          <div>
-            <span className="text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block">
+          <div className="border-r sm:border-r-0 border-[#d4a55a]/20 pr-1 sm:pr-0">
+            <span className="text-[9px] sm:text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block truncate">
               {yr} Expenses
             </span>
             <span
-              className="text-lg font-bold text-rose-700"
+              className="text-base sm:text-lg font-bold text-rose-700 truncate block"
               style={{ fontFamily: "'Antic Didone', serif" }}
             >
               {fmt(yrExpenses)}
             </span>
           </div>
 
-          <div className="h-7 w-px bg-[#d4a55a]/25 hidden sm:block" />
-
           <div>
-            <span className="text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block">
+            <span className="text-[9px] sm:text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block truncate">
               {yr} Net Profit
             </span>
             <span
-              className={`text-lg font-bold ${yrProfit >= 0 ? "text-[#005a55]" : "text-rose-700"}`}
+              className={`text-base sm:text-lg font-bold truncate block ${
+                yrProfit >= 0 ? "text-[#005a55]" : "text-rose-700"
+              }`}
               style={{ fontFamily: "'Antic Didone', serif" }}
             >
               {fmt(yrProfit)}
@@ -491,31 +493,34 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
           </div>
         </div>
 
-        {/* Action button */}
+        {/* Action Button: Full-width on mobile, auto on sm */}
         <button
           type="button"
           onClick={() => setAddModalOpen(true)}
-          className="bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-4 py-2 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+          className="w-full sm:w-auto bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl py-2.5 px-4 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5 touch-manipulation active:scale-[0.98]"
         >
           <span className="text-[#d4a55a] text-sm leading-none">+</span>
           <span>Record New Expense</span>
         </button>
       </div>
 
-      {/* Month Selector Pills */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-        <span className="text-[10px] font-bold text-[#8c6218] uppercase tracking-wider shrink-0 mr-1">
-          Fiscal Period:
+      {/* Month Selector Pills — Smooth Momentum Scroll for iOS */}
+      <div
+        className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar -mx-1 px-1"
+        style={{ WebkitOverflowScrolling: "touch" }}
+      >
+        <span className="text-[10px] font-bold text-[#8c6218] uppercase tracking-wider shrink-0 mr-1 hidden xs:inline">
+          Period:
         </span>
         {allMonths.map((m) => (
           <button
             key={m}
             type="button"
             onClick={() => setSelectedMonth(m)}
-            className={`px-3 py-1.5 text-xs font-bold rounded-xl border transition-all cursor-pointer shrink-0 ${
+            className={`px-3 py-1.5 text-xs font-bold rounded-xl border transition-all cursor-pointer shrink-0 touch-manipulation ${
               selectedMonth === m
                 ? "bg-[#005a55] border-[#005a55] text-[#F7F5EF] shadow-2xs"
-                : "bg-white border-[#d4a55a]/35 text-[#005a55] hover:border-[#005a55]"
+                : "bg-white border-[#d4a55a]/35 text-[#005a55] active:bg-[#F7F5EF]"
             }`}
           >
             {monthLabel(m)}
@@ -523,101 +528,112 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
         ))}
       </div>
 
-      {/* Sub-view Segmented Tabs */}
-      <div className="flex items-center justify-between gap-3 border-b border-[#d4a55a]/20 pb-2 flex-wrap">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setSubView("expenses")}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-              subView === "expenses"
-                ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
-                : "bg-white text-[#005a55]/70 border border-[#d4a55a]/30 hover:border-[#005a55]"
-            }`}
-          >
-            💸 Operational Expenses ({curExpenses.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setSubView("inflow")}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-              subView === "inflow"
-                ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
-                : "bg-white text-[#005a55]/70 border border-[#d4a55a]/30 hover:border-[#005a55]"
-            }`}
-          >
-            💰 Commissions Inflow ({curOrders.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setSubView("statement")}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-              subView === "statement"
-                ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
-                : "bg-white text-[#005a55]/70 border border-[#d4a55a]/30 hover:border-[#005a55]"
-            }`}
-          >
-            📊 Statement Breakdown
-          </button>
-        </div>
+      {/* iOS-Style 3-Segment Tab Bar (No wrapping, zero clipping) */}
+      <div className="grid grid-cols-3 gap-1 bg-white border border-[#d4a55a]/30 p-1 rounded-2xl shadow-2xs">
+        <button
+          type="button"
+          onClick={() => setSubView("expenses")}
+          className={`py-2 px-1 text-center text-xs font-bold rounded-xl transition-all cursor-pointer touch-manipulation truncate ${
+            subView === "expenses"
+              ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
+              : "text-[#005a55]/70 active:text-[#005a55]"
+          }`}
+        >
+          Expenses ({curExpenses.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setSubView("inflow")}
+          className={`py-2 px-1 text-center text-xs font-bold rounded-xl transition-all cursor-pointer touch-manipulation truncate ${
+            subView === "inflow"
+              ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
+              : "text-[#005a55]/70 active:text-[#005a55]"
+          }`}
+        >
+          Inflow ({curOrders.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setSubView("statement")}
+          className={`py-2 px-1 text-center text-xs font-bold rounded-xl transition-all cursor-pointer touch-manipulation truncate ${
+            subView === "statement"
+              ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
+              : "text-[#005a55]/70 active:text-[#005a55]"
+          }`}
+        >
+          Statement
+        </button>
+      </div>
 
-        <span className="text-[11px] font-semibold text-[#8c6218]">
-          {monthLabel(selectedMonth)} Net: <strong>{fmt(curSummary.profit)}</strong>
+      {/* Sub-header net status */}
+      <div className="flex items-center justify-between px-1 text-xs">
+        <span className="text-[11px] text-[#0d3b38]/60">
+          Showing {monthLabel(selectedMonth)}
+        </span>
+        <span className="font-semibold text-[#8c6218]">
+          Net Profit:{" "}
+          <strong className={curSummary.profit >= 0 ? "text-[#00756e]" : "text-rose-700"}>
+            {fmt(curSummary.profit)}
+          </strong>
         </span>
       </div>
 
       {/* ─── SUB-VIEW 1: OPERATIONAL EXPENSES ───────────────────────────────── */}
       {subView === "expenses" && (
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {curExpenses.length > 0 ? (
-            <div className="space-y-2">
-              {curExpenses.map((e) => (
-                <div
-                  key={e.id}
-                  className="bg-white border border-[#d4a55a]/30 rounded-2xl p-3.5 shadow-2xs hover:border-[#005a55]/40 transition-all flex items-center justify-between gap-3"
-                >
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-semibold text-[#005a55] block truncate">
-                      {e.description}
-                    </span>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[11px] text-[#8c6218] font-bold">Date:</span>
-                      <InlineDatePickerDDMMYYYY
-                        value={e.date || (e.createdAt ? e.createdAt.split("T")[0] : "")}
-                        onChange={(val) => {
-                          if (!val) return;
-                          handleSaveExpense({
-                            ...e,
-                            date: val,
-                            month: val.slice(0, 7),
-                          });
-                        }}
-                      />
-                    </div>
+            curExpenses.map((e) => (
+              <div
+                key={e.id}
+                className="bg-white border border-[#d4a55a]/30 rounded-2xl p-3.5 shadow-2xs space-y-2.5"
+              >
+                {/* Top Row: Description on left, Cost in bold red on right */}
+                <div className="flex items-start justify-between gap-2">
+                  <span className="text-sm font-semibold text-[#005a55] leading-snug break-words flex-1">
+                    {e.description}
+                  </span>
+                  <span className="text-base font-bold text-rose-700 shrink-0 ml-2">
+                    {fmt(e.amount)}
+                  </span>
+                </div>
+
+                {/* Bottom Row: Date Pill on left, Edit & Delete buttons on right (Never overlaps!) */}
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#d4a55a]/15">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[11px] font-bold text-[#8c6218]">Date:</span>
+                    <InlineDatePickerDDMMYYYY
+                      value={e.date || (e.createdAt ? e.createdAt.split("T")[0] : "")}
+                      onChange={(val) => {
+                        if (!val) return;
+                        handleSaveExpense({
+                          ...e,
+                          date: val,
+                          month: val.slice(0, 7),
+                        });
+                      }}
+                    />
                   </div>
 
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span className="text-base font-bold text-rose-700">{fmt(e.amount)}</span>
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       type="button"
                       onClick={() => setEditingExpense(e)}
-                      className="text-xs text-[#005a55] hover:text-[#00756e] font-bold px-2.5 py-1 rounded-lg border border-[#005a55]/30 bg-[#fdfcf7] cursor-pointer"
-                      title="Edit expense description or amount"
+                      className="text-xs text-[#005a55] font-bold px-3 py-1.5 rounded-lg border border-[#005a55]/30 bg-[#fdfcf7] active:bg-[#005a55]/10 touch-manipulation cursor-pointer"
                     >
                       ✏️ Edit
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDeleteExpense(e.id)}
-                      className="text-xs text-rose-600 hover:text-rose-800 font-bold px-2 py-1 rounded-lg border border-rose-200 bg-white cursor-pointer"
+                      className="text-xs text-rose-600 font-bold px-2.5 py-1.5 rounded-lg border border-rose-200 bg-white active:bg-rose-50 touch-manipulation cursor-pointer"
                       title="Delete expense"
                     >
                       ✕
                     </button>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))
           ) : (
             <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-8 text-center text-xs text-[#005a55]/60 shadow-2xs">
               No operational expenses logged for {monthLabel(selectedMonth)}.
@@ -628,37 +644,39 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
 
       {/* ─── SUB-VIEW 2: COMMISSIONS INFLOW ─────────────────────────────────── */}
       {subView === "inflow" && (
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {curOrders.length > 0 ? (
-            <div className="space-y-2">
-              {curOrders.map((o) => (
-                <div
-                  key={o.id}
-                  className="bg-white border border-[#d4a55a]/30 rounded-2xl p-3.5 shadow-2xs flex items-center justify-between gap-3"
-                >
-                  <div className="flex-1 min-w-0">
+            curOrders.map((o) => (
+              <div
+                key={o.id}
+                className="bg-white border border-[#d4a55a]/30 rounded-2xl p-3.5 shadow-2xs space-y-1.5"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div>
                     <div
-                      className="text-sm font-semibold text-[#005a55] truncate"
+                      className="text-sm font-semibold text-[#005a55]"
                       style={{ fontFamily: "'Antic Didone', serif" }}
                     >
                       {o.clientName}
                     </div>
-                    <div className="flex items-center gap-2 mt-0.5 text-xs text-[#0d3b38]/70 flex-wrap">
-                      <span className="text-[#8c6218] font-semibold">{o.projectType}</span>
-                      <span>·</span>
-                      <span>Date: {formatDisplayDate(o.date || o.createdAt, o.month)}</span>
+                    <div className="text-[11px] text-[#8c6218] font-medium mt-0.5">
+                      {o.projectType}
                     </div>
                   </div>
 
                   <div className="text-right shrink-0">
                     <div className="text-sm font-bold text-[#00756e]">{fmt(o.amount)}</div>
                     <div className="text-[10px] font-semibold text-[#0d3b38]/60">
-                      {o.fullPaid ? "✓ Full Paid" : o.advancePaid ? `Adv: ${fmt(o.advance)}` : "Payment Due"}
+                      {o.fullPaid ? "✓ Full Paid" : o.advancePaid ? `Adv: ${fmt(o.advance)}` : "Due"}
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+
+                <div className="text-[11px] text-[#0d3b38]/50 pt-1 border-t border-[#d4a55a]/15">
+                  Date: {formatDisplayDate(o.date || o.createdAt, o.month)}
+                </div>
+              </div>
+            ))
           ) : (
             <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-8 text-center text-xs text-[#005a55]/60 shadow-2xs">
               No client commissions billed in {monthLabel(selectedMonth)}.
@@ -669,43 +687,47 @@ export function FinanceTab({ orders, expenses, onUpdate }: Props) {
 
       {/* ─── SUB-VIEW 3: STATEMENT BREAKDOWN ───────────────────────────────── */}
       {subView === "statement" && (
-        <div className="bg-white border border-[#d4a55a]/35 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
-          <div className="border-b border-[#d4a55a]/20 pb-4">
-            <div className="text-[10px] font-bold text-[#8c6218] uppercase tracking-[0.25em] mb-1">
+        <div className="bg-white border border-[#d4a55a]/35 rounded-3xl p-5 sm:p-7 shadow-xs space-y-4">
+          <div className="border-b border-[#d4a55a]/20 pb-3">
+            <div className="text-[10px] font-bold text-[#8c6218] uppercase tracking-[0.25em] mb-0.5">
               Monthly Statement
             </div>
             <h3
-              className="text-2xl text-[#005a55]"
+              className="text-xl sm:text-2xl text-[#005a55]"
               style={{ fontFamily: "'Antic Didone', serif" }}
             >
-              {monthLabel(selectedMonth)} Statement Breakdown
+              {monthLabel(selectedMonth)} Breakdown
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-[#fdfcf7] border border-[#d4a55a]/25 rounded-2xl p-4 text-center">
-              <div className="text-xl font-bold text-[#00756e]">{fmt(curSummary.revenue)}</div>
-              <div className="text-[10.5px] text-[#0d3b38]/50 mt-1 uppercase tracking-wider font-semibold">
-                Period Inflow
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-[#fdfcf7] border border-[#d4a55a]/25 rounded-2xl p-3 text-center">
+              <div className="text-base sm:text-xl font-bold text-[#00756e] truncate">
+                {fmt(curSummary.revenue)}
+              </div>
+              <div className="text-[9.5px] text-[#0d3b38]/50 mt-1 uppercase tracking-wider font-semibold">
+                Inflow
               </div>
             </div>
 
-            <div className="bg-[#fdfcf7] border border-[#d4a55a]/25 rounded-2xl p-4 text-center">
-              <div className="text-xl font-bold text-rose-700">{fmt(curSummary.expenses)}</div>
-              <div className="text-[10.5px] text-[#0d3b38]/50 mt-1 uppercase tracking-wider font-semibold">
-                Total Expenses
+            <div className="bg-[#fdfcf7] border border-[#d4a55a]/25 rounded-2xl p-3 text-center">
+              <div className="text-base sm:text-xl font-bold text-rose-700 truncate">
+                {fmt(curSummary.expenses)}
+              </div>
+              <div className="text-[9.5px] text-[#0d3b38]/50 mt-1 uppercase tracking-wider font-semibold">
+                Expenses
               </div>
             </div>
 
-            <div className="bg-[#fdfcf7] border border-[#d4a55a]/25 rounded-2xl p-4 text-center">
+            <div className="bg-[#fdfcf7] border border-[#d4a55a]/25 rounded-2xl p-3 text-center">
               <div
-                className={`text-xl font-bold ${
+                className={`text-base sm:text-xl font-bold truncate ${
                   curSummary.profit >= 0 ? "text-[#005a55]" : "text-rose-700"
                 }`}
               >
                 {fmt(curSummary.profit)}
               </div>
-              <div className="text-[10.5px] text-[#0d3b38]/50 mt-1 uppercase tracking-wider font-semibold">
+              <div className="text-[9.5px] text-[#0d3b38]/50 mt-1 uppercase tracking-wider font-semibold">
                 Net Profit
               </div>
             </div>

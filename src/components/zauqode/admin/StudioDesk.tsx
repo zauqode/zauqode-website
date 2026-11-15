@@ -82,8 +82,8 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F5EF] flex items-center justify-center p-6 selection:bg-[#005a55] selection:text-[#F7F5EF]">
-      <div className="w-full max-w-md bg-white border border-[#d4a55a]/40 rounded-3xl p-8 sm:p-11 shadow-[0_12px_45px_rgba(0,90,85,0.06)] relative overflow-hidden">
+    <div className="min-h-screen bg-[#F7F5EF] flex items-center justify-center p-4 sm:p-6 selection:bg-[#005a55] selection:text-[#F7F5EF]">
+      <div className="w-full max-w-md bg-white border border-[#d4a55a]/40 rounded-3xl p-6 sm:p-11 shadow-[0_12px_45px_rgba(0,90,85,0.06)] relative overflow-hidden">
         {/* Subtle decorative top accent line */}
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#d4a55a]/30 via-[#005a55] to-[#d4a55a]/30" />
 
@@ -133,7 +133,7 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
               onChange={(e) => setInput(e.target.value)}
               placeholder="••••••••••••••••••••"
               autoFocus
-              className="w-full bg-[#fdfcf7] border border-[#d4a55a]/50 rounded-xl px-4 py-3 text-[#005a55] placeholder-[#005a55]/25 text-sm outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all shadow-inner"
+              className="w-full bg-[#fdfcf7] border border-[#d4a55a]/50 rounded-xl px-4 py-3 text-[#005a55] placeholder-[#005a55]/25 text-base sm:text-sm outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 transition-all shadow-inner touch-manipulation"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             />
           </div>
@@ -231,28 +231,28 @@ export function StudioDesk() {
       style={{ fontFamily: "'Manrope', sans-serif" }}
     >
       {/* Top Studio Bar */}
-      <header className="sticky top-0 z-30 bg-[#F7F5EF]/90 backdrop-blur-md border-b border-[#d4a55a]/30 px-6 sm:px-10 py-4.5 transition-all">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
+      <header className="sticky top-0 z-30 bg-[#F7F5EF]/95 backdrop-blur-md border-b border-[#d4a55a]/30 px-3.5 sm:px-8 py-3 sm:py-4 transition-all">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <span
-              className="text-base sm:text-lg tracking-[0.3em] uppercase text-[#005a55] font-normal"
+              className="text-sm sm:text-lg tracking-[0.25em] uppercase text-[#005a55] font-normal truncate"
               style={{ fontFamily: "'Croissant One', cursive, serif" }}
             >
               ZAUQODE
             </span>
             <span className="text-[#d4a55a] text-xs">/</span>
             <span
-              className="text-base sm:text-lg text-[#005a55]"
+              className="text-sm sm:text-lg text-[#005a55] truncate"
               style={{ fontFamily: "'Antic Didone', serif" }}
             >
               Studio Desk
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {saveMsg && (
               <span
-                className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
+                className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${
                   saveMsg.startsWith("✓")
                     ? "bg-[#eef8f3] text-[#00756e] border-[#cdeee3]"
                     : "bg-rose-50 text-rose-600 border-rose-200"
@@ -262,8 +262,8 @@ export function StudioDesk() {
               </span>
             )}
             {saving && (
-              <span className="text-xs text-[#8c6218] animate-pulse font-medium">
-                Syncing with Cloud…
+              <span className="text-[11px] text-[#8c6218] animate-pulse font-medium hidden xs:inline">
+                Syncing…
               </span>
             )}
             <button
@@ -271,7 +271,7 @@ export function StudioDesk() {
                 sessionStorage.removeItem(SESSION_KEY);
                 setAuthed(false);
               }}
-              className="text-xs font-semibold text-[#005a55]/70 hover:text-[#005a55] border border-[#005a55]/20 hover:border-[#005a55]/50 rounded-full px-3.5 py-1.5 transition-colors cursor-pointer"
+              className="text-xs font-semibold text-[#005a55]/70 hover:text-[#005a55] border border-[#005a55]/20 hover:border-[#005a55]/50 rounded-full px-3 py-1 sm:px-3.5 sm:py-1.5 transition-colors cursor-pointer touch-manipulation"
             >
               Sign out
             </button>
@@ -279,31 +279,35 @@ export function StudioDesk() {
         </div>
       </header>
 
-      {/* Sub-Header & Navigation Tabs */}
-      <div className="bg-white border-b border-[#d4a55a]/25 px-6 sm:px-10 shadow-xs">
-        <div className="max-w-6xl mx-auto flex items-center justify-between flex-wrap gap-4 pt-4">
-          <nav className="flex gap-2 sm:gap-3">
+      {/* Sub-Header & Navigation Tabs — Horizontally Scrollable on Mobile with Momentum */}
+      <div className="bg-white border-b border-[#d4a55a]/25 px-3 sm:px-8 shadow-xs">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
+          <nav
+            className="flex gap-1.5 sm:gap-3 overflow-x-auto no-scrollbar py-2 w-full sm:w-auto"
+            style={{ WebkitOverflowScrolling: "touch" }}
+          >
             {[
-              { id: "portfolio" as const, label: "Portfolio Works", count: data.works.length, icon: "✦" },
-              { id: "orders" as const, label: "Client Orders", count: data.orders.length, icon: "◈" },
-              { id: "finance" as const, label: "Profit & Expenses", icon: "₹" },
+              { id: "portfolio" as const, label: "Portfolio", fullLabel: "Portfolio Works", count: data.works.length, icon: "✦" },
+              { id: "orders" as const, label: "Orders", fullLabel: "Client Orders", count: data.orders.length, icon: "◈" },
+              { id: "finance" as const, label: "Finance", fullLabel: "Profit & Expenses", icon: "₹" },
             ].map((t) => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`px-4 sm:px-5 py-3 text-xs sm:text-sm font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
+                className={`px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 rounded-xl transition-all cursor-pointer touch-manipulation ${
                   tab === t.id
-                    ? "border-[#005a55] text-[#005a55] bg-[#F7F5EF]/60 rounded-t-lg"
-                    : "border-transparent text-[#005a55]/50 hover:text-[#005a55] hover:bg-[#F7F5EF]/30 rounded-t-lg"
+                    ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
+                    : "text-[#005a55]/60 hover:text-[#005a55] hover:bg-[#F7F5EF]"
                 }`}
               >
-                <span className="text-[#8c6218] text-xs">{t.icon}</span>
-                <span>{t.label}</span>
+                <span className={tab === t.id ? "text-[#d4a55a]" : "text-[#8c6218]"}>{t.icon}</span>
+                <span className="hidden sm:inline">{t.fullLabel}</span>
+                <span className="sm:hidden">{t.label}</span>
                 {t.count !== undefined && (
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                    className={`text-[9.5px] px-1.5 py-0.2 rounded-full font-bold ${
                       tab === t.id
-                        ? "bg-[#005a55] text-[#F7F5EF]"
+                        ? "bg-[#F7F5EF] text-[#005a55]"
                         : "bg-[#005a55]/10 text-[#005a55]"
                     }`}
                   >
@@ -315,7 +319,7 @@ export function StudioDesk() {
           </nav>
 
           <div
-            className="hidden sm:block text-xs text-[#8c6218] tracking-widest uppercase font-semibold pb-3"
+            className="hidden md:block text-xs text-[#8c6218] tracking-widest uppercase font-semibold"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Digital Studio Management
@@ -324,7 +328,7 @@ export function StudioDesk() {
       </div>
 
       {/* Main Studio Body */}
-      <main className="p-6 sm:p-10 max-w-6xl mx-auto">
+      <main className="p-3.5 sm:p-6 md:p-8 max-w-6xl mx-auto pb-20">
         {loading ? (
           <div className="flex flex-col items-center justify-center h-64 text-[#005a55]/60 text-sm gap-3">
             <div className="w-8 h-8 rounded-full border-2 border-[#005a55]/20 border-t-[#005a55] animate-spin" />

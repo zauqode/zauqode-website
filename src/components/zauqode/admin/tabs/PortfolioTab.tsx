@@ -54,26 +54,30 @@ function Modal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[#005a55]/30 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-[#005a55]/40 backdrop-blur-xs transition-opacity"
         onClick={onClose}
       />
 
-      {/* Dialog content */}
+      {/* Sheet Content — Bottom Sheet on Mobile, Centered on sm+ */}
       <div
-        className={`relative w-full ${maxWidth} bg-[#F7F5EF] border border-[#d4a55a]/45 rounded-3xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,90,85,0.18)] z-10 max-h-[90vh] overflow-y-auto`}
+        className={`relative w-full ${maxWidth} bg-[#F7F5EF] border-t sm:border border-[#d4a55a]/45 rounded-t-3xl sm:rounded-3xl p-5 sm:p-8 shadow-[0_20px_60px_rgba(0,90,85,0.22)] z-10 max-h-[92dvh] overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom,20px)]`}
+        style={{ WebkitOverflowScrolling: "touch" }}
       >
-        <div className="flex items-start justify-between border-b border-[#d4a55a]/25 pb-4 mb-6">
+        {/* iOS Drag Handle */}
+        <div className="w-10 h-1 bg-[#d4a55a]/40 rounded-full mx-auto mb-3 sm:hidden" />
+
+        <div className="flex items-start justify-between border-b border-[#d4a55a]/25 pb-3 mb-4">
           <div>
             {subtitle && (
-              <div className="text-[10px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-1">
+              <div className="text-[10px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-0.5">
                 {subtitle}
               </div>
             )}
             <h3
-              className="text-2xl text-[#005a55]"
+              className="text-xl sm:text-2xl text-[#005a55]"
               style={{ fontFamily: "'Antic Didone', serif" }}
             >
               {title}
@@ -82,7 +86,7 @@ function Modal({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white border border-[#d4a55a]/40 text-[#005a55] hover:bg-[#005a55] hover:text-[#F7F5EF] flex items-center justify-center text-sm font-semibold transition-all cursor-pointer shadow-2xs"
+            className="w-8 h-8 rounded-full bg-white border border-[#d4a55a]/40 text-[#005a55] hover:bg-[#005a55] hover:text-[#F7F5EF] flex items-center justify-center text-sm font-semibold transition-all cursor-pointer shadow-2xs touch-manipulation"
             title="Close"
           >
             ✕
@@ -269,7 +273,7 @@ function AddWorkModal({
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder={isStationery ? "e.g. Kaadhalum Valaiyalum" : "e.g. Sonali & Pallav"}
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10"
             />
           </div>
 
@@ -280,7 +284,7 @@ function AddWorkModal({
             <select
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 cursor-pointer font-semibold"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10 cursor-pointer font-semibold"
             >
               {CATEGORIES.map((c) => (
                 <option key={c.value} value={c.value}>
@@ -299,7 +303,7 @@ function AddWorkModal({
               value={form.occasion}
               onChange={(e) => setForm({ ...form, occasion: e.target.value })}
               placeholder="e.g. Sacred Temple Wedding"
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10"
             />
           </div>
 
@@ -312,7 +316,7 @@ function AddWorkModal({
               value={form.sub}
               onChange={(e) => setForm({ ...form, sub: e.target.value })}
               placeholder="e.g. Four-Ceremony Royal Folio Suite"
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-[#005a55] placeholder-[#005a55]/30 outline-none focus:border-[#005a55] focus:ring-2 focus:ring-[#005a55]/10"
             />
           </div>
 
@@ -589,7 +593,7 @@ function EditWorkModal({
               type="text"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
             />
           </div>
 
@@ -600,7 +604,7 @@ function EditWorkModal({
             <select
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55] cursor-pointer font-semibold"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55] cursor-pointer font-semibold"
             >
               {CATEGORIES.map((c) => (
                 <option key={c.value} value={c.value}>
@@ -618,7 +622,7 @@ function EditWorkModal({
               type="text"
               value={form.occasion}
               onChange={(e) => setForm({ ...form, occasion: e.target.value })}
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
             />
           </div>
 
@@ -630,7 +634,7 @@ function EditWorkModal({
               type="text"
               value={form.sub}
               onChange={(e) => setForm({ ...form, sub: e.target.value })}
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
             />
           </div>
 
@@ -1168,39 +1172,39 @@ export function PortfolioTab({ works, featuredHomeIds, onUpdate, onUpdateFeature
       />
 
       {/* Top Studio Control Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white border border-[#d4a55a]/30 rounded-2xl p-3 sm:p-4 shadow-2xs">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white border border-[#d4a55a]/30 rounded-2xl p-2.5 sm:p-4 shadow-2xs">
         {/* Sub-view Segmented Toggle */}
-        <div className="flex items-center gap-1.5 bg-[#F7F5EF] p-1 rounded-xl border border-[#d4a55a]/25 shrink-0">
+        <div className="grid grid-cols-2 sm:flex items-center gap-1 bg-[#F7F5EF] p-1 rounded-xl border border-[#d4a55a]/25 shrink-0">
           <button
             type="button"
             onClick={() => setSubView("catalogue")}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+            className={`px-3 py-2 sm:py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer text-center truncate touch-manipulation ${
               subView === "catalogue"
                 ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
-                : "text-[#005a55]/70 hover:text-[#005a55]"
+                : "text-[#005a55]/70 active:text-[#005a55]"
             }`}
           >
-            📁 Portfolio Works ({works.length})
+            📁 Works ({works.length})
           </button>
           <button
             type="button"
             onClick={() => setSubView("curator")}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+            className={`px-3 py-2 sm:py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer text-center truncate touch-manipulation ${
               subView === "curator"
                 ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
-                : "text-[#005a55]/70 hover:text-[#005a55]"
+                : "text-[#005a55]/70 active:text-[#005a55]"
             }`}
           >
-            ★ Home Reel Curator ({activeFeaturedIds.length})
+            ★ Home Reel ({activeFeaturedIds.length})
           </button>
         </div>
 
         {/* Action Button & Utilities */}
-        <div className="flex items-center gap-2.5 justify-end flex-wrap">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handleRestoreDefaults}
-            className="text-[11px] font-semibold text-[#8c6218] hover:text-[#005a55] border border-[#d4a55a]/40 hover:border-[#005a55] rounded-xl px-3 py-2 bg-[#fdfcf7] transition-all cursor-pointer shadow-2xs"
+            className="flex-1 sm:flex-none text-[11px] font-semibold text-[#8c6218] border border-[#d4a55a]/40 rounded-xl px-3 py-2 bg-[#fdfcf7] transition-all cursor-pointer shadow-2xs text-center touch-manipulation active:bg-[#F7F5EF]"
             title="Import or restore default website creations"
           >
             ↺ Sync Defaults
@@ -1209,10 +1213,10 @@ export function PortfolioTab({ works, featuredHomeIds, onUpdate, onUpdateFeature
           <button
             type="button"
             onClick={() => setAddModalOpen(true)}
-            className="bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-4 py-2 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center gap-1.5"
+            className="flex-1 sm:flex-none bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-4 py-2 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5 touch-manipulation active:scale-[0.98]"
           >
             <span className="text-[#d4a55a] text-sm leading-none">+</span>
-            <span>Add New Creation</span>
+            <span>Add Creation</span>
           </button>
         </div>
       </div>

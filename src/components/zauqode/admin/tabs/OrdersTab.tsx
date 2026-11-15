@@ -1,10 +1,6 @@
 /**
  * Orders Tab — Track client commissions, advance payments, deadlines & fulfillment.
- * Features:
- *  - Full CRUD: Create, Read (High-density rows/table), Update (Edit Order Modal), Delete.
- *  - Sub-views: Active Commissions vs Delivered Archive.
- *  - Compact single-row KPI ribbon (no massive bloated cards).
- *  - Strict dd/mm/yyyy date format.
+ * Fully optimized for mobile & iOS Safari with responsive cards and touch manipulation.
  */
 
 import React, { useState, useMemo } from "react";
@@ -30,7 +26,7 @@ function fmt(n: number) {
   return "₹" + n.toLocaleString("en-IN");
 }
 
-// ─── Modal Dialog Wrapper ─────────────────────────────────────────────────────
+// ─── iOS Mobile Sheet Modal ───────────────────────────────────────────────────
 
 function Modal({
   open,
@@ -50,23 +46,27 @@ function Modal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto">
       <div
-        className="fixed inset-0 bg-[#005a55]/30 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-[#005a55]/40 backdrop-blur-xs transition-opacity"
         onClick={onClose}
       />
       <div
-        className={`relative w-full ${maxWidth} bg-[#F7F5EF] border border-[#d4a55a]/45 rounded-3xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,90,85,0.18)] z-10 max-h-[90vh] overflow-y-auto`}
+        className={`relative w-full ${maxWidth} bg-[#F7F5EF] border-t sm:border border-[#d4a55a]/45 rounded-t-3xl sm:rounded-3xl p-5 sm:p-7 shadow-[0_20px_60px_rgba(0,90,85,0.22)] z-10 max-h-[92dvh] overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom,20px)]`}
+        style={{ WebkitOverflowScrolling: "touch" }}
       >
-        <div className="flex items-start justify-between border-b border-[#d4a55a]/25 pb-4 mb-6">
+        {/* iOS Drag Handle */}
+        <div className="w-10 h-1 bg-[#d4a55a]/40 rounded-full mx-auto mb-3 sm:hidden" />
+
+        <div className="flex items-start justify-between border-b border-[#d4a55a]/25 pb-3 mb-4">
           <div>
             {subtitle && (
-              <div className="text-[10px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-1">
+              <div className="text-[10px] font-bold text-[#8c6218] tracking-[0.25em] uppercase mb-0.5">
                 {subtitle}
               </div>
             )}
             <h3
-              className="text-2xl text-[#005a55]"
+              className="text-xl sm:text-2xl text-[#005a55]"
               style={{ fontFamily: "'Antic Didone', serif" }}
             >
               {title}
@@ -75,7 +75,7 @@ function Modal({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white border border-[#d4a55a]/40 text-[#005a55] hover:bg-[#005a55] hover:text-[#F7F5EF] flex items-center justify-center text-sm font-semibold transition-all cursor-pointer shadow-2xs"
+            className="w-8 h-8 rounded-full bg-white border border-[#d4a55a]/40 text-[#005a55] hover:bg-[#005a55] hover:text-[#F7F5EF] flex items-center justify-center text-sm font-semibold transition-all cursor-pointer shadow-2xs touch-manipulation"
             title="Close"
           >
             ✕
@@ -171,7 +171,7 @@ function AddOrderModal({
       subtitle="Client Registry"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
             <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
               Client / Couple Name *
@@ -181,7 +181,7 @@ function AddOrderModal({
               value={form.clientName}
               onChange={(e) => setForm({ ...form, clientName: e.target.value })}
               placeholder="e.g. Priya & Rahul"
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-3 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
             />
           </div>
 
@@ -192,7 +192,7 @@ function AddOrderModal({
             <select
               value={form.projectType}
               onChange={(e) => setForm({ ...form, projectType: e.target.value })}
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55] cursor-pointer font-semibold"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-3 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55] cursor-pointer font-semibold"
             >
               {PROJECT_TYPES.map((t) => (
                 <option key={t} value={t}>
@@ -212,7 +212,7 @@ function AddOrderModal({
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
               placeholder="e.g. 25000"
               min="0"
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-3 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
             />
           </div>
 
@@ -226,7 +226,7 @@ function AddOrderModal({
               onChange={(e) => setForm({ ...form, advance: e.target.value })}
               placeholder="e.g. 10000"
               min="0"
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-3 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
             />
           </div>
 
@@ -261,11 +261,11 @@ function AddOrderModal({
             {(
               [
                 { key: "advancePaid", label: "Advance Received" },
-                { key: "fullPaid", label: "Full Payment Settled" },
+                { key: "fullPaid", label: "Full Paid" },
                 { key: "completed", label: "Delivered & Complete" },
               ] as const
             ).map(({ key, label }) => (
-              <label key={key} className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#005a55]">
+              <label key={key} className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#005a55] touch-manipulation">
                 <input
                   type="checkbox"
                   checked={form[key]}
@@ -288,7 +288,7 @@ function AddOrderModal({
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
             rows={2}
             placeholder="Theme palette, special features, RSVP details..."
-            className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2 text-sm text-[#005a55] outline-none focus:border-[#005a55] resize-none"
+            className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55] resize-none"
           />
         </div>
 
@@ -302,13 +302,13 @@ function AddOrderModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 text-xs font-semibold text-[#005a55] hover:bg-white rounded-xl border border-[#d4a55a]/40 transition-colors cursor-pointer"
+            className="flex-1 sm:flex-none px-4 py-3 sm:py-2.5 text-xs font-semibold text-[#005a55] hover:bg-white rounded-xl border border-[#d4a55a]/40 transition-colors cursor-pointer touch-manipulation text-center"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-6 py-2.5 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer"
+            className="flex-1 sm:flex-none bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-5 py-3 sm:py-2.5 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer touch-manipulation text-center"
           >
             Save Order Record ✦
           </button>
@@ -408,7 +408,7 @@ function EditOrderModal({
       subtitle="Client Registry Editor"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
             <label className="block text-xs font-semibold text-[#005a55]/80 uppercase tracking-wider mb-1.5">
               Client / Couple Name *
@@ -417,7 +417,7 @@ function EditOrderModal({
               type="text"
               value={form.clientName}
               onChange={(e) => setForm({ ...form, clientName: e.target.value })}
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-3 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
             />
           </div>
 
@@ -428,7 +428,7 @@ function EditOrderModal({
             <select
               value={form.projectType}
               onChange={(e) => setForm({ ...form, projectType: e.target.value })}
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55] cursor-pointer font-semibold"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-3 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55] cursor-pointer font-semibold"
             >
               {PROJECT_TYPES.map((t) => (
                 <option key={t} value={t}>
@@ -447,7 +447,7 @@ function EditOrderModal({
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
               min="0"
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-3 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
             />
           </div>
 
@@ -460,7 +460,7 @@ function EditOrderModal({
               value={form.advance}
               onChange={(e) => setForm({ ...form, advance: e.target.value })}
               min="0"
-              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-sm text-[#005a55] outline-none focus:border-[#005a55]"
+              className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-3 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55]"
             />
           </div>
 
@@ -495,11 +495,11 @@ function EditOrderModal({
             {(
               [
                 { key: "advancePaid", label: "Advance Received" },
-                { key: "fullPaid", label: "Full Payment Settled" },
+                { key: "fullPaid", label: "Full Paid" },
                 { key: "completed", label: "Delivered & Complete" },
               ] as const
             ).map(({ key, label }) => (
-              <label key={key} className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#005a55]">
+              <label key={key} className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#005a55] touch-manipulation">
                 <input
                   type="checkbox"
                   checked={form[key]}
@@ -521,7 +521,7 @@ function EditOrderModal({
             value={form.notes}
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
             rows={2}
-            className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2 text-sm text-[#005a55] outline-none focus:border-[#005a55] resize-none"
+            className="w-full bg-white border border-[#d4a55a]/40 rounded-xl px-3.5 py-2.5 text-base sm:text-sm text-[#005a55] outline-none focus:border-[#005a55] resize-none"
           />
         </div>
 
@@ -535,13 +535,13 @@ function EditOrderModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 text-xs font-semibold text-[#005a55] hover:bg-white rounded-xl border border-[#d4a55a]/40 transition-colors cursor-pointer"
+            className="flex-1 sm:flex-none px-4 py-3 sm:py-2.5 text-xs font-semibold text-[#005a55] hover:bg-white rounded-xl border border-[#d4a55a]/40 transition-colors cursor-pointer touch-manipulation text-center"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-6 py-2.5 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer"
+            className="flex-1 sm:flex-none bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-5 py-3 sm:py-2.5 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer touch-manipulation text-center"
           >
             Save Changes ✦
           </button>
@@ -567,23 +567,19 @@ function CompactOrderRow({
   const pendingAmount = order.fullPaid ? 0 : order.amount - (order.advancePaid ? order.advance : 0);
 
   return (
-    <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-4 shadow-2xs hover:border-[#005a55]/40 transition-all flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-      {/* Client & Metadata */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
+    <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-3.5 sm:p-4 shadow-2xs hover:border-[#005a55]/40 transition-all space-y-2.5">
+      {/* Row 1: Client Name, Project Type on left, Total Amount & Status on right */}
+      <div className="flex items-start justify-between gap-2 flex-wrap">
+        <div className="flex items-center gap-1.5 flex-wrap flex-1 min-w-0">
           <span
-            className="text-base sm:text-lg font-medium text-[#005a55] truncate"
+            className="text-base font-semibold text-[#005a55] truncate"
             style={{ fontFamily: "'Antic Didone', serif" }}
           >
             {order.clientName}
           </span>
-
-          {/* Service badge */}
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#005a55] bg-[#eef8f3] border border-[#cdeee3] px-2 py-0.5 rounded-full">
+          <span className="text-[9.5px] font-bold uppercase tracking-wider text-[#005a55] bg-[#eef8f3] border border-[#cdeee3] px-2 py-0.5 rounded-full">
             {order.projectType}
           </span>
-
-          {/* Fulfillment Status */}
           <span
             className={`text-[9.5px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
               order.completed
@@ -593,92 +589,81 @@ function CompactOrderRow({
           >
             {order.completed ? "Delivered" : "In Progress"}
           </span>
-
-          {/* Payment Status */}
-          {order.fullPaid ? (
-            <span className="text-[9.5px] font-bold bg-[#eef8f3] text-[#00756e] border border-[#cdeee3] px-2 py-0.5 rounded-full">
-              Full Paid
-            </span>
-          ) : order.advancePaid ? (
-            <span className="text-[9.5px] font-bold bg-[#fef9ee] text-[#8c6218] border border-[#f5e4bf] px-2 py-0.5 rounded-full">
-              Adv: {fmt(order.advance)}
-            </span>
-          ) : (
-            <span className="text-[9.5px] font-bold bg-rose-50 text-rose-600 border border-rose-200 px-2 py-0.5 rounded-full">
-              Payment Due
-            </span>
-          )}
         </div>
 
-        {/* Financial & Dates strip */}
-        <div className="flex items-center gap-3 mt-1.5 text-xs text-[#0d3b38]/70 flex-wrap">
-          <span>
-            Total: <strong className="text-[#005a55]">{fmt(order.amount)}</strong>
-          </span>
-          <span>·</span>
-          <span>
-            Pending:{" "}
-            <strong className={pendingAmount === 0 ? "text-[#00756e]" : "text-rose-600"}>
-              {pendingAmount === 0 ? "₹0 (Settled)" : fmt(pendingAmount)}
-            </strong>
-          </span>
-          <span>·</span>
-          <span>
-            Date:{" "}
-            <strong className="text-[#005a55]">
-              {formatDisplayDate(order.date || order.createdAt, order.month)}
-            </strong>
-          </span>
-          {order.deadline && (
-            <>
-              <span>·</span>
-              <span>
-                Deadline: <strong className="text-[#8c6218]">{toDDMMYYYY(order.deadline)}</strong>
-              </span>
-            </>
-          )}
-          {order.notes && (
-            <>
-              <span>·</span>
-              <span className="italic text-[#0d3b38]/50 truncate max-w-[200px]" title={order.notes}>
-                "{order.notes}"
-              </span>
-            </>
-          )}
+        <div className="text-right shrink-0">
+          <div className="text-sm sm:text-base font-bold text-[#005a55]">{fmt(order.amount)}</div>
+          <div className="text-[10px] font-semibold text-[#0d3b38]/60">
+            {order.fullPaid ? (
+              <span className="text-[#00756e]">✓ Full Paid</span>
+            ) : order.advancePaid ? (
+              <span className="text-[#8c6218]">Adv: {fmt(order.advance)}</span>
+            ) : (
+              <span className="text-rose-600">Payment Due</span>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Quick Action Toggles & Edit/Delete Toolbar */}
-      <div className="flex items-center gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#d4a55a]/15">
-        {/* Quick status checkboxes */}
-        <div className="hidden lg:flex items-center gap-1.5 bg-[#fdfcf7] border border-[#d4a55a]/25 rounded-xl px-2.5 py-1 text-[11px] font-semibold text-[#005a55]">
+      {/* Row 2: Financial & Dates Strip */}
+      <div className="flex items-center gap-2.5 text-xs text-[#0d3b38]/70 flex-wrap pt-1 border-t border-[#d4a55a]/15">
+        <span>
+          Date: <strong className="text-[#005a55]">{formatDisplayDate(order.date || order.createdAt, order.month)}</strong>
+        </span>
+        {order.deadline && (
+          <>
+            <span>·</span>
+            <span>
+              Deadline: <strong className="text-[#8c6218]">{toDDMMYYYY(order.deadline)}</strong>
+            </span>
+          </>
+        )}
+        {pendingAmount > 0 && (
+          <>
+            <span>·</span>
+            <span>
+              Pending: <strong className="text-rose-600">{fmt(pendingAmount)}</strong>
+            </span>
+          </>
+        )}
+      </div>
+
+      {/* Row 3: Status Checkbox Pills on left, Edit & Delete on right */}
+      <div className="flex items-center justify-between gap-2 pt-1 border-t border-[#d4a55a]/15 flex-wrap">
+        <div className="flex items-center gap-1 text-[11px] font-semibold text-[#005a55]">
           <button
             type="button"
             onClick={() => onToggleStatus("advancePaid")}
-            className={`px-1.5 py-0.5 rounded cursor-pointer ${
-              order.advancePaid ? "text-[#00756e] font-bold bg-[#eef8f3]" : "text-[#005a55]/40 hover:text-[#005a55]"
+            className={`px-2 py-1 rounded-lg border text-xs cursor-pointer touch-manipulation ${
+              order.advancePaid
+                ? "bg-[#eef8f3] border-[#00756e]/40 text-[#00756e] font-bold"
+                : "border-[#d4a55a]/30 text-[#005a55]/60"
             }`}
-            title="Toggle Advance Paid"
+            title="Toggle Advance Received"
           >
             Adv {order.advancePaid ? "✓" : "○"}
           </button>
-          <span>·</span>
+
           <button
             type="button"
             onClick={() => onToggleStatus("fullPaid")}
-            className={`px-1.5 py-0.5 rounded cursor-pointer ${
-              order.fullPaid ? "text-[#00756e] font-bold bg-[#eef8f3]" : "text-[#005a55]/40 hover:text-[#005a55]"
+            className={`px-2 py-1 rounded-lg border text-xs cursor-pointer touch-manipulation ${
+              order.fullPaid
+                ? "bg-[#eef8f3] border-[#00756e]/40 text-[#00756e] font-bold"
+                : "border-[#d4a55a]/30 text-[#005a55]/60"
             }`}
             title="Toggle Full Paid"
           >
             Full {order.fullPaid ? "✓" : "○"}
           </button>
-          <span>·</span>
+
           <button
             type="button"
             onClick={() => onToggleStatus("completed")}
-            className={`px-1.5 py-0.5 rounded cursor-pointer ${
-              order.completed ? "text-[#00756e] font-bold bg-[#eef8f3]" : "text-[#005a55]/40 hover:text-[#005a55]"
+            className={`px-2 py-1 rounded-lg border text-xs cursor-pointer touch-manipulation ${
+              order.completed
+                ? "bg-[#eef8f3] border-[#00756e]/40 text-[#00756e] font-bold"
+                : "border-[#d4a55a]/30 text-[#005a55]/60"
             }`}
             title="Toggle Delivered"
           >
@@ -686,24 +671,23 @@ function CompactOrderRow({
           </button>
         </div>
 
-        {/* Edit Button */}
-        <button
-          type="button"
-          onClick={onEdit}
-          className="text-xs text-[#005a55] hover:text-[#00756e] font-bold px-3 py-1.5 rounded-xl border border-[#005a55]/30 hover:border-[#005a55] bg-white transition-colors cursor-pointer shadow-2xs"
-        >
-          ✏️ Edit
-        </button>
-
-        {/* Delete Button */}
-        <button
-          type="button"
-          onClick={onDelete}
-          className="text-xs text-rose-600 hover:text-rose-800 font-bold px-2.5 py-1.5 rounded-xl border border-rose-200 hover:bg-rose-50 bg-white transition-colors cursor-pointer shadow-2xs"
-          title="Delete order"
-        >
-          🗑️
-        </button>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            type="button"
+            onClick={onEdit}
+            className="text-xs text-[#005a55] font-bold px-3 py-1.5 rounded-lg border border-[#005a55]/30 bg-[#fdfcf7] active:bg-[#005a55]/10 touch-manipulation cursor-pointer"
+          >
+            ✏️ Edit
+          </button>
+          <button
+            type="button"
+            onClick={onDelete}
+            className="text-xs text-rose-600 font-bold px-2.5 py-1.5 rounded-lg border border-rose-200 bg-white active:bg-rose-50 touch-manipulation cursor-pointer"
+            title="Delete order"
+          >
+            ✕
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -751,7 +735,7 @@ export function OrdersTab({ orders, onUpdate }: Props) {
     .reduce((s, o) => s + (o.amount - (o.advancePaid ? o.advance : 0)), 0);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Modals */}
       <AddOrderModal
         open={addModalOpen}
@@ -766,60 +750,54 @@ export function OrdersTab({ orders, onUpdate }: Props) {
         onSave={handleSaveEdit}
       />
 
-      {/* Sleek Horizontal KPI Ribbon (Replaces the 3 massive square boxes!) */}
-      <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-3 sm:p-4 shadow-2xs flex items-center justify-between gap-3 flex-wrap text-xs">
-        <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
-          <div>
-            <span className="text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block">
+      {/* Mobile-Optimized KPI Card */}
+      <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-3.5 sm:p-4 shadow-2xs space-y-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center sm:text-left">
+          <div className="border-r border-[#d4a55a]/20 pr-1">
+            <span className="text-[9.5px] sm:text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block">
               Inflow Collected
             </span>
             <span
-              className="text-lg font-bold text-[#00756e]"
+              className="text-base sm:text-lg font-bold text-[#00756e]"
               style={{ fontFamily: "'Antic Didone', serif" }}
             >
               {fmt(totalCollected)}
             </span>
           </div>
 
-          <div className="h-7 w-px bg-[#d4a55a]/25 hidden sm:block" />
-
-          <div>
-            <span className="text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block">
+          <div className="sm:border-r border-[#d4a55a]/20 pr-1">
+            <span className="text-[9.5px] sm:text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block">
               Pending Balances
             </span>
             <span
-              className={`text-lg font-bold ${pendingBalance > 0 ? "text-amber-700" : "text-[#00756e]"}`}
+              className={`text-base sm:text-lg font-bold ${pendingBalance > 0 ? "text-amber-700" : "text-[#00756e]"}`}
               style={{ fontFamily: "'Antic Didone', serif" }}
             >
               {fmt(pendingBalance)}
             </span>
           </div>
 
-          <div className="h-7 w-px bg-[#d4a55a]/25 hidden sm:block" />
-
-          <div>
-            <span className="text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block">
-              Active Commissions
+          <div className="border-r border-[#d4a55a]/20 pr-1">
+            <span className="text-[9.5px] sm:text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block">
+              Active Projects
             </span>
             <span
-              className="text-lg font-bold text-[#005a55]"
+              className="text-base sm:text-lg font-bold text-[#005a55]"
               style={{ fontFamily: "'Antic Didone', serif" }}
             >
-              {pending.length} Projects
+              {pending.length}
             </span>
           </div>
 
-          <div className="h-7 w-px bg-[#d4a55a]/25 hidden sm:block" />
-
           <div>
-            <span className="text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block">
-              Completed Archive
+            <span className="text-[9.5px] sm:text-[10px] font-bold text-[#8c6218] uppercase tracking-wider block">
+              Delivered
             </span>
             <span
-              className="text-lg font-bold text-[#005a55]"
+              className="text-base sm:text-lg font-bold text-[#005a55]"
               style={{ fontFamily: "'Antic Didone', serif" }}
             >
-              {completed.length} Delivered
+              {completed.length}
             </span>
           </div>
         </div>
@@ -828,54 +806,48 @@ export function OrdersTab({ orders, onUpdate }: Props) {
         <button
           type="button"
           onClick={() => setAddModalOpen(true)}
-          className="bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl px-4 py-2 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+          className="w-full sm:w-auto bg-[#005a55] hover:bg-[#00756e] text-[#F7F5EF] rounded-xl py-2.5 px-4 text-xs font-bold tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5 touch-manipulation active:scale-[0.98]"
         >
           <span className="text-[#d4a55a] text-sm leading-none">+</span>
           <span>Register New Client Order</span>
         </button>
       </div>
 
-      {/* Sub-views Segmented Control */}
-      <div className="flex items-center justify-between gap-3 border-b border-[#d4a55a]/20 pb-2 flex-wrap">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setSubView("active")}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-              subView === "active"
-                ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
-                : "bg-white text-[#005a55]/70 border border-[#d4a55a]/30 hover:border-[#005a55]"
-            }`}
-          >
-            ⚡ Active Commissions ({pending.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setSubView("completed")}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-              subView === "completed"
-                ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
-                : "bg-white text-[#005a55]/70 border border-[#d4a55a]/30 hover:border-[#005a55]"
-            }`}
-          >
-            ✓ Delivered Archive ({completed.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setSubView("all")}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-              subView === "all"
-                ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
-                : "bg-white text-[#005a55]/70 border border-[#d4a55a]/30 hover:border-[#005a55]"
-            }`}
-          >
-            📋 All Orders ({orders.length})
-          </button>
-        </div>
-
-        <span className="text-[11px] text-[#0d3b38]/50">
-          Showing {displayedOrders.length} order{displayedOrders.length === 1 ? "" : "s"}
-        </span>
+      {/* iOS-Style 3-Segment Tab Bar */}
+      <div className="grid grid-cols-3 gap-1 bg-white border border-[#d4a55a]/30 p-1 rounded-2xl shadow-2xs">
+        <button
+          type="button"
+          onClick={() => setSubView("active")}
+          className={`py-2 px-1 text-center text-xs font-bold rounded-xl transition-all cursor-pointer touch-manipulation truncate ${
+            subView === "active"
+              ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
+              : "text-[#005a55]/70 active:text-[#005a55]"
+          }`}
+        >
+          Active ({pending.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setSubView("completed")}
+          className={`py-2 px-1 text-center text-xs font-bold rounded-xl transition-all cursor-pointer touch-manipulation truncate ${
+            subView === "completed"
+              ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
+              : "text-[#005a55]/70 active:text-[#005a55]"
+          }`}
+        >
+          Archive ({completed.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setSubView("all")}
+          className={`py-2 px-1 text-center text-xs font-bold rounded-xl transition-all cursor-pointer touch-manipulation truncate ${
+            subView === "all"
+              ? "bg-[#005a55] text-[#F7F5EF] shadow-2xs"
+              : "text-[#005a55]/70 active:text-[#005a55]"
+          }`}
+        >
+          All ({orders.length})
+        </button>
       </div>
 
       {/* Orders List */}
@@ -892,7 +864,7 @@ export function OrdersTab({ orders, onUpdate }: Props) {
           ))}
         </div>
       ) : (
-        <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-10 text-center text-xs text-[#005a55]/60 shadow-2xs">
+        <div className="bg-white border border-[#d4a55a]/30 rounded-2xl p-8 text-center text-xs text-[#005a55]/60 shadow-2xs">
           {subView === "active"
             ? "No active commissions in progress."
             : subView === "completed"
