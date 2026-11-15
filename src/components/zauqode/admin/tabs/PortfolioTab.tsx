@@ -1061,11 +1061,6 @@ export function PortfolioTab({ works, featuredHomeIds, onUpdate, onUpdateFeature
       .filter((item): item is AdminWork => Boolean(item));
   }, [activeFeaturedIds, works]);
 
-  // Unfeatured items
-  const unfeaturedItems = useMemo(() => {
-    return works.filter((item) => !activeFeaturedIds.includes(item.id));
-  }, [works, activeFeaturedIds]);
-
   // Filtered catalogue works
   const filteredWorks = useMemo(() => {
     return works.filter((w) => {
@@ -1457,35 +1452,10 @@ export function PortfolioTab({ works, featuredHomeIds, onUpdate, onUpdateFeature
               </div>
             ) : (
               <div className="p-6 text-center text-xs text-[#005a55]/60 bg-[#fdfcf7] rounded-2xl border border-[#d4a55a]/20">
-                No creations featured on home reel yet. Click any creation below to add it.
+                No creations featured on home reel yet. You can feature any creation directly from the Portfolio Works catalogue using the ★ Home button.
               </div>
             )}
           </div>
-
-          {/* Quick Add Available Works Drawer */}
-          {unfeaturedItems.length > 0 && (
-            <div className="pt-3 border-t border-[#d4a55a]/20">
-              <div className="text-[11px] font-bold text-[#8c6218] tracking-widest uppercase mb-3">
-                Click to Add Creations to Homepage Reel:
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {unfeaturedItems.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => toggleFeature(item.id)}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-[#d4a55a]/40 bg-[#fdfcf7] hover:border-[#005a55] hover:bg-white text-xs font-semibold text-[#005a55] transition-all cursor-pointer shadow-2xs"
-                  >
-                    <span className="w-4 h-4 rounded-full bg-[#eef8f3] text-[#00756e] inline-flex items-center justify-center font-bold text-[10px] shrink-0">
-                      +
-                    </span>
-                    <span className="truncate max-w-[140px]">{item.name}</span>
-                    <span className="text-[9.5px] text-[#8c6218] font-normal">({item.label})</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       )}
     </div>
