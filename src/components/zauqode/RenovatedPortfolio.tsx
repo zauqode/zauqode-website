@@ -253,8 +253,72 @@ export function RenovatedPortfolio() {
     return () => observer.disconnect();
   }, [currentRoute]);
 
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+  const hasMovedRef = useRef(false);
+
+  const handleCarouselMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = carouselRef.current;
+    if (!el) return;
+    isDraggingRef.current = true;
+    hasMovedRef.current = false;
+    startXRef.current = e.pageX - el.offsetLeft;
+    scrollLeftRef.current = el.scrollLeft;
+    el.style.cursor = "grabbing";
+    el.style.userSelect = "none";
+  };
+
+  const handleCarouselMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    const el = carouselRef.current;
+    if (!el) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    const walk = (x - startXRef.current) * 1.35;
+    if (Math.abs(walk) > 6) {
+      hasMovedRef.current = true;
+    }
+    el.scrollLeft = scrollLeftRef.current - walk;
+  };
+
+  const handleCarouselMouseUp = () => {
+    isDraggingRef.current = false;
+    const el = carouselRef.current;
+    if (el) {
+      el.style.cursor = "grab";
+      el.style.removeProperty("user-select");
+    }
+    window.setTimeout(() => {
+      hasMovedRef.current = false;
+    }, 60);
+  };
+
+  const handleCarouselMouseLeave = () => {
+    if (isDraggingRef.current) {
+      isDraggingRef.current = false;
+      const el = carouselRef.current;
+      if (el) {
+        el.style.cursor = "grab";
+        el.style.removeProperty("user-select");
+      }
+      window.setTimeout(() => {
+        hasMovedRef.current = false;
+      }, 60);
+    }
+  };
+
+  const scrollCarousel = (direction: -1 | 1) => {
+    if (!carouselRef.current) return;
+    carouselRef.current.scrollBy({ left: direction * 320, behavior: "smooth" });
+  };
+
   const handleSelectWork = useCallback(
     (item: WorkItem) => {
+      // If user was dragging/swiping with the mouse, prevent opening modal
+      if (hasMovedRef.current) {
+        return;
+      }
       if (item.category === "invitations" || item.category === "stalls") {
         const idx = allInvitations.findIndex((inv) => inv.id === item.id);
         setActiveInvitationIndex(idx !== -1 ? idx : 0);
@@ -733,39 +797,70 @@ export function RenovatedPortfolio() {
           </div>
 
           {/* 4. Selected Works (Mist Band) */}
-          <section className="bg-[#eef8f3] py-16 sm:py-24 px-4 sm:px-6">
-            <div className="max-w-6xl mx-auto space-y-10 sm:space-y-12">
-              <div className="text-center space-y-2 sm:space-y-3">
-                <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
-                  Selected Portfolio
+          <section className="bg-[#eef8f3] py-16 sm:py-24 px-4 sm:px-6 select-none">
+            <div className="max-w-6xl mx-auto space-y-8 sm:space-y-10">
+              {/* Header with Title and Desktop Navigation Controls */}
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#d4a55a]/20 pb-4">
+                <div className="space-y-1.5 text-center sm:text-left">
+                  <div className="font-ui font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#785212]">
+                    Selected Portfolio
+                  </div>
+                  <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#00756e] leading-snug">
+                    Meaningful stories,{" "}
+                    <span className="font-script text-3xl sm:text-4xl md:text-5xl font-normal">
+                      thoughtfully shaped
+                    </span>
+                    .
+                  </h2>
                 </div>
-                <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#00756e] leading-snug">
-                  Meaningful stories,{" "}
-                  <span className="font-script text-3xl sm:text-4xl md:text-5xl font-normal">
-                    thoughtfully shaped
+
+                {/* Prominent Desktop Navigation Arrows */}
+                <div className="hidden sm:flex items-center gap-2.5 self-center sm:self-end">
+                  <span className="text-[11px] font-ui font-semibold tracking-wider uppercase text-[#785212]/80 mr-1">
+                    Swipe or Click
                   </span>
-                  .
-                </h2>
+                  <button
+                    type="button"
+                    onClick={() => scrollCarousel(-1)}
+                    className="w-10 h-10 rounded-full border border-[#d4a55a]/50 bg-white hover:bg-[#005a55] text-[#005a55] hover:text-[#F7F5EF] flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
+                    aria-label="Previous creation"
+                    title="Previous"
+                  >
+                    <ArrowIcon direction="left" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollCarousel(1)}
+                    className="w-10 h-10 rounded-full border border-[#d4a55a]/50 bg-white hover:bg-[#005a55] text-[#005a55] hover:text-[#F7F5EF] flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
+                    aria-label="Next creation"
+                    title="Next"
+                  >
+                    <ArrowIcon direction="right" />
+                  </button>
+                </div>
               </div>
 
-              {/* Horizontal Scroll Reel with Navigation Controls */}
+              {/* Horizontal Scroll Reel with Drag-to-Swipe & Side Arrow Controls */}
               <div className="relative group/reel">
-                {/* Scroll Left Button (visible on md+) */}
+                {/* Floating Left Button (visible on md+) */}
                 <button
                   type="button"
-                  onClick={() => {
-                    carouselRef.current?.scrollBy({ left: -320, behavior: "smooth" });
-                  }}
-                  className="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/95 border border-[#d4a55a]/60 text-[#005a55] shadow-[0_4px_18px_rgba(0,90,85,0.14)] hover:bg-[#005a55] hover:text-[#F7F5EF] hover:border-[#005a55] items-center justify-center transition-all cursor-pointer backdrop-blur-xs opacity-75 hover:opacity-100"
+                  onClick={() => scrollCarousel(-1)}
+                  className="hidden md:flex absolute left-1 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/95 border border-[#d4a55a]/60 text-[#005a55] shadow-[0_4px_18px_rgba(0,90,85,0.18)] hover:bg-[#005a55] hover:text-[#F7F5EF] hover:border-[#005a55] items-center justify-center transition-all cursor-pointer backdrop-blur-xs opacity-90 hover:opacity-100 active:scale-95"
                   aria-label="Scroll left"
                 >
                   <ArrowIcon direction="left" />
                 </button>
 
-                {/* The Horizontal Reel */}
+                {/* The Horizontal Reel with Drag-to-Scroll cursor */}
                 <div
                   ref={carouselRef}
-                  className="flex overflow-x-auto snap-x snap-mandatory gap-5 sm:gap-6 pb-4 pt-1 px-4 sm:px-2 scroll-pl-4 sm:scroll-pl-2 no-scrollbar scroll-smooth"
+                  onMouseDown={handleCarouselMouseDown}
+                  onMouseMove={handleCarouselMouseMove}
+                  onMouseUp={handleCarouselMouseUp}
+                  onMouseLeave={handleCarouselMouseLeave}
+                  className="flex overflow-x-auto snap-x snap-mandatory gap-5 sm:gap-6 pb-4 pt-1 px-4 sm:px-2 scroll-pl-4 sm:scroll-pl-2 no-scrollbar scroll-smooth cursor-grab active:cursor-grabbing"
+                  style={{ WebkitOverflowScrolling: "touch" }}
                 >
                   {homeWorks.map((item) => (
                     <PortfolioCard
@@ -775,25 +870,24 @@ export function RenovatedPortfolio() {
                       onSelect={handleSelectWork}
                     />
                   ))}
-                  <div className="shrink-0 w-4" aria-hidden="true" />
+                  <div className="shrink-0 w-6" aria-hidden="true" />
                 </div>
 
-                {/* Scroll Right Button (visible on md+) */}
+                {/* Floating Right Button (visible on md+) */}
                 <button
                   type="button"
-                  onClick={() => {
-                    carouselRef.current?.scrollBy({ left: 320, behavior: "smooth" });
-                  }}
-                  className="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/95 border border-[#d4a55a]/60 text-[#005a55] shadow-[0_4px_18px_rgba(0,90,85,0.14)] hover:bg-[#005a55] hover:text-[#F7F5EF] hover:border-[#005a55] items-center justify-center transition-all cursor-pointer backdrop-blur-xs opacity-75 hover:opacity-100"
+                  onClick={() => scrollCarousel(1)}
+                  className="hidden md:flex absolute right-1 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/95 border border-[#d4a55a]/60 text-[#005a55] shadow-[0_4px_18px_rgba(0,90,85,0.18)] hover:bg-[#005a55] hover:text-[#F7F5EF] hover:border-[#005a55] items-center justify-center transition-all cursor-pointer backdrop-blur-xs opacity-90 hover:opacity-100 active:scale-95"
                   aria-label="Scroll right"
                 >
                   <ArrowIcon direction="right" />
                 </button>
               </div>
 
-              {/* Swipe / Scroll indicator hint */}
-              <div className="text-center font-ui font-semibold text-[11px] sm:text-xs tracking-[0.2em] uppercase text-[#785212] -mt-2 flex items-center justify-center gap-1.5">
-                <span>Swipe to explore creations</span>
+              {/* Intuitive visual swipe & navigation indicator */}
+              <div className="flex items-center justify-center gap-2 text-center font-ui font-semibold text-[11px] sm:text-xs tracking-[0.2em] uppercase text-[#785212] -mt-2">
+                <span className="hidden sm:inline">Click &amp; drag mouse or use arrows to explore</span>
+                <span className="sm:hidden">Swipe to explore creations</span>
                 <ArrowIcon direction="right" className="inline-block" />
               </div>
 
