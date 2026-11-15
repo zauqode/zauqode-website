@@ -4,10 +4,11 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -18,6 +19,7 @@ import {
   SITE_SCHEMA_JSON,
   SITE_TITLE,
 } from "../lib/seo";
+import { trackMetaPageView, trackMetaContact } from "../lib/metaPixel";
 
 function NotFoundComponent() {
   return (
@@ -132,8 +134,34 @@ function RootShell({ children }: { children: ReactNode }) {
         />
         <HeadContent />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: SITE_SCHEMA_JSON }} />
+        {/* Meta Pixel Code */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1636316038192665');
+fbq('track', 'PageView');`,
+          }}
+        />
+        {/* End Meta Pixel Code */}
       </head>
       <body>
+        {/* Meta Pixel noscript fallback */}
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=1636316038192665&ev=PageView&noscript=1"
+            alt=""
+          />
+        </noscript>
         {children}
         <Scripts />
       </body>
@@ -141,11 +169,57 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function MetaPixelTracker() {
+  const location = useLocation();
+  const isFirstMount = useRef(true);
+  const prevPath = useRef(location.pathname);
+
+  // Track PageView on client-side route changes without duplicating initial load
+  useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+
+    if (prevPath.current !== location.pathname) {
+      prevPath.current = location.pathname;
+      trackMetaPageView();
+    }
+  }, [location.pathname]);
+
+  // Global WhatsApp contact tracking: catches all anchor clicks to wa.me or whatsapp.com
+  useEffect(() => {
+    const handleGlobalClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+
+      const anchor = target.closest("a");
+      if (anchor && anchor.href) {
+        const href = anchor.href.toLowerCase();
+        if (href.includes("wa.me") || href.includes("whatsapp.com")) {
+          trackMetaContact({
+            source: "whatsapp_link_click",
+            label: anchor.innerText?.trim() || anchor.getAttribute("aria-label") || "WhatsApp",
+          });
+        }
+      }
+    };
+
+    window.addEventListener("click", handleGlobalClick, { capture: true });
+    return () => {
+      window.removeEventListener("click", handleGlobalClick, { capture: true });
+    };
+  }, []);
+
+  return null;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
+      <MetaPixelTracker />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
     </QueryClientProvider>

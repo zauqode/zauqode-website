@@ -14,6 +14,7 @@ import {
   type WorkItem,
 } from "./portfolioData";
 import { getAdminDataFn, type AdminWork } from "@/lib/adminServerFns";
+import { trackMetaContact, trackMetaLead, trackMetaViewContent } from "@/lib/metaPixel";
 import "./RenovatedPortfolio.css";
 
 const WorksCatalogueView = lazy(() =>
@@ -351,6 +352,8 @@ export function RenovatedPortfolio() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
+    trackMetaLead({ formName: "Contact Section Form", category: form.service });
+    trackMetaContact({ source: "contact_section_submit", label: form.service });
     const waMsg = encodeURIComponent(
       `*New Inquiry via zauqode.com*\n\n*Name:* ${form.name}\n*Event Date:* ${form.eventDate || "Not specified"}\n*City:* ${form.city || "Not specified"}\n*Need:* ${form.service}\n*Message:* ${form.message}`
     );
@@ -359,6 +362,24 @@ export function RenovatedPortfolio() {
 
   const activeInv =
     activeInvitationIndex !== null ? allInvitations[activeInvitationIndex] ?? null : null;
+
+  useEffect(() => {
+    if (activeInv) {
+      trackMetaViewContent({
+        content_name: activeInv.name,
+        content_category: activeInv.category,
+      });
+    }
+  }, [activeInv]);
+
+  useEffect(() => {
+    if (activeMockup) {
+      trackMetaViewContent({
+        content_name: activeMockup.name,
+        content_category: activeMockup.category,
+      });
+    }
+  }, [activeMockup]);
 
   return (
     <div className="renovated-app min-h-[100dvh] relative overflow-x-hidden">
