@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { trackMetaContact } from "@/lib/metaPixel";
 
 const WHATSAPP_RAW = "918946077234";
 
@@ -46,7 +45,8 @@ export function WhatsAppFloat() {
           target="_blank"
           rel="noreferrer"
           aria-label="Direct WhatsApp inquiry"
-          onClick={() => trackMetaContact({ source: "floating_whatsapp_button" })}
+          data-pixel-source="floating_whatsapp_button"
+          data-pixel-label="Chat with Atelier"
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
           whileHover={{ scale: 1.1 }}

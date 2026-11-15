@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { ArrowIcon } from "@/components/zauqode-home/ArrowIcon";
 import { getOptimizedThumbSources, type WorkItem } from "./portfolioData";
-import { trackMetaContact } from "@/lib/metaPixel";
 
 interface InvitationShowcaseModalProps {
   activeInv: WorkItem;
@@ -167,12 +166,8 @@ export function InvitationShowcaseModal({
                 )}`}
                 target="_blank"
                 rel="noreferrer"
-                onClick={() =>
-                  trackMetaContact({
-                    source: "invitation_modal_booking",
-                    label: activeInv.name,
-                  })
-                }
+                data-pixel-source="invitation_modal_booking"
+                data-pixel-label={activeInv.name}
                 className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 py-3 px-6 rounded-full bg-[#d4a55a] hover:bg-[#b8893c] text-[#021816] font-ui text-xs sm:text-sm font-semibold tracking-wider uppercase shadow-[0_4px_25px_rgba(212,165,90,0.35)] transition-all cursor-pointer"
               >
                 Book a similar design

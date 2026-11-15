@@ -19,6 +19,8 @@ interface ButtonProps {
   arrow?: string;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => void;
   className?: string;
+  dataPixelSource?: string;
+  dataPixelLabel?: string;
 }
 
 /**
@@ -33,6 +35,8 @@ export function Button({
   arrow,
   onClick,
   className = '',
+  dataPixelSource,
+  dataPixelLabel,
 }: ButtonProps) {
   const combinedClassName = `${styles.button} ${className}`.trim();
   const mappedDirection = arrow ? ARROW_DIRECTION_MAP[arrow] : undefined;
@@ -50,6 +54,8 @@ export function Button({
         rel={target === '_blank' ? (rel || 'noopener noreferrer') : rel}
         onClick={onClick}
         className={combinedClassName}
+        data-pixel-source={dataPixelSource}
+        data-pixel-label={dataPixelLabel}
       >
         <span>{children}</span>
         {arrowNode}

@@ -224,6 +224,8 @@ export function Hero(_props: HeroProps) {
               target="_blank"
               rel="noopener noreferrer"
               arrow="↗"
+              dataPixelSource="hero_whatsapp_link"
+              dataPixelLabel="Hero Chat on WhatsApp"
             >
               Chat on WhatsApp
             </Button>

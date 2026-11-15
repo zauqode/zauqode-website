@@ -183,11 +183,11 @@ function MetaPixelTracker() {
 
     if (prevPath.current !== location.pathname) {
       prevPath.current = location.pathname;
-      trackMetaPageView();
+      trackMetaPageView(location.pathname);
     }
   }, [location.pathname]);
 
-  // Global WhatsApp contact tracking: catches all anchor clicks to wa.me or whatsapp.com
+  // Centralized WhatsApp contact tracking: delegating all clicks to wa.me or api.whatsapp.com
   useEffect(() => {
     const handleGlobalClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
@@ -197,9 +197,19 @@ function MetaPixelTracker() {
       if (anchor && anchor.href) {
         const href = anchor.href.toLowerCase();
         if (href.includes("wa.me") || href.includes("whatsapp.com")) {
+          const source =
+            anchor.getAttribute("data-pixel-source") ||
+            anchor.getAttribute("data-source") ||
+            "whatsapp_link_click";
+          const label =
+            anchor.getAttribute("data-pixel-label") ||
+            anchor.getAttribute("aria-label") ||
+            anchor.innerText?.trim() ||
+            "WhatsApp Consultation";
+
           trackMetaContact({
-            source: "whatsapp_link_click",
-            label: anchor.innerText?.trim() || anchor.getAttribute("aria-label") || "WhatsApp",
+            source,
+            label,
           });
         }
       }

@@ -13,7 +13,7 @@ import {
   sendToGoogleSheet,
   DEFAULT_GOOGLE_SHEET_URL,
 } from "../../lib/googleSheetIntegration";
-import { trackMetaContact, trackMetaLead } from "@/lib/metaPixel";
+import { trackMetaLead } from "@/lib/metaPixel";
 
 const WHATSAPP_RAW = "918946077234";
 const STORAGE_KEY = "zauqode_simple_brief_v2";
@@ -208,7 +208,6 @@ export function ClientOnboardingForm() {
     setIsSubmitting(false);
     setIsSuccess(true);
     trackMetaLead({ formName: "Client Onboarding Form", category: formData.primaryGoal });
-    trackMetaContact({ source: "client_onboarding_whatsapp" });
 
     // 2. Open WhatsApp with formatted brief
     const text = encodeURIComponent(compileWhatsAppSummary());

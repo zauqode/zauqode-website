@@ -12,6 +12,16 @@ declare global {
   }
 }
 
+// In-memory timestamps and signatures to prevent duplicate rapid events (debouncing & deduplication)
+let lastContactTrackTime = 0;
+let lastContactSignature = "";
+
+let lastLeadTrackTime = 0;
+let lastLeadSignature = "";
+
+let lastPageViewTime = 0;
+let lastPageViewPath = "";
+
 /**
  * Safely calls window.fbq if available in browser runtime.
  */
@@ -31,23 +41,48 @@ export function trackMetaEvent(event: string, params?: Record<string, any>) {
 
 /**
  * Fires 'PageView' event on client-side route transitions.
+ * Deduplicates multiple calls on the same pathname within 600ms.
  */
-export function trackMetaPageView() {
+export function trackMetaPageView(path?: string) {
+  const currentPath =
+    path || (typeof window !== "undefined" ? window.location.pathname : "");
+  const now = Date.now();
+  if (now - lastPageViewTime < 600 && lastPageViewPath === currentPath) {
+    return;
+  }
+  lastPageViewTime = now;
+  lastPageViewPath = currentPath;
   trackMetaEvent("PageView");
 }
 
 /**
  * Fires 'Contact' event specifically when a user initiates a WhatsApp enquiry.
+ * Deduplicates rapid double-clicks within 1000ms.
  * STRICT: Does NOT report as Lead.
  */
 export function trackMetaContact(params?: { source?: string; label?: string; [key: string]: any }) {
+  const now = Date.now();
+  const signature = JSON.stringify(params || {});
+  if (now - lastContactTrackTime < 1000 && lastContactSignature === signature) {
+    return;
+  }
+  lastContactTrackTime = now;
+  lastContactSignature = signature;
   trackMetaEvent("Contact", params);
 }
 
 /**
  * Fires 'Lead' event specifically when a user successfully submits an enquiry or onboarding form.
+ * STRICT: Separate from Contact. Deduplicates repeated form submissions within 2000ms.
  */
 export function trackMetaLead(params?: { formName?: string; category?: string; [key: string]: any }) {
+  const now = Date.now();
+  const signature = JSON.stringify(params || {});
+  if (now - lastLeadTrackTime < 2000 && lastLeadSignature === signature) {
+    return;
+  }
+  lastLeadTrackTime = now;
+  lastLeadSignature = signature;
   trackMetaEvent("Lead", params);
 }
 

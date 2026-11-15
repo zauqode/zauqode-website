@@ -14,7 +14,7 @@ import {
   type WorkItem,
 } from "./portfolioData";
 import { getAdminDataFn, type AdminWork, type AdminData } from "@/lib/adminServerFns";
-import { trackMetaContact, trackMetaLead, trackMetaViewContent } from "@/lib/metaPixel";
+import { trackMetaLead, trackMetaViewContent } from "@/lib/metaPixel";
 import "./RenovatedPortfolio.css";
 
 const WorksCatalogueView = lazy(() =>
@@ -374,7 +374,6 @@ export function RenovatedPortfolio({ initialData }: RenovatedPortfolioProps = {}
     e.preventDefault();
     setFormSubmitted(true);
     trackMetaLead({ formName: "Contact Section Form", category: form.service });
-    trackMetaContact({ source: "contact_section_submit", label: form.service });
     const waMsg = encodeURIComponent(
       `*New Inquiry via zauqode.com*\n\n*Name:* ${form.name}\n*Event Date:* ${form.eventDate || "Not specified"}\n*City:* ${form.city || "Not specified"}\n*Need:* ${form.service}\n*Message:* ${form.message}`
     );
@@ -1253,6 +1252,8 @@ export function RenovatedPortfolio({ initialData }: RenovatedPortfolioProps = {}
               href="https://wa.me/918946077234"
               target="_blank"
               rel="noreferrer"
+              data-pixel-source="footer_whatsapp_link"
+              data-pixel-label="Footer +91 89460 77234"
               className="inline-flex items-center min-h-[44px] px-2 font-body text-sm sm:text-base text-[#f3e3c0] hover:text-white transition-colors"
             >
               +91 89460 77234

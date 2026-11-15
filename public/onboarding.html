@@ -590,7 +590,6 @@
 
       if (typeof fbq === 'function') {
         fbq('track', 'Lead', { formName: 'Static Onboarding Form' });
-        fbq('track', 'Contact', { source: 'static_onboarding_whatsapp' });
       }
 
       window.open('https://wa.me/' + WHATSAPP_PHONE + '?text=' + text, '_blank');
