@@ -354,8 +354,8 @@ function AddWorkModal({
           {/* Photo Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             {galleryUrls.map((url, idx) => {
-              const active = uploadedUrl || previewUrl;
-              const isCover = url === active || (idx === 0 && !active);
+              const currentCover = uploadedUrl || previewUrl || galleryUrls[0];
+              const isCover = url === currentCover || (idx === 0 && !currentCover);
               return (
                 <div
                   key={idx}
@@ -844,8 +844,8 @@ function EditWorkModal({
           {/* Photo Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             {galleryUrls.map((url, idx) => {
-              const active = uploadedUrl || previewUrl;
-              const isCover = url === active || (idx === 0 && !active);
+              const currentCover = thumbUrl || galleryUrls[0];
+              const isCover = url === currentCover || (idx === 0 && !currentCover);
               return (
                 <div
                   key={idx}
