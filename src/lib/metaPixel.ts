@@ -56,9 +56,9 @@ export function trackMetaPageView(path?: string) {
 }
 
 /**
- * Fires 'Contact' event specifically when a user initiates a WhatsApp enquiry.
+ * Fires 'Contact' event specifically when a user initiates a WhatsApp enquiry
+ * (via direct button clicks or submitting a form that redirects to WhatsApp).
  * Deduplicates rapid double-clicks within 1000ms.
- * STRICT: Does NOT report as Lead.
  */
 export function trackMetaContact(params?: { source?: string; label?: string; [key: string]: any }) {
   const now = Date.now();
@@ -72,8 +72,10 @@ export function trackMetaContact(params?: { source?: string; label?: string; [ke
 }
 
 /**
- * Fires 'Lead' event specifically when a user successfully submits an enquiry or onboarding form.
- * STRICT: Separate from Contact. Deduplicates repeated form submissions within 2000ms.
+ * Fires 'Lead' event ONLY for genuine, completed website enquiry/order submissions
+ * that are independently submitted and recorded directly on the website.
+ * STRICT: Do not fire for forms that merely redirect to WhatsApp.
+ * Deduplicates repeated form submissions within 2000ms.
  */
 export function trackMetaLead(params?: { formName?: string; category?: string; [key: string]: any }) {
   const now = Date.now();

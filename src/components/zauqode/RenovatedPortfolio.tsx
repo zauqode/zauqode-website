@@ -14,7 +14,7 @@ import {
   type WorkItem,
 } from "./portfolioData";
 import { getAdminDataFn, type AdminWork, type AdminData } from "@/lib/adminServerFns";
-import { trackMetaLead, trackMetaViewContent } from "@/lib/metaPixel";
+import { trackMetaContact, trackMetaViewContent } from "@/lib/metaPixel";
 import "./RenovatedPortfolio.css";
 
 const WorksCatalogueView = lazy(() =>
@@ -373,7 +373,7 @@ export function RenovatedPortfolio({ initialData }: RenovatedPortfolioProps = {}
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
-    trackMetaLead({ formName: "Contact Section Form", category: form.service });
+    trackMetaContact({ source: "contact_section_submit", label: form.service });
     const waMsg = encodeURIComponent(
       `*New Inquiry via zauqode.com*\n\n*Name:* ${form.name}\n*Event Date:* ${form.eventDate || "Not specified"}\n*City:* ${form.city || "Not specified"}\n*Need:* ${form.service}\n*Message:* ${form.message}`
     );
