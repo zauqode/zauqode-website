@@ -23,13 +23,36 @@ export function InvitationShowcaseModal({
   onClose,
 }: InvitationShowcaseModalProps) {
   const [imgFailed, setImgFailed] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const gallery =
+    activeInv.galleryUrls && activeInv.galleryUrls.length > 0
+      ? activeInv.galleryUrls
+      : activeInv.thumb || activeInv.mobileImg
+      ? [activeInv.thumb || activeInv.mobileImg]
+      : [];
 
   useEffect(() => {
+    setActiveImageIndex(0);
     setImgFailed(false);
   }, [activeInv.id]);
 
-  const rawSrc = activeInv.thumb || activeInv.mobileImg || "";
+  const rawSrc = gallery[activeImageIndex] || activeInv.thumb || activeInv.mobileImg || "";
   const sources = rawSrc ? getOptimizedThumbSources(rawSrc) : null;
+
+  const handlePrevCard = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (gallery.length <= 1) return;
+    setImgFailed(false);
+    setActiveImageIndex((i) => (i > 0 ? i - 1 : gallery.length - 1));
+  };
+
+  const handleNextCard = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (gallery.length <= 1) return;
+    setImgFailed(false);
+    setActiveImageIndex((i) => (i < gallery.length - 1 ? i + 1 : 0));
+  };
 
   return (
     <div
@@ -89,8 +112,8 @@ export function InvitationShowcaseModal({
 
         {/* Main 2-Column Content */}
         <div className="flex flex-col md:flex-row flex-1 min-h-0 overflow-y-auto md:overflow-hidden overscroll-contain">
-          {/* Left Side: Full Invitation Artwork */}
-          <div className="w-full md:w-[52%] lg:w-[55%] shrink-0 p-4 sm:p-6 lg:p-8 flex items-center justify-center bg-[#010f0e]/60 relative group">
+          {/* Left Side: Full Invitation Artwork & Gallery Carousel */}
+          <div className="w-full md:w-[52%] lg:w-[55%] shrink-0 p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-center bg-[#010f0e]/60 relative group">
             <div className="relative w-full flex items-center justify-center">
               {!imgFailed && rawSrc ? (
                 <picture className="flex items-center justify-center">
@@ -109,14 +132,15 @@ export function InvitationShowcaseModal({
                     </>
                   )}
                   <img
+                    key={rawSrc}
                     src={rawSrc}
-                    alt={activeInv.name}
+                    alt={`${activeInv.name} — Card ${activeImageIndex + 1}`}
                     loading="eager"
                     decoding="async"
                     width={768}
                     height={1024}
                     onError={() => setImgFailed(true)}
-                    className="max-h-[44dvh] sm:max-h-[54vh] md:max-h-[70vh] w-auto max-w-full object-contain rounded-xl sm:rounded-2xl shadow-[0_15px_45px_rgba(0,0,0,0.6)] border border-[#d4a55a]/30 transition-transform duration-500 ease-out md:group-hover:scale-[1.03] select-none bg-[#03221f]"
+                    className="max-h-[40dvh] sm:max-h-[50vh] md:max-h-[64vh] w-auto max-w-full object-contain rounded-xl sm:rounded-2xl shadow-[0_15px_45px_rgba(0,0,0,0.6)] border border-[#d4a55a]/30 transition-transform duration-500 ease-out md:group-hover:scale-[1.02] select-none bg-[#03221f]"
                   />
                 </picture>
               ) : (
@@ -124,7 +148,59 @@ export function InvitationShowcaseModal({
                   {activeInv.name}
                 </div>
               )}
+
+              {/* Prev / Next Card buttons on image if multiple images */}
+              {gallery.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handlePrevCard}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#021816]/85 hover:bg-[#d4a55a] text-[#ecd08b] hover:text-[#005a55] border border-[#d4a55a]/50 flex items-center justify-center shadow-lg transition-all cursor-pointer z-10 text-xl font-light"
+                    aria-label="Previous card in suite"
+                    title="Previous card"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNextCard}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#021816]/85 hover:bg-[#d4a55a] text-[#ecd08b] hover:text-[#005a55] border border-[#d4a55a]/50 flex items-center justify-center shadow-lg transition-all cursor-pointer z-10 text-xl font-light"
+                    aria-label="Next card in suite"
+                    title="Next card"
+                  >
+                    ›
+                  </button>
+
+                  <div className="absolute top-2 right-2 px-2.5 py-1 rounded-full bg-[#021816]/85 border border-[#d4a55a]/50 text-[#f3e3c0] font-ui text-[10.5px] font-semibold tracking-wider pointer-events-none shadow-md">
+                    Card {activeImageIndex + 1} of {gallery.length}
+                  </div>
+                </>
+              )}
             </div>
+
+            {/* Thumbnail Navigation Strip if multiple images */}
+            {gallery.length > 1 && (
+              <div className="flex items-center gap-2 mt-3 sm:mt-4 overflow-x-auto max-w-full py-1 px-1 scrollbar-none">
+                {gallery.map((url, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => {
+                      setImgFailed(false);
+                      setActiveImageIndex(idx);
+                    }}
+                    className={`relative w-11 h-13 sm:w-13 sm:h-15 rounded-lg overflow-hidden shrink-0 border transition-all cursor-pointer ${
+                      activeImageIndex === idx
+                        ? "border-[#d4a55a] ring-2 ring-[#d4a55a] scale-105 shadow-[0_0_12px_rgba(212,165,90,0.4)]"
+                        : "border-[#d4a55a]/30 opacity-60 hover:opacity-100"
+                    }`}
+                    title={`View Card ${idx + 1}`}
+                  >
+                    <img src={url} alt={`Card thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Right Side: 3-Part Description */}

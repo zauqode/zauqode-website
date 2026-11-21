@@ -17,6 +17,7 @@ export interface AdminWork {
   liveUrl?: string;
   videoUrl?: string;
   mobileImg?: string;
+  galleryUrls?: string[];
   story?: string;
   occasion?: string;
   style?: string;

@@ -7,6 +7,7 @@ export interface WorkItem {
   thumb: string;
   url?: string;
   mobileImg?: string;
+  galleryUrls?: string[];
   videoUrl?: string;
   canIframe?: boolean;
   theme?: string;

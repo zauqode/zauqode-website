@@ -125,7 +125,11 @@ function AddWorkModal({
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
+  const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
+  const [uploadingMulti, setUploadingMulti] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState("");
   const [error, setError] = useState("");
+  const multiFileRef = useRef<HTMLInputElement>(null);
 
   const isStationery = form.category === "invitations" || form.category === "stalls";
   const isVideo = form.category === "videos";
@@ -152,6 +156,9 @@ function AddWorkModal({
       });
       if (res?.url) {
         setUploadedUrl(res.url);
+        setGalleryUrls((prev) => (prev.length === 0 ? [res.url] : prev));
+      } else if (compressed.base64) {
+        setGalleryUrls((prev) => (prev.length === 0 ? [compressed.base64] : prev));
       }
     } catch (err: any) {
       console.error("Artwork upload error:", err);
@@ -162,14 +169,76 @@ function AddWorkModal({
     }
   };
 
+  const handleMultiFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    if (files.length === 0) return;
+    setError("");
+    setUploadingMulti(true);
+
+    try {
+      const newUrls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        setUploadProgress(`Optimizing ${i + 1} of ${files.length}…`);
+        const compressed = await compressImage(file, 1400, 0.85);
+        const res = await uploadArtworkFn({
+          data: {
+            filename: file.name,
+            contentType: compressed.contentType,
+            base64: compressed.base64,
+          },
+        });
+        if (res?.url) {
+          newUrls.push(res.url);
+        } else if (compressed.base64) {
+          newUrls.push(compressed.base64);
+        }
+      }
+      setGalleryUrls((prev) => {
+        const combined = [...prev, ...newUrls];
+        if (!uploadedUrl && !previewUrl && combined.length > 0) {
+          setUploadedUrl(combined[0]);
+          setPreviewUrl(combined[0]);
+        }
+        return combined;
+      });
+    } catch (err: any) {
+      console.error("Gallery upload error:", err);
+      setError("Cloud storage upload warning: some images stored locally.");
+    } finally {
+      setUploadingMulti(false);
+      setUploadProgress("");
+      if (multiFileRef.current) multiFileRef.current.value = "";
+    }
+  };
+
+  const handleSetCover = (url: string) => {
+    setUploadedUrl(url);
+    setPreviewUrl(url);
+    setGalleryUrls((prev) => [url, ...prev.filter((u) => u !== url)]);
+  };
+
+  const handleRemovePhoto = (index: number) => {
+    setGalleryUrls((prev) => {
+      const updated = prev.filter((_, i) => i !== index);
+      const active = uploadedUrl || previewUrl;
+      if (prev[index] === active) {
+        setUploadedUrl(updated[0] || null);
+        setPreviewUrl(updated[0] || null);
+      }
+      return updated;
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim()) {
       setError("Project or couple name is required.");
       return;
     }
-    if (!uploadedUrl && !previewUrl) {
-      setError("Please select and upload an image preview.");
+    const finalCover = uploadedUrl || previewUrl || galleryUrls[0];
+    if (!finalCover) {
+      setError("Please select and upload at least one artwork preview.");
       return;
     }
 
@@ -183,7 +252,8 @@ function AddWorkModal({
       story: form.story.trim() || undefined,
       liveUrl: isWebsite && form.liveUrl.trim() ? form.liveUrl.trim() : undefined,
       videoUrl: isVideo && form.videoUrl.trim() ? form.videoUrl.trim() : undefined,
-      thumbUrl: uploadedUrl || previewUrl || "",
+      thumbUrl: finalCover,
+      galleryUrls: galleryUrls.length > 0 ? galleryUrls : [finalCover],
       hidden: false,
       addedAt: new Date().toISOString(),
     };
@@ -202,6 +272,7 @@ function AddWorkModal({
     });
     setPreviewUrl(null);
     setUploadedUrl(null);
+    setGalleryUrls([]);
     setError("");
     onClose();
   };
@@ -260,6 +331,103 @@ function AddWorkModal({
             type="file"
             accept="image/*"
             onChange={handleFileChange}
+            className="hidden"
+          />
+        </div>
+
+        {/* Gallery / Suite Photos Section */}
+        <div className="bg-white/80 border border-[#d4a55a]/35 rounded-2xl p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="block text-xs font-bold text-[#005a55] uppercase tracking-wider">
+                Suite Gallery / Additional Photos
+              </label>
+              <p className="text-[11px] text-[#0d3b38]/60 mt-0.5">
+                Upload multiple cards, stationery pieces, or views. The photo marked "★ Cover" appears as the main card thumbnail.
+              </p>
+            </div>
+            <span className="text-[11px] font-semibold text-[#8c6218] bg-[#f9f4ea] border border-[#d4a55a]/40 px-2.5 py-0.5 rounded-full shrink-0">
+              {galleryUrls.length} {galleryUrls.length === 1 ? "Photo" : "Photos"}
+            </span>
+          </div>
+
+          {/* Photo Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            {galleryUrls.map((url, idx) => {
+              const active = uploadedUrl || previewUrl;
+              const isCover = url === active || (idx === 0 && !active);
+              return (
+                <div
+                  key={idx}
+                  className={`relative group rounded-xl overflow-hidden border bg-white aspect-[4/3] shadow-2xs transition-all ${
+                    isCover
+                      ? "border-[#d4a55a] ring-2 ring-[#d4a55a]/70 shadow-sm"
+                      : "border-[#d4a55a]/30 hover:border-[#005a55]/50"
+                  }`}
+                >
+                  <img src={url} alt={`Photo ${idx + 1}`} className="w-full h-full object-cover" />
+
+                  {/* Cover Badge */}
+                  {isCover && (
+                    <span className="absolute top-1.5 left-1.5 bg-[#8c6218] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md shadow-sm">
+                      ★ Cover
+                    </span>
+                  )}
+
+                  {/* Actions overlay */}
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 p-1.5">
+                    {!isCover && (
+                      <button
+                        type="button"
+                        onClick={() => handleSetCover(url)}
+                        className="w-full py-1 px-1.5 bg-[#d4a55a] hover:bg-[#b8893c] text-[#021816] text-[10px] font-bold rounded cursor-pointer transition-colors"
+                      >
+                        Set Cover
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => handleRemovePhoto(idx)}
+                      className="w-full py-1 px-1.5 bg-rose-600/90 hover:bg-rose-700 text-white text-[10px] font-semibold rounded cursor-pointer transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Add More Photos Card */}
+            <div
+              onClick={() => multiFileRef.current?.click()}
+              className="border-2 border-dashed border-[#d4a55a]/50 hover:border-[#005a55] rounded-xl flex flex-col items-center justify-center p-3 text-center cursor-pointer bg-white/60 hover:bg-white transition-all aspect-[4/3] group"
+              title="Upload multiple photos"
+            >
+              {uploadingMulti ? (
+                <div className="flex flex-col items-center gap-1">
+                  <span className="w-5 h-5 border-2 border-[#005a55] border-t-transparent rounded-full animate-spin" />
+                  <span className="text-[10px] font-semibold text-[#005a55] leading-tight">
+                    {uploadProgress || "Uploading…"}
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <span className="w-7 h-7 rounded-full bg-[#eef8f3] text-[#005a55] flex items-center justify-center font-bold text-base mb-1 group-hover:scale-110 transition-transform">
+                    +
+                  </span>
+                  <span className="text-[11px] font-bold text-[#005a55]">Add Photos</span>
+                  <span className="text-[9px] text-[#0d3b38]/50">Select 1 or more</span>
+                </>
+              )}
+            </div>
+          </div>
+
+          <input
+            ref={multiFileRef}
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleMultiFileChange}
             className="hidden"
           />
         </div>
@@ -431,6 +599,7 @@ function EditWorkModal({
   onSave: (updated: AdminWork, featureOnHome: boolean) => void;
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
+  const multiFileRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
     name: "",
     category: "websites",
@@ -444,6 +613,9 @@ function EditWorkModal({
   const [featureOnHome, setFeatureOnHome] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [thumbUrl, setThumbUrl] = useState("");
+  const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
+  const [uploadingMulti, setUploadingMulti] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState("");
   const [error, setError] = useState("");
 
   // Sync form when work changes
@@ -459,7 +631,14 @@ function EditWorkModal({
         videoUrl: work.videoUrl || "",
         hidden: !!work.hidden,
       });
-      setThumbUrl(work.thumbUrl || "");
+      const initialGallery =
+        work.galleryUrls && work.galleryUrls.length > 0
+          ? work.galleryUrls
+          : work.thumbUrl
+          ? [work.thumbUrl]
+          : [];
+      setGalleryUrls(initialGallery);
+      setThumbUrl(work.thumbUrl || initialGallery[0] || "");
       setFeatureOnHome(isFeatured);
       setError("");
     }
@@ -490,6 +669,10 @@ function EditWorkModal({
       });
       if (res?.url) {
         setThumbUrl(res.url);
+        setGalleryUrls((prev) => {
+          if (prev.length === 0) return [res.url];
+          return [res.url, ...prev.filter((u) => u !== res.url)];
+        });
       }
     } catch (err: any) {
       console.error("Artwork upload error:", err);
@@ -499,13 +682,71 @@ function EditWorkModal({
     }
   };
 
+  const handleMultiFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    if (files.length === 0) return;
+    setError("");
+    setUploadingMulti(true);
+
+    try {
+      const newUrls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        setUploadProgress(`Optimizing ${i + 1} of ${files.length}…`);
+        const compressed = await compressImage(file, 1400, 0.85);
+        const res = await uploadArtworkFn({
+          data: {
+            filename: file.name,
+            contentType: compressed.contentType,
+            base64: compressed.base64,
+          },
+        });
+        if (res?.url) {
+          newUrls.push(res.url);
+        } else if (compressed.base64) {
+          newUrls.push(compressed.base64);
+        }
+      }
+      setGalleryUrls((prev) => {
+        const updated = [...prev, ...newUrls];
+        if (!thumbUrl && updated.length > 0) {
+          setThumbUrl(updated[0]);
+        }
+        return updated;
+      });
+    } catch (err: any) {
+      console.error("Gallery upload error:", err);
+      setError("Cloud storage upload warning: some images stored locally.");
+    } finally {
+      setUploadingMulti(false);
+      setUploadProgress("");
+      if (multiFileRef.current) multiFileRef.current.value = "";
+    }
+  };
+
+  const handleSetCover = (url: string) => {
+    setThumbUrl(url);
+    setGalleryUrls((prev) => [url, ...prev.filter((u) => u !== url)]);
+  };
+
+  const handleRemovePhoto = (index: number) => {
+    setGalleryUrls((prev) => {
+      const updated = prev.filter((_, i) => i !== index);
+      if (prev[index] === thumbUrl) {
+        setThumbUrl(updated[0] || "");
+      }
+      return updated;
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim()) {
       setError("Project or couple name is required.");
       return;
     }
-    if (!thumbUrl) {
+    const finalCover = thumbUrl || galleryUrls[0];
+    if (!finalCover) {
       setError("Artwork image is required.");
       return;
     }
@@ -520,7 +761,8 @@ function EditWorkModal({
       story: form.story.trim() || undefined,
       liveUrl: isWebsite && form.liveUrl.trim() ? form.liveUrl.trim() : undefined,
       videoUrl: isVideo && form.videoUrl.trim() ? form.videoUrl.trim() : undefined,
-      thumbUrl,
+      thumbUrl: finalCover,
+      galleryUrls: galleryUrls.length > 0 ? galleryUrls : [finalCover],
       hidden: form.hidden,
     };
 
@@ -579,6 +821,103 @@ function EditWorkModal({
             type="file"
             accept="image/*"
             onChange={handleFileChange}
+            className="hidden"
+          />
+        </div>
+
+        {/* Gallery / Suite Photos Section */}
+        <div className="bg-white/80 border border-[#d4a55a]/35 rounded-2xl p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="block text-xs font-bold text-[#005a55] uppercase tracking-wider">
+                Suite Gallery / Additional Photos
+              </label>
+              <p className="text-[11px] text-[#0d3b38]/60 mt-0.5">
+                Upload multiple cards, stationery pieces, or views. The photo marked "★ Cover" appears as the main card thumbnail.
+              </p>
+            </div>
+            <span className="text-[11px] font-semibold text-[#8c6218] bg-[#f9f4ea] border border-[#d4a55a]/40 px-2.5 py-0.5 rounded-full shrink-0">
+              {galleryUrls.length} {galleryUrls.length === 1 ? "Photo" : "Photos"}
+            </span>
+          </div>
+
+          {/* Photo Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            {galleryUrls.map((url, idx) => {
+              const active = uploadedUrl || previewUrl;
+              const isCover = url === active || (idx === 0 && !active);
+              return (
+                <div
+                  key={idx}
+                  className={`relative group rounded-xl overflow-hidden border bg-white aspect-[4/3] shadow-2xs transition-all ${
+                    isCover
+                      ? "border-[#d4a55a] ring-2 ring-[#d4a55a]/70 shadow-sm"
+                      : "border-[#d4a55a]/30 hover:border-[#005a55]/50"
+                  }`}
+                >
+                  <img src={url} alt={`Photo ${idx + 1}`} className="w-full h-full object-cover" />
+
+                  {/* Cover Badge */}
+                  {isCover && (
+                    <span className="absolute top-1.5 left-1.5 bg-[#8c6218] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md shadow-sm">
+                      ★ Cover
+                    </span>
+                  )}
+
+                  {/* Actions overlay */}
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 p-1.5">
+                    {!isCover && (
+                      <button
+                        type="button"
+                        onClick={() => handleSetCover(url)}
+                        className="w-full py-1 px-1.5 bg-[#d4a55a] hover:bg-[#b8893c] text-[#021816] text-[10px] font-bold rounded cursor-pointer transition-colors"
+                      >
+                        Set Cover
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => handleRemovePhoto(idx)}
+                      className="w-full py-1 px-1.5 bg-rose-600/90 hover:bg-rose-700 text-white text-[10px] font-semibold rounded cursor-pointer transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Add More Photos Card */}
+            <div
+              onClick={() => multiFileRef.current?.click()}
+              className="border-2 border-dashed border-[#d4a55a]/50 hover:border-[#005a55] rounded-xl flex flex-col items-center justify-center p-3 text-center cursor-pointer bg-white/60 hover:bg-white transition-all aspect-[4/3] group"
+              title="Upload multiple photos"
+            >
+              {uploadingMulti ? (
+                <div className="flex flex-col items-center gap-1">
+                  <span className="w-5 h-5 border-2 border-[#005a55] border-t-transparent rounded-full animate-spin" />
+                  <span className="text-[10px] font-semibold text-[#005a55] leading-tight">
+                    {uploadProgress || "Uploading…"}
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <span className="w-7 h-7 rounded-full bg-[#eef8f3] text-[#005a55] flex items-center justify-center font-bold text-base mb-1 group-hover:scale-110 transition-transform">
+                    +
+                  </span>
+                  <span className="text-[11px] font-bold text-[#005a55]">Add Photos</span>
+                  <span className="text-[9px] text-[#0d3b38]/50">Select 1 or more</span>
+                </>
+              )}
+            </div>
+          </div>
+
+          <input
+            ref={multiFileRef}
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleMultiFileChange}
             className="hidden"
           />
         </div>
@@ -792,6 +1131,11 @@ function CompactWorkCard({
             </span>
 
             <div className="flex items-center gap-1">
+              {work.galleryUrls && work.galleryUrls.length > 1 && (
+                <span className="bg-[#021816]/85 backdrop-blur-xs text-[#ecd08b] border border-[#d4a55a]/40 text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full shadow-2xs">
+                  {work.galleryUrls.length} Photos
+                </span>
+              )}
               {isFeatured && (
                 <span className="bg-[#8c6218] text-[#F7F5EF] text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full shadow-2xs">
                   ★ On Home

@@ -113,6 +113,21 @@ export function PortfolioCard({ item, variant, onSelect }: PortfolioCardProps) {
           </div>
         )}
 
+        {/* Multi-photo gallery indicator */}
+        {item.galleryUrls && item.galleryUrls.length > 1 && !isVideo && (
+          <span
+            className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-[#021816]/80 backdrop-blur-xs border border-[#d4a55a]/60 text-[#f3e3c0] text-[10px] font-ui font-semibold flex items-center gap-1 shadow-md pointer-events-none"
+            aria-label={`${item.galleryUrls.length} photos`}
+          >
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+            <span>{item.galleryUrls.length}</span>
+          </span>
+        )}
+
         {/* Discreet corner play indicator only on video invitations */}
         {isVideo && (
           <span

@@ -70,6 +70,12 @@ function mapAdminWorkToWorkItem(w: AdminWork): WorkItem {
     url: w.liveUrl,
     videoUrl: w.videoUrl,
     mobileImg: w.mobileImg || w.thumbUrl,
+    galleryUrls:
+      w.galleryUrls && w.galleryUrls.length > 0
+        ? w.galleryUrls
+        : w.thumbUrl
+        ? [w.thumbUrl]
+        : [],
     canIframe: (w.category === "websites" || w.category === "business") && !!w.liveUrl,
     story: w.story || `Bespoke digital creation for ${w.name}.`,
     occasion: w.occasion || (w.category === "websites" ? "Wedding Celebration" : "Celebration"),
